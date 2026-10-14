@@ -4,15 +4,15 @@ Applies to every file in the repo. When this document and a chunk disagree, ask;
 
 ## 1. Stack and libraries (approved list)
 
-| Area | Choice |
-| --- | --- |
-| Runtime | Node.js LTS (pin the exact version in `.nvmrc` and `engines`), pnpm workspaces, one lockfile |
-| Language | TypeScript strict everywhere |
-| Frontend | Next.js App Router, React, Tailwind CSS, shadcn/ui primitives, TanStack Query, React Hook Form, Zod, Recharts, `@microsoft/fetch-event-source`, lucide-react |
-| Auth | Better Auth (hosted inside the Next.js app) with plugins: `organization`, `jwt`, MongoDB adapter |
-| Backend | Express 5, Mongoose, Zod, `jose` (JWT verification), `pino` (logging), `helmet`, `cors`, `express-rate-limit`, `decimal.js`, `csv-parse`, `multer` (memory storage) |
-| Tests | Vitest, Supertest, `mongodb-memory-server` (replica set), React Testing Library, Playwright |
-| Tooling | ESLint (flat config, typescript-eslint), Prettier, GitHub Actions |
+| Area     | Choice                                                                                                                                                              |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Runtime  | Node.js LTS (pin the exact version in `.nvmrc` and `engines`), pnpm workspaces, one lockfile                                                                        |
+| Language | TypeScript strict everywhere                                                                                                                                        |
+| Frontend | Next.js App Router, React, Tailwind CSS, shadcn/ui primitives, TanStack Query, React Hook Form, Zod, Recharts, `@microsoft/fetch-event-source`, lucide-react        |
+| Auth     | Better Auth (hosted inside the Next.js app) with plugins: `organization`, `jwt`, MongoDB adapter                                                                    |
+| Backend  | Express 5, Mongoose, Zod, `jose` (JWT verification), `pino` (logging), `helmet`, `cors`, `express-rate-limit`, `decimal.js`, `csv-parse`, `multer` (memory storage) |
+| Tests    | Vitest, Supertest, `mongodb-memory-server` (replica set), React Testing Library, Playwright                                                                         |
+| Tooling  | ESLint (flat config, typescript-eslint), Prettier, GitHub Actions                                                                                                   |
 
 LLM: provider adapter with Gemini as the default provider and a scripted replay provider (see chunk B16). No other AI SDKs.
 
@@ -70,7 +70,12 @@ Layer rules (a lint rule enforces the import rules):
 `ActorContext` (set by the auth middleware, passed explicitly to services):
 
 ```ts
-type ActorContext = { userId: string; tenantId: string; role: 'owner' | 'employee' | 'reviewer'; requestId: string };
+type ActorContext = {
+  userId: string;
+  tenantId: string;
+  role: 'owner' | 'employee' | 'reviewer';
+  requestId: string;
+};
 ```
 
 ## 4. Frontend: feature-based architecture

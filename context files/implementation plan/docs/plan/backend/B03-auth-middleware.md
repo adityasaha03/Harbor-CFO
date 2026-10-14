@@ -3,9 +3,11 @@
 Depends: B02. Priority: P0. Read first: ARCHITECTURE.md section 5; PRODUCT_BRIEF.md roles table; DB_SCHEMA.md section 2. Better Auth docs: JWT plugin (verifying tokens, JWKS).
 
 ## Goal
+
 Every protected route knows who the caller is, which company (tenant) they act in, their current role, and whether they hold the required permission.
 
 ## Files (`apps/api/src/features/auth/`)
+
 - `auth.types.ts` (`ActorContext`, `AuthIdentity`, Express `Request` augmentation: `req.auth`, `req.actor`)
 - `jwt-verifier.ts` (`createRemoteJWKSet` with `jose`, `verifyAccessToken(token)`)
 - `authenticate.middleware.ts`
@@ -16,6 +18,7 @@ Every protected route knows who the caller is, which company (tenant) they act i
 - `index.ts`, `__tests__/`
 
 ## Specification
+
 - `verifyAccessToken`: JWKS URL = `BETTER_AUTH_JWKS_URL` or `BETTER_AUTH_URL + /api/auth/jwks`; verify signature, `issuer` and `audience` equal to `BETTER_AUTH_URL`, and expiry. Cache the remote JWKS (jose does this). Return `{ userId: payload.sub or payload.id, expiresAt }`. Confirm the claim names against the Better Auth JWT docs before coding; do not guess.
 - `authenticate`: requires `Authorization: Bearer <token>`. Missing, malformed, expired or badly signed -> `UnauthenticatedError` (no detail about why). Sets `req.auth`.
 - `tenantContext`: requires `X-Tenant-Id`. Loads the membership for `(userId, tenantId)` from `member`. Not a member or tenant missing -> `ForbiddenError('Not a member of this company')` (same response for both, so tenant existence is not revealed). Validates `role` against `ROLES` from contracts (unknown role -> Forbidden). Sets `req.actor` (`ActorContext`). The role is read from the database on every request, never from the token.
@@ -25,6 +28,7 @@ Every protected route knows who the caller is, which company (tenant) they act i
 - `GET /api/v1/me` returns `{ userId, tenantId, role, permissions }` and requires only authenticate + tenantContext.
 
 ## Tasks
+
 - [ ] Types and Express augmentation compile in strict mode
 - [ ] JWT verifier tested with locally generated keys (create a local JWKS in the test; cover valid, expired, wrong issuer, wrong audience, tampered signature)
 - [ ] `authenticate`, `tenantContext`, `requirePermission` implemented with unit tests

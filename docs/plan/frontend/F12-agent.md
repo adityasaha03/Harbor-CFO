@@ -3,15 +3,18 @@
 Depends: F04, B16. Priority: P0. Read first: B15/B16 specs; API_REFERENCE.md (agent, events stream).
 
 ## Goal
+
 A copilot chat whose every step is visible: which tools ran, with what inputs, how long they took, and what evidence the answer used. The agent can create a proposal but never approve one.
 
 ## Files
+
 - `src/app/(app)/agent/page.tsx`
 - `src/features/agent/components/`: `agent-workspace.tsx`, `chat-input.tsx`, `message-list.tsx`, `assistant-message.tsx`, `suggested-prompts.tsx`, `activity-timeline.tsx`, `timeline-item.tsx`, `evidence-chips.tsx`, `mode-badge.tsx`, `style-toggle.tsx`, `proposal-link-card.tsx`
 - `src/features/agent/api/`: `use-start-run.ts`, `use-run.ts`, `use-runs.ts`
 - `src/features/agent/hooks/use-run-events.ts` (filters the shared SSE stream by `runId`)
 
 ## Specification
+
 - Layout: conversation on the left, activity timeline on the right (stacked on small screens).
 - Input: up to 1000 characters; style toggle `standard | plain`; suggested prompts: "What is causing the cash gap?", "Which overdue invoices matter most?", "Compare my financing options", "Propose the best way to close the gap".
 - Flow: `POST /agent/runs` returns `runId` (202); the timeline shows `tool.started` and `tool.completed` events for that run in order with tool name, sanitized args (collapsed by default), duration and a status icon; the final answer appears when `run.completed` arrives (fetch `GET /agent/runs/:id`). If the stream is delayed, poll the run every 2 s as a fallback.
@@ -22,6 +25,7 @@ A copilot chat whose every step is visible: which tools ran, with what inputs, h
 - Past runs list (`GET /agent/runs`) in a sidebar.
 
 ## Tasks
+
 - [ ] Chat UI, suggested prompts, style toggle, mode badge
 - [ ] Timeline driven by SSE events filtered by `runId`, with polling fallback
 - [ ] Evidence chips and proposal link card

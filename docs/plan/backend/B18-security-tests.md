@@ -3,13 +3,16 @@
 Depends: B14, B16. Priority: P0. Read first: AGENTS.md section 3; ARCHITECTURE.md section 8.
 
 ## Goal
+
 Prove the security claims with tests, close gaps, and generate the artifacts the security self-assessment needs. Any unexplained unauthorized write is release-blocking.
 
 ## Files
+
 `apps/api/src/__security__/` (integration suites): `tenant-isolation.test.ts`, `rbac-matrix.test.ts`, `injection.test.ts`, `idempotency-concurrency.test.ts`, `rate-limit.test.ts`, `input-hardening.test.ts`, `logging-redaction.test.ts`, `helpers.ts`
 `submissions/security/`: `test-results.md` (generated summary), `scan-notes.md`
 
 ## Specification (each suite uses the real app, real replica set, two tenants)
+
 1. **Tenant isolation**: for every tenant-owned collection and every route that takes an id, a valid session from tenant B (and a forged `X-Tenant-Id` of tenant A) returns 404/403 and never leaks content, counts or events. Includes SSE (tenant B stream receives no tenant A events) and aggregate endpoints.
 2. **RBAC matrix**: iterate the permission matrix in `@harbor/contracts`; for every route, call as owner, employee, reviewer, non-member and anonymous and assert the expected status. A route without `protect()` fails the test (walk the router stack; only `/health/*` may be public).
 3. **Injection**: Mongo operator payloads (`$ne`, `$where`, `$gt`, dotted keys) in body/query/params are rejected by validation; unknown properties rejected; imported descriptions with HTML/script remain data (assert API returns them JSON-escaped and the UI renders text, see F-chunks); prompt-injection invoice text produces no tool calls to unregistered tools, no proposals, no ledger changes.
@@ -21,6 +24,7 @@ Prove the security claims with tests, close gaps, and generate the artifacts the
 9. **Headers and CORS**: helmet headers present, CORS allows only `WEB_ORIGIN`, no wildcard.
 
 ## Tasks
+
 - [ ] Suites 1 to 7 written and passing; failures fixed at the source (not by weakening tests)
 - [ ] Suite 9 passing; suite 8 outputs saved
 - [ ] A script `pnpm --filter @harbor/api test:security` runs everything in `__security__`

@@ -3,12 +3,15 @@
 Depends: B04, B05, B06. Priority: P0. Read first: DB_SCHEMA.md `imports`; ARCHITECTURE.md section 6.
 
 ## Goal
+
 Upload -> preview -> commit with atomic, idempotent persistence; a committed import bumps the dataset version and publishes an event, which later triggers forecast and alert recomputation.
 
 ## Files (`apps/api/src/features/imports/`)
+
 `imports.model.ts`, `imports.repository.ts`, `imports.service.ts`, `imports.controller.ts`, `imports.routes.ts`, `imports.constants.ts`, `index.ts`, `__tests__/`
 
 ## Specification
+
 - `POST /api/v1/imports/preview` (`imports:write`, rate limit 5/min per tenant): multipart upload with `multer` memory storage (field `file`, size limit 5 MB) and body `{ kind: 'transactions' | 'invoices' }`. Runs the B06 engine. If errors: respond 200 with `{ importId, status: 'rejected', errors }` (record the import as `rejected`, store up to 200 errors). If ok: store `stagedRows`, `status: 'previewed'`, `expiresAt` +24 h; respond with counts, warnings and a sample of the first 20 rows.
 - `POST /api/v1/imports/:id/commit` (`imports:write`): in one `withTransaction`:
   1. load the import (tenant-scoped, `previewed`, not expired) else 404/409;
@@ -21,6 +24,7 @@ Upload -> preview -> commit with atomic, idempotent persistence; a committed imp
 - Expired previews are rejected on commit even if the TTL job has not removed them (check `expiresAt` in code).
 
 ## Tasks
+
 - [ ] Model with partial unique index on committed imports; TTL on `expiresAt`
 - [ ] Preview endpoint: clean file, bad file (errors listed), oversize (413), wrong content type (400)
 - [ ] Commit endpoint transactional; test that a failure in step 5 rolls back steps 3 and 4

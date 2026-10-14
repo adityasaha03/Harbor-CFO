@@ -3,9 +3,11 @@
 Depends: S00, S01. Priority: P0. Read first: ARCHITECTURE.md sections 3, 6, 8, 9.
 
 ## Goal
+
 A running Express 5 + TypeScript app skeleton with validated config, structured logging, consistent errors, request validation, security headers, CORS, rate limiting and health endpoints.
 
 ## Files (`apps/api`)
+
 - `package.json`, `tsconfig.json`, `tsup.config.ts` (bundle `@harbor/contracts`), `vitest.config.ts`, `.env.example`
 - `src/server.ts`, `src/app.ts`, `src/routes.ts`
 - `src/config/env.ts`
@@ -17,6 +19,7 @@ A running Express 5 + TypeScript app skeleton with validated config, structured 
 - `src/core/http/__tests__/*.test.ts`
 
 ## Specification
+
 - `env.ts`: Zod schema for all API env vars in ARCHITECTURE.md section 11, parsed once, exported as typed `env`. Fail fast with a readable message.
 - Middleware order in `app.ts`: request id -> pino-http logger -> helmet -> CORS (only `WEB_ORIGIN`, allow headers `Authorization, X-Tenant-Id, Content-Type, Idempotency-Key, Last-Event-ID`, no credentials) -> JSON body (limit 1 MB; CSV upload uses multer separately) -> `/health/*` -> `/api/v1` router (rate limiter first) -> not-found -> error handler.
 - `validate({ body?, query?, params? })` parses with Zod, replaces `req.body/query/params` with parsed values, and throws `ValidationError` with `details` (field paths and messages) on failure.
@@ -26,6 +29,7 @@ A running Express 5 + TypeScript app skeleton with validated config, structured 
 - `server.ts`: starts the app, handles `SIGTERM`/`SIGINT` with graceful shutdown.
 
 ## Tasks
+
 - [ ] Package scaffold and scripts: `dev` (tsx watch), `build` (tsup), `start`, `test`, `lint`, `typecheck`
 - [ ] `env.ts` with tests (missing var fails, defaults applied)
 - [ ] AppError classes, error handler, validate middleware, respond helper, with unit tests for each error code mapping

@@ -3,9 +3,11 @@
 Depends: F05 to F14. Priority: P1. Read first: ARCHITECTURE.md section 4.
 
 ## Goal
+
 Raise clarity and trust without adding features.
 
 ## Tasks
+
 - [ ] Every screen has loading skeletons, empty states, error states with retry, and forbidden states; audit each route against the four-state rule
 - [ ] Keyboard navigation and focus order checked on dialogs, drawers and tables; visible focus rings; ARIA labels on charts (provide a text summary and the weekly table as an accessible alternative)
 - [ ] Responsive layouts verified at 390, 768 and 1280 px widths; wide tables scroll inside their container, never the page

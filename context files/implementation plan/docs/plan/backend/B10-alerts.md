@@ -3,13 +3,16 @@
 Depends: B04, B09, B11. Priority: P0. Read first: PRODUCT_BRIEF.md alert rules; DB_SCHEMA.md `alerts`.
 
 ## Goal
+
 Proactive alerts created by data changes, with deduplication by fingerprint and automatic resolution when a condition clears.
 
 ## Files (`apps/api/src/features/alerts/`)
+
 `engine/rules.ts`, `engine/evaluate.ts`, `alerts.constants.ts`, `alerts.model.ts`, `alerts.repository.ts`, `alerts.service.ts`, `alerts.listeners.ts`, `alerts.controller.ts`, `alerts.routes.ts`, `index.ts`, `__tests__/`
 Contracts: fill `packages/contracts/src/alerts.ts`.
 
 ## Specification
+
 - Pure `evaluateAlerts(ctx)` returns candidate alerts `{ ruleId, fingerprint, severity, title, summary, evidence[] }` from: forecast summary and floor, overdue AR per counterparty (from analytics), concentration (from analytics), last successful import time, settings thresholds.
 - Rules and fingerprints:
   - `negative_cash` (critical): `firstNegativeDate` not null; fingerprint `negative_cash:horizon`; summary names the date and the largest outflow sources of that day (from provenance).
@@ -23,6 +26,7 @@ Contracts: fill `packages/contracts/src/alerts.ts`.
 - Alerts must fire without any chat or user action: the only trigger is the data change.
 
 ## Tasks
+
 - [ ] Contracts filled; model with unique `(tenantId, fingerprint)` index
 - [ ] Rule tests for every rule: triggers, does not trigger, boundary (exactly at threshold), zero AR for concentration
 - [ ] Dedup test: evaluating twice creates one alert; changed severity updates it

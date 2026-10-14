@@ -3,15 +3,19 @@
 Depends: B03. Priority: P0. Read first: ARCHITECTURE.md section 3; DB_SCHEMA.md `tenantSettings`, `accounts`, `counterparties`, `ledgerEntries`, `invoices`, `commitments`.
 
 ## Goal
+
 The persistent core of a company's books, each as its own feature: settings, accounts, counterparties, ledger, invoices, commitments, with strictly tenant-scoped repositories and read endpoints.
 
 ## Features and files
+
 Create six feature folders under `apps/api/src/features/`, each with `model`, `repository`, `service`, `controller`, `routes`, `index.ts` and `__tests__/`:
+
 - `tenants/` (`tenantSettings`): `getSettings`, `ensureSettings(tenantId)` (creates defaults on first access), `updateSettings` (owner only), `bumpDatasetVersion(tenantId, session)`, `getForecastAsOf(tenantId)` (returns `forecastAsOfDate` override or today in the tenant timezone)
 - `accounts/`, `counterparties/`, `ledger/`, `invoices/`, `commitments/`
-Contracts: fill `packages/contracts/src/tenants.ts`, `ledger.ts`, `invoices.ts` (DTO schemas and enums: ledger categories, invoice direction/status, commitment frequency).
+  Contracts: fill `packages/contracts/src/tenants.ts`, `ledger.ts`, `invoices.ts` (DTO schemas and enums: ledger categories, invoice direction/status, commitment frequency).
 
 ## Specification
+
 - Models follow DB_SCHEMA.md exactly, including unique and secondary indexes.
 - Repositories: first parameter `tenantId`; filters always include it; writes accept optional `session`; return plain objects. Provide `bulkUpsert...` methods used by the import feature (unique key upserts, idempotent).
 - Services expose the reads other features need, for example `ledgerService.getCashAt(tenantId, asOf)` (opening balance + entries after the opening date up to `asOf`), `invoicesService.listOutstanding(tenantId)`, `commitmentsService.list(tenantId)`.
@@ -23,6 +27,7 @@ Contracts: fill `packages/contracts/src/tenants.ts`, `ledger.ts`, `invoices.ts` 
 - Overdue is derived: `dueOn < asOf && outstandingMinor > 0`; never stored.
 
 ## Tasks
+
 - [ ] Contracts filled for these features
 - [ ] Six models with indexes; tests that unique indexes reject duplicates
 - [ ] Repositories tenant-scoped; a test per repository proves tenant B cannot read or update tenant A rows

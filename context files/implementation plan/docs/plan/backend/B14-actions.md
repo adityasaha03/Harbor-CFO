@@ -3,13 +3,16 @@
 Depends: B04, B12, B13. Priority: P0. Read first: DB_SCHEMA.md `actionProposals`, `approvals`, `sandboxOperations`, `financingCommitments`; ARCHITECTURE.md sections 5, 8. This is the most security-critical chunk: implement exactly, test hard.
 
 ## Goal
+
 A user or the agent proposes an exact sandbox financing action; only an Owner approves it; the server executes it once, atomically, with idempotency, and writes ledger entries, obligations and evidence.
 
 ## Files (`apps/api/src/features/actions/`)
+
 `actions.models.ts` (proposals, approvals, sandboxOperations, financingCommitments), `actions.repository.ts`, `proposals.service.ts`, `approvals.service.ts`, `execution.service.ts`, `payload.ts` (canonicalization and hashing), `actions.controller.ts`, `actions.routes.ts`, `actions.constants.ts`, `index.ts`, `__tests__/`
 Contracts: fill `packages/contracts/src/actions.ts`.
 
 ## Specification
+
 - **Canonical payload and hash** (`payload.ts`): server resolves `offerCode`, `offerVersion`, `principalMinor`, `fundingOn`, `upfrontFeeMinor`, `interestMinor`, `schedule[]` from the catalog and B12 engine (never trusts client numbers). `payloadHash = sha256(canonicalJson({ tenantId, actionType, payload, baseInputVersion, offerVersion, expiresAt }))` where canonical JSON has sorted keys and no whitespace.
 - `POST /api/v1/action-proposals` (`actions:propose`): body `{ actionType: 'sandbox_financing_draw', offerCode, principalMinor, scenarioId? }`. Re-runs the B12 gates; fails with 409 if the scenario (when given) is stale. Stores `status: pending`, `expiresAt` +30 minutes, `baseInputVersion = current datasetVersion`. Publishes `proposal.created` and `approval.required`; audit `proposal.create`. Source `agent` is set only by the agent runtime, never from the request body.
 - `GET /api/v1/action-proposals` and `/:id` (`finance:read`): lazily mark expired proposals; returns the full payload, hash, status, `operationId` when executed.
@@ -24,12 +27,13 @@ Contracts: fill `packages/contracts/src/actions.ts`.
   6. Conditional update proposal `approved` -> `executed`.
   7. Insert two ledger entries on `fundingOn`: draw (`+principal`, kind `sandbox_financing_draw`, category `loan_draw`) and fee (`-upfrontFee`, kind `sandbox_financing_fee`, category `loan_fee`); insert one `financingCommitments` with the schedule; insert the `sandboxOperations` doc (`operationId` = `op_` + nanoid, input and output versions); write audit `financing.execute`; insert event `action.committed`.
   8. After commit: recompute the baseline forecast (listener on `action.committed`), then store `forecastBeforeId`/`forecastAfterId` on the operation. These refs feed the evidence export.
-  Any exception rolls everything back. Repeating the request never creates a second loan.
+     Any exception rolls everything back. Repeating the request never creates a second loan.
 - Register a forecast contributor (see B09) that returns active `financingCommitments` schedules as financing flows (`repayment` kind) so executed loans appear in every later forecast. Ledger entries dated after the as-of date are picked up by the loader's `scheduledLedger`.
 - After execution, evaluate `repayment_pressure`: if the post-action forecast first falls below the floor later, call `alertsService.raiseRepaymentPressure`.
 - All denials and conflicts are audited with reason codes (`NOT_APPROVER`, `STALE_VERSION`, `EXPIRED`, `HASH_MISMATCH`, `APPROVAL_CONSUMED`, `ROLE_REVOKED`). Never expose another tenant's records (404).
 
 ## Tasks
+
 - [ ] Contracts filled; four models with the indexes from DB_SCHEMA.md
 - [ ] `payload.ts` tests: key order does not change the hash; any field change changes the hash
 - [ ] Proposal tests: gate failure, stale scenario, client-supplied fees ignored

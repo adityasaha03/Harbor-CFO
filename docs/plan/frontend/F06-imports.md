@@ -3,15 +3,18 @@
 Depends: F04, B07. Priority: P0. Read first: B06/B07 specs; API_REFERENCE.md (imports).
 
 ## Goal
+
 Upload a CSV, see an exact preview or row-level errors, commit atomically, and watch the alert appear.
 
 ## Files
+
 - `src/app/(app)/imports/page.tsx`
 - `src/features/imports/components/`: `import-workspace.tsx`, `file-dropzone.tsx`, `template-links.tsx`, `preview-table.tsx`, `error-list.tsx`, `commit-bar.tsx`, `import-history-table.tsx`
 - `src/features/imports/api/`: `use-preview-import.ts`, `use-commit-import.ts`, `use-imports.ts`, `download-error-report.ts`
 - `src/features/imports/lib/templates.ts` (header rows from contracts, generated as downloadable CSV blobs)
 
 ## Specification
+
 - Select kind (transactions or invoices), drop a file (client checks size 5 MB and `.csv` before upload; the server is the real validator).
 - Preview success: counts, warnings, first 20 rows in a table with formatted amounts. Rejected: error list grouped by row with field and message, "Download error report", and a clear "nothing was imported" message (imports are atomic).
 - Commit button with a confirmation dialog stating counts; handles 409 (already imported: link to the existing import) and expired preview (re-upload prompt).
@@ -21,6 +24,7 @@ Upload a CSV, see an exact preview or row-level errors, commit atomically, and w
 - Imported text (descriptions) is rendered as plain text only.
 
 ## Tasks
+
 - [ ] Dropzone, templates download, preview and error views
 - [ ] Commit flow with confirmation, 409 and expired handling
 - [ ] History table

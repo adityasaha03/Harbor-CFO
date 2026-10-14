@@ -3,14 +3,17 @@
 Depends: F04, B09. Priority: P0. Read first: B08/B09 specs.
 
 ## Goal
+
 Show the 91-day cash forecast, the assumptions behind it, and let the user click a dip to see the exact invoices and payments that cause it.
 
 ## Files
+
 - `src/app/(app)/forecast/page.tsx`
 - `src/features/forecast/components/`: `forecast-chart.tsx`, `breach-summary.tsx`, `day-drilldown-drawer.tsx`, `weekly-table.tsx`, `assumptions-panel.tsx`, `view-toggle.tsx`
 - `src/features/forecast/api/`: `use-latest-forecast.ts` (exists from F05; extend), `use-forecast-day.ts`
 
 ## Specification
+
 - Chart: toggle weekly (13 buckets) or daily (91 points); lines for baseline closing cash and the conservative variant (dashed, labelled "Conservative assumption: overdue receivables arrive 14 days later (not a statistical confidence band)"); horizontal floor and zero reference lines; breach markers.
 - Breach summary: first day below the floor, first negative day, lowest cash with date, gap. Empty state text when no breach.
 - Drill-down drawer: opens from a chart click or `?date=` query param; lists the day's sources grouped as receipts, payments, financing, with amount, label and a link to the invoice or commitment; shows closing cash.
@@ -19,6 +22,7 @@ Show the 91-day cash forecast, the assumptions behind it, and let the user click
 - Money shown only via `<Money>`.
 
 ## Tasks
+
 - [ ] Chart with toggle, floor/zero lines, conservative line and legend
 - [ ] Breach summary and assumptions panel
 - [ ] Drill-down drawer works from click and from URL

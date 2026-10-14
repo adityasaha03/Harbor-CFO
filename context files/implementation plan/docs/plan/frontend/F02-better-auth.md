@@ -3,9 +3,11 @@
 Depends: F01, S01. Priority: P0. Read first: ARCHITECTURE.md section 5. **Required reading before coding** (current docs, do not rely on memory): Better Auth installation, Next.js integration, MongoDB adapter, email/password, organization plugin (including access control / custom roles), JWT plugin, rate limiting.
 
 ## Goal
+
 Better Auth running inside the Next.js app with MongoDB, email/password, organizations as companies (tenants), custom roles, and the JWT plugin exposing a JWKS so the Express API can verify tokens.
 
 ## Files (`apps/web/src/features/auth/`)
+
 - `server/mongo.ts` (singleton `MongoClient`, safe for dev hot reload), `server/auth.ts` (the `betterAuth` instance), `server/access-control.ts` (permissions statement, `ac`, roles), `server/session.ts` (`getServerSession`, `requireServerSession`)
 - `lib/auth-client.ts` (`createAuthClient` with `organizationClient` and `jwtClient`)
 - `index.ts` (public exports)
@@ -13,6 +15,7 @@ Better Auth running inside the Next.js app with MongoDB, email/password, organiz
 - `.env.example` entries: `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `MONGODB_URI`, `MONGODB_DB_NAME`
 
 ## Specification
+
 - Database: Better Auth MongoDB adapter with the shared `harbor` database; pass the client if the docs say it is required for transactions.
 - Auth: email and password enabled, minimum password length 8, email verification off for the demo (no email service); document this as a known limitation.
 - `organization` plugin: companies = organizations. Roles: `owner` (creator role), `employee`, `reviewer`. Define them with the access-control API per the docs so the three role names are what gets stored in `member.role`. If custom roles block progress for more than one hour, stop and ask the human; the fallback is built-in roles with a mapping constant in `@harbor/contracts` (record it in the Deviation Log).
@@ -23,6 +26,7 @@ Better Auth running inside the Next.js app with MongoDB, email/password, organiz
 - The Next.js cookies plugin (if the docs require it for Server Actions) is configured per the docs.
 
 ## Tasks
+
 - [ ] Packages installed per docs; env validated at startup with a clear message
 - [ ] Route handler responds at `/api/auth/*`; `curl <web>/api/auth/jwks` returns keys after the first token request (note the plugin may create the key on first use)
 - [ ] Roles defined; unit test of `access-control.ts` asserting the three roles exist and map to the `ROLES` from contracts

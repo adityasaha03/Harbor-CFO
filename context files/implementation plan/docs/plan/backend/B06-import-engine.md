@@ -3,13 +3,16 @@
 Depends: S01. Priority: P0. Read first: DB_SCHEMA.md `imports`, `ledgerEntries`, `invoices`; ARCHITECTURE.md sections 3, 7.
 
 ## Goal
+
 A pure, heavily tested module that turns CSV bytes into validated, normalized rows or a precise error report. No database, no Express.
 
 ## Files (`apps/api/src/features/imports/engine/`)
+
 `parse-csv.ts`, `transactions.mapper.ts`, `invoices.mapper.ts`, `validate-rows.ts`, `limits.ts`, `checksum.ts`, `types.ts`, `index.ts`, and tests in `engine/__tests__/` with fixture CSVs in `engine/__tests__/fixtures/`.
 Contracts: fill `packages/contracts/src/imports.ts` (row schemas, error item schema, templates).
 
 ## Specification
+
 - Templates (header names exact, case-insensitive, extra columns rejected):
   - transactions: `externalId,date,accountId,amount,currency,category,description`
   - invoices: `invoiceId,direction,counterpartyId,total,outstanding,currency,dueDate,expectedSettlementDate,status`
@@ -23,6 +26,7 @@ Contracts: fill `packages/contracts/src/imports.ts` (row schemas, error item sch
 - Free-text fields are kept as untrusted strings, trimmed, never interpreted.
 
 ## Tasks
+
 - [ ] Contracts for import schemas filled
 - [ ] `parseCsv` and limits tested: oversize, too many rows, bad UTF-8, unknown column, missing column, empty file
 - [ ] Transaction and invoice mappers tested with valid rows (exact minor-unit outputs) and every invalid case listed above

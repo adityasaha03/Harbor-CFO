@@ -3,9 +3,11 @@
 Depends: all P0 chunks. Priority: P0. Read first: PRODUCT_BRIEF.md deliverables; ARCHITECTURE.md section 11.
 
 ## Goal
+
 A reviewer can open the hosted demo and can also run everything from a clean clone. The submission package is complete and consistent.
 
 ## Tasks
+
 - [ ] **Hosting**: web on Vercel (or any Node host), API on a Node host (Render, Railway or Fly), database on MongoDB Atlas (replica set, so transactions work). Set every variable from ARCHITECTURE.md section 11 in each service. `BETTER_AUTH_URL` and `NEXT_PUBLIC_APP_URL` = the public web URL; `WEB_ORIGIN` on the API = the same URL; `NEXT_PUBLIC_API_URL` = the public API URL.
 - [ ] **Atlas**: dedicated database user with least privilege on the `harbor` database, network access restricted where the host allows, TLS on.
 - [ ] Health check: `GET /health/ready` on the API passes in production; CORS test from the hosted web app works.

@@ -3,9 +3,11 @@
 Depends: B01. Priority: P0. Read first: ARCHITECTURE.md sections 3, 10; DB_SCHEMA.md conventions.
 
 ## Goal
+
 Reliable Mongoose connection, a transaction helper, a shared test harness with an in-memory replica set, and an index sync mechanism.
 
 ## Files (`apps/api/src/core/db/`)
+
 - `mongo.ts` (connect, disconnect, `isDbReady`, native `getDb()` for Better Auth collections)
 - `with-transaction.ts`
 - `base-schema.ts` (shared schema options: timestamps, `toJSON` that maps `_id` to `id` and removes `__v`)
@@ -14,6 +16,7 @@ Reliable Mongoose connection, a transaction helper, a shared test harness with a
 - `__tests__/with-transaction.test.ts`
 
 ## Specification
+
 - `mongo.ts`: connect using `MONGODB_URI` and `MONGODB_DB_NAME`; fail fast on error; log connection events; wire `isDbReady` into `/health/ready`.
 - `withTransaction(fn: (session: ClientSession) => Promise<T>): Promise<T>` uses `mongoose.connection.startSession()` and `session.withTransaction`, retries transient errors (the driver does this inside `withTransaction`), always ends the session. Services pass `session` down to repositories (every repository write method accepts an optional `session`).
 - `base-schema.ts`: helper `createSchema(definition, options)` applying `timestamps: true`, `versionKey: false`, id transform. Every feature model uses it.
@@ -21,6 +24,7 @@ Reliable Mongoose connection, a transaction helper, a shared test harness with a
 - Test harness: integration tests use a real in-memory replica set (transactions require it); no DB mocks. Provide `useTestDb()` helper that wires before/after hooks.
 
 ## Tasks
+
 - [ ] Connection and graceful disconnect implemented; readiness wired
 - [ ] `withTransaction` implemented; test proves a thrown error rolls back all writes in two collections
 - [ ] `createSchema` helper with test of id transform

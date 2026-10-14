@@ -3,15 +3,18 @@
 Depends: F04, B09, B11. Priority: P0. Read first: PRODUCT_BRIEF.md; API_REFERENCE.md (forecast, analytics, alerts).
 
 ## Goal
+
 A one-screen answer to "are we going to run short, why, and what should I do next", built from deterministic data.
 
 ## Files
+
 - `src/app/(app)/dashboard/page.tsx`
 - `src/features/dashboard/components/`: `cash-summary-cards.tsx`, `cash-curve-chart.tsx`, `top-alert-banner.tsx`, `aging-card.tsx`, `concentration-card.tsx`, `data-freshness-card.tsx`, `insights-list.tsx`, `source-chip.tsx`, `health-score-card.tsx` (P1; hidden when the endpoint returns 404)
 - `src/features/forecast/api/use-latest-forecast.ts`, `src/features/analytics/api/use-analytics-summary.ts`, `src/features/alerts/api/use-alerts.ts` (shared hooks used by other features; owned here, import through each feature's `index.ts`)
 - `src/lib/formulas.ts` (plain-text formula descriptions used by `source-chip`)
 
 ## Specification
+
 - Cards: current cash, liquidity floor, lowest projected cash with its date, gap to the floor; when no breach show "No breach within 91 days" (never "infinite runway").
 - Chart (Recharts): weekly closing cash line for the baseline, a dashed floor line and a zero line; tooltip with date and amount; clicking a point navigates to `/forecast?date=...` (drill-down in F07).
 - Top alert banner: the highest-severity open alert with a link to `/alerts`.
@@ -22,6 +25,7 @@ A one-screen answer to "are we going to run short, why, and what should I do nex
 - Everything wrapped in `QueryBoundary`; Reviewer sees the same read-only dashboard.
 
 ## Tasks
+
 - [ ] Hooks created and exported from their features
 - [ ] Cards, chart, banner, aging, concentration, freshness, insights implemented
 - [ ] `SourceChip` with formulas for cash, floor gap, aging, concentration
