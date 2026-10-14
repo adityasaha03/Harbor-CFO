@@ -27,7 +27,7 @@ Depends: S00. Priority: P0. Read first: ARCHITECTURE.md sections 2, 3, 6, 7; PRO
 
 ## Tasks
 
-- [ ] Package created and importable from both apps (verify once `apps/api` and `apps/web` exist, or with a vitest alias now)
+- [x] Package created and importable from both apps (verify once `apps/api` and `apps/web` exist, or with a vitest alias now)
 - [ ] `ROLE_PERMISSIONS` matches the brief; a test asserts every role/permission pair
 - [ ] Money tests: `toMinor("12500.00") === 1250000`; `applyBps(6000000, 200) === 120000`; rejects `"1.234"`, `"abc"`, `"9007199254740993"`
 - [ ] Date tests: `addDays('2026-10-20', 21) === '2026-11-10'`; month-end and leap-year cases; invalid dates rejected
