@@ -30,7 +30,7 @@ A running Express 5 + TypeScript app skeleton with validated config, structured 
 
 ## Tasks
 
-- [ ] Package scaffold and scripts: `dev` (tsx watch), `build` (tsup), `start`, `test`, `lint`, `typecheck`
+- [x] Package scaffold and scripts: `dev` (tsx watch), `build` (tsup), `start`, `test`, `lint`, `typecheck`
 - [ ] `env.ts` with tests (missing var fails, defaults applied)
 - [ ] AppError classes, error handler, validate middleware, respond helper, with unit tests for each error code mapping
 - [ ] Logger, request id (honors incoming `X-Request-Id`, otherwise generates), CORS and helmet configured; test that a disallowed origin gets no CORS headers
