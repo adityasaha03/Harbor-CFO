@@ -37,4 +37,4 @@ A running Express 5 + TypeScript app skeleton with validated config, structured 
 - [x] Rate limiter factory with a test that the 121st request returns 429 and `Retry-After`
 - [x] Health endpoints with tests
 - [x] `routes.ts` created with a comment explaining how features mount (one line per feature)
-- [ ] `.env.example` matches ARCHITECTURE.md; master plan row B01 set to `[x]`
+- [x] `.env.example` matches ARCHITECTURE.md; master plan row B01 set to `[x]`

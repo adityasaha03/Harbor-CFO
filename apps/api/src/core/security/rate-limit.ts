@@ -8,9 +8,7 @@ export interface RateLimiterOptions {
   keyGenerator?: (req: Request) => string;
 }
 
-export function createRateLimiter(
-  options: RateLimiterOptions = {},
-): RequestHandler {
+export function createRateLimiter(options: RateLimiterOptions = {}): RequestHandler {
   const windowMs = options.windowMs ?? 60 * 1000;
   const max = options.max ?? 120;
   const retryAfterSeconds = Math.ceil(windowMs / 1000);
@@ -18,8 +16,7 @@ export function createRateLimiter(
   const keyGenerator =
     options.keyGenerator ??
     ((req: Request) => {
-      const actorContext = (req as { actorContext?: { userId?: string } })
-        .actorContext;
+      const actorContext = (req as { actorContext?: { userId?: string } }).actorContext;
       if (actorContext?.userId) {
         return actorContext.userId;
       }

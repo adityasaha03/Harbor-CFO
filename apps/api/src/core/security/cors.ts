@@ -2,9 +2,7 @@ import type { RequestHandler } from 'express';
 import cors from 'cors';
 import { env } from '../../config/env';
 
-export function createCorsMiddleware(
-  allowedOrigin = env.WEB_ORIGIN,
-): RequestHandler {
+export function createCorsMiddleware(allowedOrigin = env.WEB_ORIGIN): RequestHandler {
   return cors({
     origin: (origin, callback) => {
       if (!origin || origin === allowedOrigin) {

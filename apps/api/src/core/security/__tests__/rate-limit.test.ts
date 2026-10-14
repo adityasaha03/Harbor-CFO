@@ -17,9 +17,7 @@ describe('Rate limiter factory', () => {
     // Fire 120 requests sequentially or in parallel batches
     const batchSize = 20;
     for (let i = 0; i < 120; i += batchSize) {
-      const promises = Array.from({ length: batchSize }, () =>
-        request(app).get('/api/test'),
-      );
+      const promises = Array.from({ length: batchSize }, () => request(app).get('/api/test'));
       const responses = await Promise.all(promises);
       for (const res of responses) {
         expect(res.status).toBe(200);
@@ -45,8 +43,7 @@ describe('Rate limiter factory', () => {
       createRateLimiter({
         windowMs: 30 * 1000,
         max: 2,
-        keyGenerator: (req) =>
-          (req.headers['x-custom-key'] as string) || 'default-key',
+        keyGenerator: (req) => (req.headers['x-custom-key'] as string) || 'default-key',
       }),
     );
     app.get('/api/custom', (_req, res) => {
@@ -55,25 +52,17 @@ describe('Rate limiter factory', () => {
     app.use(errorHandler);
 
     // Key A: 2 requests pass
-    const resA1 = await request(app)
-      .get('/api/custom')
-      .set('X-Custom-Key', 'user-A');
-    const resA2 = await request(app)
-      .get('/api/custom')
-      .set('X-Custom-Key', 'user-A');
+    const resA1 = await request(app).get('/api/custom').set('X-Custom-Key', 'user-A');
+    const resA2 = await request(app).get('/api/custom').set('X-Custom-Key', 'user-A');
     expect(resA1.status).toBe(200);
     expect(resA2.status).toBe(200);
 
     // Key A: 3rd request blocked
-    const resA3 = await request(app)
-      .get('/api/custom')
-      .set('X-Custom-Key', 'user-A');
+    const resA3 = await request(app).get('/api/custom').set('X-Custom-Key', 'user-A');
     expect(resA3.status).toBe(429);
 
     // Key B: first request still passes (isolated by key)
-    const resB1 = await request(app)
-      .get('/api/custom')
-      .set('X-Custom-Key', 'user-B');
+    const resB1 = await request(app).get('/api/custom').set('X-Custom-Key', 'user-B');
     expect(resB1.status).toBe(200);
   });
 });

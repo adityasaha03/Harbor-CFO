@@ -68,9 +68,7 @@ describe('Environment configuration (env.ts)', () => {
     expect(parsed.MONGODB_URI).toBe('mongodb+srv://user:pass@cluster.mongodb.net');
     expect(parsed.MONGODB_DB_NAME).toBe('harbor_prod');
     expect(parsed.BETTER_AUTH_URL).toBe('https://auth.harbor.app');
-    expect(parsed.BETTER_AUTH_JWKS_URL).toBe(
-      'https://auth.harbor.app/api/auth/jwks',
-    );
+    expect(parsed.BETTER_AUTH_JWKS_URL).toBe('https://auth.harbor.app/api/auth/jwks');
     expect(parsed.WEB_ORIGIN).toBe('https://app.harbor.app');
     expect(parsed.LOG_LEVEL).toBe('warn');
     expect(parsed.LLM_PROVIDER).toBe('gemini');

@@ -7,4 +7,4 @@ const router = Router();
 router.get('/live', liveHandler);
 router.get('/ready', asyncHandler(readyHandler));
 
-export const healthRouter = router;
+export const healthRouter: Router = router;

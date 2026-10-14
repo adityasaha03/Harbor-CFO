@@ -1,11 +1,7 @@
 import express from 'express';
 import request from 'supertest';
 import { afterEach, describe, expect, it } from 'vitest';
-import {
-  healthRouter,
-  resetReadinessCheck,
-  setReadinessCheck,
-} from '../index';
+import { healthRouter, resetReadinessCheck, setReadinessCheck } from '../index';
 
 describe('Health endpoints', () => {
   const app = express();

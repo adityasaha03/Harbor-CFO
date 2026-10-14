@@ -5,10 +5,7 @@ export abstract class AppError extends Error {
   abstract readonly code: ErrorCode;
   readonly details?: ApiErrorDetail[] | Record<string, unknown>[];
 
-  constructor(
-    message: string,
-    details?: ApiErrorDetail[] | Record<string, unknown>[],
-  ) {
+  constructor(message: string, details?: ApiErrorDetail[] | Record<string, unknown>[]) {
     super(message);
     this.name = this.constructor.name;
     this.details = details;

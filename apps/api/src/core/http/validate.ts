@@ -19,9 +19,7 @@ export function validate(schemas: ValidationSchemas) {
           message: issue.message,
           code: issue.code,
         }));
-        return next(
-          new ValidationError('Validation failed for route params', details),
-        );
+        return next(new ValidationError('Validation failed for route params', details));
       }
       req.params = result.data;
     }
@@ -34,9 +32,7 @@ export function validate(schemas: ValidationSchemas) {
           message: issue.message,
           code: issue.code,
         }));
-        return next(
-          new ValidationError('Validation failed for query parameters', details),
-        );
+        return next(new ValidationError('Validation failed for query parameters', details));
       }
       req.query = result.data;
     }
@@ -49,9 +45,7 @@ export function validate(schemas: ValidationSchemas) {
           message: issue.message,
           code: issue.code,
         }));
-        return next(
-          new ValidationError('Validation failed for request body', details),
-        );
+        return next(new ValidationError('Validation failed for request body', details));
       }
       req.body = result.data;
     }

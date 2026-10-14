@@ -5,17 +5,11 @@ import { logger } from './core/logging/logger';
 const app = createApp();
 
 const server = app.listen(env.PORT, () => {
-  logger.info(
-    { port: env.PORT, env: env.NODE_ENV },
-    'HarborCFO API server started successfully',
-  );
+  logger.info({ port: env.PORT, env: env.NODE_ENV }, 'HarborCFO API server started successfully');
 });
 
 function gracefulShutdown(signal: string): void {
-  logger.info(
-    { signal },
-    'Termination signal received; shutting down HTTP server gracefully',
-  );
+  logger.info({ signal }, 'Termination signal received; shutting down HTTP server gracefully');
   server.close(() => {
     logger.info('HTTP server closed; process terminating cleanly');
     process.exit(0);

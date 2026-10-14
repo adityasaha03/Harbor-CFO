@@ -14,11 +14,7 @@ export function ok<T, M = Record<string, unknown>>(
   res.status(statusCode).json(body);
 }
 
-export function created<T, M = Record<string, unknown>>(
-  res: Response,
-  data: T,
-  meta?: M,
-): void {
+export function created<T, M = Record<string, unknown>>(res: Response, data: T, meta?: M): void {
   ok(res, data, meta, 201);
 }
 

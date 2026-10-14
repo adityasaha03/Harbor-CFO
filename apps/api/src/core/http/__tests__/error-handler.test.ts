@@ -27,7 +27,8 @@ describe('Error handler and respond helpers', () => {
       setHeader: vi.fn(),
     } as unknown as Response;
 
-    errorHandler(error, req, res, () => {});
+    const next = vi.fn();
+    errorHandler(error, req, res, next);
 
     expect(responseStatus).toBe(403);
     expect(responseBody).toEqual({
@@ -40,11 +41,7 @@ describe('Error handler and respond helpers', () => {
   });
 
   it('sets Retry-After header for RateLimitedError', () => {
-    const error = new RateLimitedError(
-      'Rate limit exceeded',
-      undefined,
-      45,
-    );
+    const error = new RateLimitedError('Rate limit exceeded', undefined, 45);
     const req = {
       id: 'req-rate-limit',
       headers: {},
@@ -57,7 +54,8 @@ describe('Error handler and respond helpers', () => {
       setHeader,
     } as unknown as Response;
 
-    errorHandler(error, req, res, () => {});
+    const next = vi.fn();
+    errorHandler(error, req, res, next);
 
     expect(setHeader).toHaveBeenCalledWith('Retry-After', '45');
     expect(res.status).toHaveBeenCalledWith(429);
@@ -85,7 +83,8 @@ describe('Error handler and respond helpers', () => {
       setHeader: vi.fn(),
     } as unknown as Response;
 
-    errorHandler(unexpectedError, req, res, () => {});
+    const next = vi.fn();
+    errorHandler(unexpectedError, req, res, next);
 
     expect(responseStatus).toBe(500);
     expect(responseBody).toEqual({

@@ -17,10 +17,7 @@ export function liveHandler(_req: Request, res: Response): void {
   ok(res, { status: 'ok', uptime: process.uptime() });
 }
 
-export async function readyHandler(
-  _req: Request,
-  res: Response,
-): Promise<void> {
+export async function readyHandler(_req: Request, res: Response): Promise<void> {
   const isReady = await readinessCheck();
   if (!isReady) {
     res.status(503).json({

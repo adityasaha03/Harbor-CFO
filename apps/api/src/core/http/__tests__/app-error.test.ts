@@ -55,11 +55,7 @@ describe('AppError classes', () => {
   });
 
   it('creates RateLimitedError with status 429, code RATE_LIMITED, and retryAfterSeconds', () => {
-    const error = new RateLimitedError(
-      'Rate limit exceeded',
-      undefined,
-      60,
-    );
+    const error = new RateLimitedError('Rate limit exceeded', undefined, 60);
     expect(error.statusCode).toBe(429);
     expect(error.code).toBe('RATE_LIMITED');
     expect(error.retryAfterSeconds).toBe(60);

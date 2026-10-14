@@ -13,9 +13,7 @@ export const envSchema = z.object({
   BETTER_AUTH_URL: z.string().url().default('http://localhost:3000'),
   BETTER_AUTH_JWKS_URL: z.string().url().optional(),
   WEB_ORIGIN: z.string().url().default('http://localhost:3000'),
-  LOG_LEVEL: z
-    .enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent'])
-    .default('info'),
+  LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent']).default('info'),
   LLM_PROVIDER: z.enum(['gemini', 'replay']).default('replay'),
   LLM_MODEL: z.string().optional(),
   GEMINI_API_KEY: z.string().optional(),
