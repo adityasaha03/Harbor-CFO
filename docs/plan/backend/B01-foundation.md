@@ -36,5 +36,5 @@ A running Express 5 + TypeScript app skeleton with validated config, structured 
 - [x] Logger, request id (honors incoming `X-Request-Id`, otherwise generates), CORS and helmet configured; test that a disallowed origin gets no CORS headers
 - [x] Rate limiter factory with a test that the 121st request returns 429 and `Retry-After`
 - [x] Health endpoints with tests
-- [ ] `routes.ts` created with a comment explaining how features mount (one line per feature)
+- [x] `routes.ts` created with a comment explaining how features mount (one line per feature)
 - [ ] `.env.example` matches ARCHITECTURE.md; master plan row B01 set to `[x]`
