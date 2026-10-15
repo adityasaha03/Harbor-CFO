@@ -29,10 +29,10 @@ Every protected route knows who the caller is, which company (tenant) they act i
 
 ## Tasks
 
-- [ ] Types and Express augmentation compile in strict mode
-- [ ] JWT verifier tested with locally generated keys (create a local JWKS in the test; cover valid, expired, wrong issuer, wrong audience, tampered signature)
-- [ ] `authenticate`, `tenantContext`, `requirePermission` implemented with unit tests
-- [ ] Integration tests with Supertest and seeded `member`/`organization` docs: owner, employee, reviewer, non-member (403), unknown tenant (403, identical body), no token (401)
-- [ ] Role change in the database takes effect on the next request (test)
-- [ ] `protect()` helper exported; `GET /api/v1/me` mounted in `routes.ts`
-- [ ] Master plan row B03 set to `[x]`
+- [x] Types and Express augmentation compile in strict mode
+- [x] JWT verifier tested with locally generated keys (create a local JWKS in the test; cover valid, expired, wrong issuer, wrong audience, tampered signature)
+- [x] `authenticate`, `tenantContext`, `requirePermission` implemented with unit tests
+- [x] Integration tests with Supertest and seeded `member`/`organization` docs: owner, employee, reviewer, non-member (403), unknown tenant (403, identical body), no token (401)
+- [x] Role change in the database takes effect on the next request (test)
+- [x] `protect()` helper exported; `GET /api/v1/me` mounted in `routes.ts`
+- [x] Master plan row B03 set to `[x]`
