@@ -41,3 +41,4 @@ commitmentSchema.index({ tenantId: 1, label: 1 }, { unique: true });
 export const CommitmentModel: Model<CommitmentDoc> =
   mongoose.models.Commitment ||
   mongoose.model<CommitmentDoc>('Commitment', commitmentSchema, 'commitments');
+

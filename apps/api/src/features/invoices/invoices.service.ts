@@ -58,3 +58,4 @@ export const invoicesService = {
     return invoicesRepository.bulkUpsert(tenantId, items, session);
   },
 };
+

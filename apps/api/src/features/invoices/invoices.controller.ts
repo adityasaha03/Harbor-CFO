@@ -14,3 +14,4 @@ export const invoicesController: {
     ok(res, invoices);
   }),
 };
+

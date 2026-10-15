@@ -12,3 +12,4 @@ invoicesRouter.get(
   validate({ query: invoicesQuerySchema }),
   invoicesController.list,
 );
+

@@ -31,3 +31,4 @@ commitmentsRouter.delete(
   protect('settings:manage'),
   commitmentsController.delete,
 );
+
