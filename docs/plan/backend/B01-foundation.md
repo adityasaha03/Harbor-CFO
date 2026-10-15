@@ -30,11 +30,11 @@ A running Express 5 + TypeScript app skeleton with validated config, structured 
 
 ## Tasks
 
-- [ ] Package scaffold and scripts: `dev` (tsx watch), `build` (tsup), `start`, `test`, `lint`, `typecheck`
-- [ ] `env.ts` with tests (missing var fails, defaults applied)
-- [ ] AppError classes, error handler, validate middleware, respond helper, with unit tests for each error code mapping
-- [ ] Logger, request id (honors incoming `X-Request-Id`, otherwise generates), CORS and helmet configured; test that a disallowed origin gets no CORS headers
-- [ ] Rate limiter factory with a test that the 121st request returns 429 and `Retry-After`
-- [ ] Health endpoints with tests
-- [ ] `routes.ts` created with a comment explaining how features mount (one line per feature)
-- [ ] `.env.example` matches ARCHITECTURE.md; master plan row B01 set to `[x]`
+- [x] Package scaffold and scripts: `dev` (tsx watch), `build` (tsup), `start`, `test`, `lint`, `typecheck`
+- [x] `env.ts` with tests (missing var fails, defaults applied)
+- [x] AppError classes, error handler, validate middleware, respond helper, with unit tests for each error code mapping
+- [x] Logger, request id (honors incoming `X-Request-Id`, otherwise generates), CORS and helmet configured; test that a disallowed origin gets no CORS headers
+- [x] Rate limiter factory with a test that the 121st request returns 429 and `Retry-After`
+- [x] Health endpoints with tests
+- [x] `routes.ts` created with a comment explaining how features mount (one line per feature)
+- [x] `.env.example` matches ARCHITECTURE.md; master plan row B01 set to `[x]`
