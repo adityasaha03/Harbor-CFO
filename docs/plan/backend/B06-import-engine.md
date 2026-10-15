@@ -27,10 +27,10 @@ Contracts: fill `packages/contracts/src/imports.ts` (row schemas, error item sch
 
 ## Tasks
 
-- [ ] Contracts for import schemas filled
-- [ ] `parseCsv` and limits tested: oversize, too many rows, bad UTF-8, unknown column, missing column, empty file
-- [ ] Transaction and invoice mappers tested with valid rows (exact minor-unit outputs) and every invalid case listed above
-- [ ] Atomic rejection test: one bad row among 100 returns errors only, no rows
-- [ ] `escapeSpreadsheetCell` tested
-- [ ] Fixture CSVs created: `transactions-clean.csv`, `transactions-bad.csv`, `invoices-clean.csv`, `invoices-bad.csv`
-- [ ] Master plan row B06 set to `[x]`
+- [x] Contracts for import schemas filled
+- [x] `parseCsv` and limits tested: oversize, too many rows, bad UTF-8, unknown column, missing column, empty file
+- [x] Transaction and invoice mappers tested with valid rows (exact minor-unit outputs) and every invalid case listed above
+- [x] Atomic rejection test: one bad row among 100 returns errors only, no rows
+- [x] `escapeSpreadsheetCell` tested
+- [x] Fixture CSVs created: `transactions-clean.csv`, `transactions-bad.csv`, `invoices-clean.csv`, `invoices-bad.csv`
+- [x] Master plan row B06 set to `[x]`

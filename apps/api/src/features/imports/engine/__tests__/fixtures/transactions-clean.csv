@@ -1,0 +1,10 @@
+externalId,date,accountId,amount,currency,category,description
+TXN-001,2026-10-01,OPERATING,50000.00,CNY,customer_receipt,Payment from Customer A
+TXN-002,2026-10-02,OPERATING,-25000.00,CNY,supplier_payment,Payment to Supplier B
+TXN-003,2026-10-03,OPERATING,-45000.00,CNY,payroll,October payroll
+TXN-004,2026-10-04,OPERATING,-12000.00,CNY,rent,Office rent October
+TXN-005,2026-10-05,OPERATING,-8000.00,CNY,overhead,Utilities and office supplies
+TXN-006,2026-10-06,OPERATING,-3500.00,CNY,tax,Quarterly tax payment
+TXN-007,2026-10-07,OPERATING,15000.00,CNY,other_income,Equipment rental income
+TXN-008,2026-10-08,OPERATING,-2000.00,CNY,other_expense,Maintenance costs
+
