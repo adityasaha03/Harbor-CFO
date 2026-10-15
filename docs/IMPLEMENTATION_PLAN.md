@@ -51,7 +51,7 @@ Read order for any chunk: `AGENTS.md`, `docs/ARCHITECTURE.md`, `docs/DB_SCHEMA.m
 
 | Status | ID  | Title                                                              | Pri | Depends       | Chunk file                                  | Owner |
 | ------ | --- | ------------------------------------------------------------------ | --- | ------------- | ------------------------------------------- | ----- |
-| [~]    | F01 | Next.js foundation (Tailwind, shadcn, providers, app shell)        | P0  | S00           | plan/frontend/F01-foundation.md             | @Mahtab |
+| [x]    | F01 | Next.js foundation (Tailwind, shadcn, providers, app shell)        | P0  | S00           | plan/frontend/F01-foundation.md             | @Mahtab |
 | [ ]    | F02 | Better Auth server and client configuration                        | P0  | F01, S01      | plan/frontend/F02-better-auth.md            |       |
 | [ ]    | F03 | Auth pages, company onboarding, route guards                       | P0  | F02           | plan/frontend/F03-auth-pages.md             |       |
 | [ ]    | F04 | API client, JWT handling, permissions layer, role-aware navigation | P0  | F03           | plan/frontend/F04-api-client-permissions.md |       |
