@@ -28,7 +28,7 @@ Read order for any chunk: `AGENTS.md`, `docs/ARCHITECTURE.md`, `docs/DB_SCHEMA.m
 | Status | ID  | Title                                                                                    | Pri | Depends                 | Chunk file                           | Owner |
 | ------ | --- | ---------------------------------------------------------------------------------------- | --- | ----------------------- | ------------------------------------ | ----- |
 | [x]    | B01 | Express foundation (app, env, errors, validation, logging, health)                       | P0  | S00, S01                | plan/backend/B01-foundation.md       | @Mahtab |
-| [ ]    | B02 | MongoDB connection, transactions, test harness                                           | P0  | B01                     | plan/backend/B02-database.md         |       |
+| [~]    | B02 | MongoDB connection, transactions, test harness                                           | P0  | B01                     | plan/backend/B02-database.md         | @Mahtab |
 | [ ]    | B03 | Auth middleware (JWT verify, tenant context, permissions)                                | P0  | B02                     | plan/backend/B03-auth-middleware.md  |       |
 | [ ]    | B04 | Audit log and events (SSE, replay)                                                       | P0  | B03                     | plan/backend/B04-audit-events.md     |       |
 | [ ]    | B05 | Tenant data features (settings, accounts, counterparties, ledger, invoices, commitments) | P0  | B03                     | plan/backend/B05-tenant-data.md      |       |
