@@ -29,7 +29,7 @@ Read order for any chunk: `AGENTS.md`, `docs/ARCHITECTURE.md`, `docs/DB_SCHEMA.m
 | ------ | --- | ---------------------------------------------------------------------------------------- | --- | ----------------------- | ------------------------------------ | ----- |
 | [x]    | B01 | Express foundation (app, env, errors, validation, logging, health)                       | P0  | S00, S01                | plan/backend/B01-foundation.md       | @Mahtab |
 | [x]    | B02 | MongoDB connection, transactions, test harness                                           | P0  | B01                     | plan/backend/B02-database.md         | @Mahtab |
-| [ ]    | B03 | Auth middleware (JWT verify, tenant context, permissions)                                | P0  | B02                     | plan/backend/B03-auth-middleware.md  |       |
+| [~]    | B03 | Auth middleware (JWT verify, tenant context, permissions)                                | P0  | B02                     | plan/backend/B03-auth-middleware.md  | @Mahtab |
 | [ ]    | B04 | Audit log and events (SSE, replay)                                                       | P0  | B03                     | plan/backend/B04-audit-events.md     |       |
 | [ ]    | B05 | Tenant data features (settings, accounts, counterparties, ledger, invoices, commitments) | P0  | B03                     | plan/backend/B05-tenant-data.md      |       |
 | [x]    | B06 | CSV import engine (pure parse, validate, normalize)                                      | P0  | S01                     | plan/backend/B06-import-engine.md    | @Raiyan |
