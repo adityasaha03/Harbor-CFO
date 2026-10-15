@@ -55,7 +55,7 @@ Read order for any chunk: `AGENTS.md`, `docs/ARCHITECTURE.md`, `docs/DB_SCHEMA.m
 | [x]    | F02 | Better Auth server and client configuration                        | P0  | F01, S01      | plan/frontend/F02-better-auth.md            | @shirsho |
 | [x]    | F03 | Auth pages, company onboarding, route guards                       | P0  | F02           | plan/frontend/F03-auth-pages.md             | @shirsho |
 | [x]    | F04 | API client, JWT handling, permissions layer, role-aware navigation | P0  | F03           | plan/frontend/F04-api-client-permissions.md | @shirsho |
-| [ ]    | F05 | Dashboard overview                                                 | P0  | F04, B09, B11 | plan/frontend/F05-dashboard.md              |       |
+| [~]    | F05 | Dashboard overview                                                 | P0  | F04, B09, B11 | plan/frontend/F05-dashboard.md              | @shirsho |
 | [ ]    | F06 | Imports workspace                                                  | P0  | F04, B07      | plan/frontend/F06-imports.md                |       |
 | [ ]    | F07 | Forecast page with drill-down                                      | P0  | F04, B09      | plan/frontend/F07-forecast.md               |       |
 | [ ]    | F08 | Alerts panel                                                       | P0  | F04, B10      | plan/frontend/F08-alerts.md                 |       |
