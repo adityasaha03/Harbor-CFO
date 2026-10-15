@@ -32,7 +32,7 @@ Read order for any chunk: `AGENTS.md`, `docs/ARCHITECTURE.md`, `docs/DB_SCHEMA.m
 | [ ]    | B03 | Auth middleware (JWT verify, tenant context, permissions)                                | P0  | B02                     | plan/backend/B03-auth-middleware.md  |       |
 | [ ]    | B04 | Audit log and events (SSE, replay)                                                       | P0  | B03                     | plan/backend/B04-audit-events.md     |       |
 | [ ]    | B05 | Tenant data features (settings, accounts, counterparties, ledger, invoices, commitments) | P0  | B03                     | plan/backend/B05-tenant-data.md      |       |
-| [ ]    | B06 | CSV import engine (pure parse, validate, normalize)                                      | P0  | S01                     | plan/backend/B06-import-engine.md    |       |
+| [~]    | B06 | CSV import engine (pure parse, validate, normalize)                                      | P0  | S01                     | plan/backend/B06-import-engine.md    | @Raiyan |
 | [ ]    | B07 | Import endpoints (preview, commit, dedupe, error report)                                 | P0  | B04, B05, B06           | plan/backend/B07-import-endpoints.md |       |
 | [ ]    | B08 | Forecast engine (pure) with anchor tests                                                 | P0  | S01                     | plan/backend/B08-forecast-engine.md  |       |
 | [ ]    | B09 | Forecast service and endpoints                                                           | P0  | B05, B08                | plan/backend/B09-forecast-service.md |       |
