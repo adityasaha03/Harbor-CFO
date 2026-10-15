@@ -21,7 +21,16 @@ export function validate(schemas: ValidationSchemas) {
         }));
         return next(new ValidationError('Validation failed for route params', details));
       }
-      req.params = result.data;
+      try {
+        req.params = result.data;
+      } catch {
+        Object.defineProperty(req, 'params', {
+          value: result.data,
+          configurable: true,
+          enumerable: true,
+          writable: true,
+        });
+      }
     }
 
     if (schemas.query) {
@@ -34,7 +43,16 @@ export function validate(schemas: ValidationSchemas) {
         }));
         return next(new ValidationError('Validation failed for query parameters', details));
       }
-      req.query = result.data;
+      try {
+        req.query = result.data;
+      } catch {
+        Object.defineProperty(req, 'query', {
+          value: result.data,
+          configurable: true,
+          enumerable: true,
+          writable: true,
+        });
+      }
     }
 
     if (schemas.body) {

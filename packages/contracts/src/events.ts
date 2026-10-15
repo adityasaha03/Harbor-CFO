@@ -36,18 +36,18 @@ export const publishEventInputSchema = z.object({
   resourceRefs: z.array(z.string()).default([]),
   runId: z.string().optional(),
 });
-export type PublishEventInput = z.infer<typeof publishEventInputSchema>;
+export type PublishEventInput = z.input<typeof publishEventInputSchema>;
 
 export const eventsReplayQuerySchema = z.object({
   after: z.coerce.number().int().nonnegative().default(0),
   limit: z.coerce.number().int().positive().max(200).default(50),
 });
-export type EventsReplayQuery = z.infer<typeof eventsReplayQuerySchema>;
+export type EventsReplayQuery = z.input<typeof eventsReplayQuerySchema>;
 
 export const eventsStreamQuerySchema = z.object({
   after: z.coerce.number().int().nonnegative().optional(),
 });
-export type EventsStreamQuery = z.infer<typeof eventsStreamQuerySchema>;
+export type EventsStreamQuery = z.input<typeof eventsStreamQuerySchema>;
 
 // Backward compatibility with initial stub
 export const domainEventSchema = z.object({

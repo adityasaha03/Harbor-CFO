@@ -24,9 +24,9 @@ Contracts: fill `packages/contracts/src/events.ts` and `audit.ts` (event kinds, 
 
 ## Tasks
 
-- [ ] Contracts for events and audit filled
-- [ ] Audit model, repository, service, route; denial hook wired; tests for each action
-- [ ] Events model with unique `(tenantId, sequence)` and TTL index; sequence is gap-free per tenant under concurrent publishes (test with `Promise.all` of 20 publishes)
-- [ ] REST replay endpoint tested (after, limit, tenant isolation)
-- [ ] SSE endpoint tested with a Node HTTP client: replay then live event, tenant B never receives tenant A events, stream closes at token expiry, heartbeat sent
-- [ ] Routes mounted; master plan row B04 set to `[x]`
+- [x] Contracts for events and audit filled
+- [x] Audit model, repository, service, route; denial hook wired; tests for each action
+- [x] Events model with unique `(tenantId, sequence)` and TTL index; sequence is gap-free per tenant under concurrent publishes (test with `Promise.all` of 20 publishes)
+- [x] REST replay endpoint tested (after, limit, tenant isolation)
+- [x] SSE endpoint tested with a Node HTTP client: replay then live event, tenant B never receives tenant A events, stream closes at token expiry, heartbeat sent
+- [x] Routes mounted; master plan row B04 set to `[x]`

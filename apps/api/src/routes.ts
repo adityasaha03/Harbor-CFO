@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import { createRateLimiter } from './core/security/rate-limit';
 import { authRouter } from './features/auth';
+import { auditRouter } from './features/audit';
+import { eventsRouter } from './features/events';
 
 export function createApiRouter(): Router {
   const router = Router();
@@ -23,8 +25,8 @@ export function createApiRouter(): Router {
   // router.use('/scenarios', scenariosRouter);           // B13: Scenarios compare
   // router.use('/action-proposals', actionsRouter);       // B14: Action approval & execution
   // router.use('/agent', agentRouter);                   // B16: Agent runtime & runs
-  // router.use('/events', eventsRouter);                 // B04: Event stream & replay
-  // router.use('/audit-events', auditRouter);             // B04: Audit log endpoints
+  router.use('/events', eventsRouter);                 // B04: Event stream & replay
+  router.use('/audit-events', auditRouter);             // B04: Audit log endpoints
   // router.use('/evidence', evidenceRouter);             // B17: Evidence export
   // router.use('/proof', proofRouter);                   // B17: Proof endpoints
   // router.use('/demo', demoRouter);                     // B17: Demo reset

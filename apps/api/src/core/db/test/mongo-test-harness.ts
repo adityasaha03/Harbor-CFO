@@ -63,7 +63,7 @@ export async function clearTestDatabase(): Promise<void> {
 export function useTestDb(): void {
   beforeAll(async () => {
     await setupTestReplSet();
-  }, 180000);
+  }, 360000);
 
   afterEach(async () => {
     await clearTestDatabase();

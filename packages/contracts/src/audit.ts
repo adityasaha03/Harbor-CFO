@@ -35,7 +35,7 @@ export const recordAuditInputSchema = z.object({
   afterVersion: z.number().int().optional(),
   traceId: z.string(),
 });
-export type RecordAuditInput = z.infer<typeof recordAuditInputSchema>;
+export type RecordAuditInput = z.input<typeof recordAuditInputSchema>;
 
 export const auditQuerySchema = paginationQuerySchema;
-export type AuditQuery = z.infer<typeof auditQuerySchema>;
+export type AuditQuery = z.input<typeof auditQuerySchema>;
