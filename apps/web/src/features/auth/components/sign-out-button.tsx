@@ -4,6 +4,7 @@ import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { LogOut, Loader2 } from 'lucide-react';
 import { authClient } from '../lib/auth-client';
+import { clearApiToken } from '../lib/api-token';
 import { Button, type ButtonProps } from '@/components/ui/button';
 
 export interface SignOutButtonProps extends ButtonProps {
@@ -24,9 +25,11 @@ export function SignOutButton({
     setIsLoading(true);
     try {
       await authClient.signOut();
+      clearApiToken();
       router.push('/sign-in');
       router.refresh();
     } catch {
+      clearApiToken();
       // Fallback redirect on error
       router.push('/sign-in');
     } finally {

@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { authClient } from '@/features/auth';
+import { authClient, clearApiToken } from '@/features/auth';
 import type { Role } from '@harbor/contracts';
 
 export interface Company {
@@ -54,6 +54,7 @@ export function useActiveCompany(): UseActiveCompanyReturn {
       await authClient.organization.setActive({
         organizationId,
       });
+      clearApiToken();
       // Clear TanStack query cache on tenant change to isolate cross-tenant data
       queryClient.clear();
     },
