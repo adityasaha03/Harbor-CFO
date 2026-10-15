@@ -17,12 +17,14 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useSession } from '@/features/auth';
+import { hasPermission, type Permission } from '@harbor/contracts';
 
 export interface NavItem {
   href: string;
   label: string;
   icon: LucideIcon;
-  permission?: string;
+  permission?: Permission;
 }
 
 export const NAV_ITEMS: NavItem[] = [
@@ -100,10 +102,19 @@ export function SidebarNav({
   ...props
 }: SidebarNavProps) {
   const pathname = usePathname();
+  const { role } = useSession();
+
+  const filteredItems = React.useMemo(() => {
+    if (!role) return items;
+    return items.filter((item) => {
+      if (!item.permission) return true;
+      return hasPermission(role, item.permission);
+    });
+  }, [items, role]);
 
   return (
     <nav className={cn('flex flex-col gap-1', className)} {...props}>
-      {items.map((item) => {
+      {filteredItems.map((item) => {
         const Icon = item.icon;
         const isActive =
           pathname === item.href || pathname?.startsWith(`${item.href}/`);

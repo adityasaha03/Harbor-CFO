@@ -2,6 +2,7 @@ import * as React from 'react';
 import { redirect } from 'next/navigation';
 import { AppShell } from '@/components/layout/app-shell';
 import { requireServerSession } from '@/features/auth';
+import { EventStreamListener } from '@/features/events';
 
 export default async function AppLayout({
   children,
@@ -15,5 +16,10 @@ export default async function AppLayout({
     redirect('/company');
   }
 
-  return <AppShell>{children}</AppShell>;
+  return (
+    <AppShell>
+      <EventStreamListener />
+      {children}
+    </AppShell>
+  );
 }
