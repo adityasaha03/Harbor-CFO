@@ -25,9 +25,9 @@ Reliable Mongoose connection, a transaction helper, a shared test harness with a
 
 ## Tasks
 
-- [ ] Connection and graceful disconnect implemented; readiness wired
-- [ ] `withTransaction` implemented; test proves a thrown error rolls back all writes in two collections
-- [ ] `createSchema` helper with test of id transform
-- [ ] Test harness works in CI (replica set starts, collections cleaned between tests)
-- [ ] `db:sync-indexes` script works
-- [ ] Master plan row B02 set to `[x]`
+- [x] Connection and graceful disconnect implemented; readiness wired
+- [x] `withTransaction` implemented; test proves a thrown error rolls back all writes in two collections
+- [x] `createSchema` helper with test of id transform
+- [x] Test harness works in CI (replica set starts, collections cleaned between tests)
+- [x] `db:sync-indexes` script works
+- [x] Master plan row B02 set to `[x]`
