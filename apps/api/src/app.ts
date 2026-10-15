@@ -7,10 +7,12 @@ import { logger } from './core/logging/logger';
 import { requestIdMiddleware } from './core/logging/request-id';
 import { createCorsMiddleware } from './core/security/cors';
 import { createHelmetMiddleware } from './core/security/helmet';
-import { healthRouter } from './features/health';
+import { isDbReady } from './core/db/mongo';
+import { healthRouter, setReadinessCheck } from './features/health';
 import { createApiRouter } from './routes';
 
 export function createApp(): Express {
+  setReadinessCheck(isDbReady);
   const app = express();
 
   // 1. Request ID (honors incoming X-Request-Id or generates UUID)
