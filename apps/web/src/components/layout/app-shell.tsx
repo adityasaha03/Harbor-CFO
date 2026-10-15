@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { SidebarNav } from './sidebar-nav';
 import { SyntheticDataBadge } from './synthetic-data-badge';
+import { UserMenu } from '@/features/auth';
+import { CompanySwitcher } from '@/features/tenants';
 
 export interface AppShellProps {
   children: React.ReactNode;
@@ -33,7 +35,11 @@ export function AppShell({ children }: AppShellProps) {
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-4 py-4">
+        <div className="px-3 pt-3 pb-1 border-b border-sidebar-border/60">
+          <CompanySwitcher />
+        </div>
+
+        <div className="flex-1 overflow-y-auto px-4 py-3">
           <SidebarNav />
         </div>
 
@@ -84,7 +90,8 @@ export function AppShell({ children }: AppShellProps) {
                     HarborCFO
                   </span>
                 </div>
-                <div className="p-4">
+                <div className="p-4 space-y-3">
+                  <CompanySwitcher />
                   <SidebarNav onItemClick={() => setMobileOpen(false)} />
                 </div>
               </SheetContent>
@@ -101,6 +108,7 @@ export function AppShell({ children }: AppShellProps) {
 
           <div className="flex items-center gap-3">
             <SyntheticDataBadge />
+            <UserMenu />
           </div>
         </header>
 

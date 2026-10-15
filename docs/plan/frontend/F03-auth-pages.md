@@ -27,10 +27,10 @@ Users can sign up, sign in, create or select a company, and every app route is p
 
 ## Tasks
 
-- [ ] Sign-up, sign-in, sign-out work end to end
-- [ ] Company creation sets the active organization and the creator is `owner`
-- [ ] `(app)` routes redirect when logged out; `/sign-in` redirects when logged in
-- [ ] Company switcher works and clears the query cache
-- [ ] Demo account picker behind `NEXT_PUBLIC_DEMO_MODE`
-- [ ] RTL tests for both forms (validation messages, submit calls the client)
-- [ ] Master plan row F03 set to `[x]`
+- [x] Sign-up, sign-in, sign-out work end to end
+- [x] Company creation sets the active organization and the creator is `owner`
+- [x] `(app)` routes redirect when logged out; `/sign-in` redirects when logged in
+- [x] Company switcher works and clears the query cache
+- [x] Demo account picker behind `NEXT_PUBLIC_DEMO_MODE`
+- [x] RTL tests for both forms (validation messages, submit calls the client)
+- [x] Master plan row F03 set to `[x]`
