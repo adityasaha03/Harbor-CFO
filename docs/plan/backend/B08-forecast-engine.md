@@ -58,11 +58,11 @@ Rules:
 
 ## Tasks
 
-- [ ] Contracts for forecast types filled
-- [ ] Engine files implemented with doc comments on exported functions
-- [ ] Anchor test passes with every expectation above
-- [ ] Unit tests for commitment expansion (weekly, biweekly, monthly clamp, once, endOn)
-- [ ] Unit tests for summary, weekly buckets and conservative shift
-- [ ] Property test: sum of flows equals `closing[last] - closing[0]`
-- [ ] Engine has no imports from express, mongoose or env (lint or test enforces)
-- [ ] Master plan row B08 set to `[x]`
+- [x] Contracts for forecast types filled
+- [x] Engine files implemented with doc comments on exported functions
+- [x] Anchor test passes with every expectation above
+- [x] Unit tests for commitment expansion (weekly, biweekly, monthly clamp, once, endOn)
+- [x] Unit tests for summary, weekly buckets and conservative shift
+- [x] Property test: sum of flows equals `closing[last] - closing[0]`
+- [x] Engine has no imports from express, mongoose or env (lint or test enforces)
+- [x] Master plan row B08 set to `[x]`
