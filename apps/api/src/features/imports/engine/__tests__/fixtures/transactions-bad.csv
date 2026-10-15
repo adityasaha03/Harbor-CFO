@@ -1,0 +1,10 @@
+externalId,date,accountId,amount,currency,category,description
+,2026-10-01,OPERATING,50000.00,CNY,customer_receipt,Missing external ID
+TXN-BAD-DATE,2026-13-01,OPERATING,50000.00,CNY,customer_receipt,Invalid month 13
+TXN-BAD-AMT,2026-10-01,OPERATING,0.00,CNY,customer_receipt,Zero amount
+TXN-BAD-CUR,2026-10-01,OPERATING,50000.00,USD,customer_receipt,Wrong currency
+TXN-BAD-CAT,2026-10-01,OPERATING,50000.00,CNY,invalid_cat,Bad category
+TXN-NO-ACCT,2026-10-01,,50000.00,CNY,customer_receipt,Missing account ID
+TXN-BAD-FMT,2026-10-01,OPERATING,abc,CNY,customer_receipt,Non-numeric amount
+TXN-LONG-DESC,2026-10-01,OPERATING,100.00,CNY,overhead,This description is way too long and will be padded to exceed the limit
+

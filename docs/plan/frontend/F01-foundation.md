@@ -28,9 +28,9 @@ A clean Next.js App Router app with Tailwind, shadcn/ui primitives, providers, t
 
 ## Tasks
 
-- [ ] App generated, package renamed, workspace scripts (`dev`, `build`, `lint`, `typecheck`, `test`) work from the repo root
-- [ ] shadcn initialised and the listed primitives added
-- [ ] Providers, app shell, nav, placeholder pages render; `pnpm --filter @harbor/web build` passes
-- [ ] `QueryBoundary`, `Money`, `SeverityBadge`, `SyntheticDataBadge` implemented with RTL tests (money formatting `1250000` -> `12,500.00`)
-- [ ] `@harbor/contracts` imports work in a client component and a server component
-- [ ] Master plan row F01 set to `[x]`
+- [x] App generated, package renamed, workspace scripts (`dev`, `build`, `lint`, `typecheck`, `test`) work from the repo root
+- [x] shadcn initialised and the listed primitives added
+- [x] Providers, app shell, nav, placeholder pages render; `pnpm --filter @harbor/web build` passes
+- [x] `QueryBoundary`, `Money`, `SeverityBadge`, `SyntheticDataBadge` implemented with RTL tests (money formatting `1250000` -> `12,500.00`)
+- [x] `@harbor/contracts` imports work in a client component and a server component
+- [x] Master plan row F01 set to `[x]`

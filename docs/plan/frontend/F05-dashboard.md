@@ -26,10 +26,10 @@ A one-screen answer to "are we going to run short, why, and what should I do nex
 
 ## Tasks
 
-- [ ] Hooks created and exported from their features
-- [ ] Cards, chart, banner, aging, concentration, freshness, insights implemented
-- [ ] `SourceChip` with formulas for cash, floor gap, aging, concentration
-- [ ] With the anchor demo data the page shows: day-21 cash path dipping to -20,000.00, floor 30,000.00, gap 50,000.00, concentration 66.7%
-- [ ] RTL tests: no-breach state, breach state, loading, error
-- [ ] Health score card (P1) only if B19 is done
-- [ ] Master plan row F05 set to `[x]`
+- [x] Hooks created and exported from their features
+- [x] Cards, chart, banner, aging, concentration, freshness, insights implemented
+- [x] `SourceChip` with formulas for cash, floor gap, aging, concentration
+- [x] With the anchor demo data the page shows: day-21 cash path dipping to -20,000.00, floor 30,000.00, gap 50,000.00, concentration 66.7%
+- [x] RTL tests: no-breach state, breach state, loading, error
+- [x] Health score card (P1) only if B19 is done
+- [x] Master plan row F05 set to `[x]`

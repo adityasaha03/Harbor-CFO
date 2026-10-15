@@ -26,10 +26,10 @@ One typed way to call the Express API with a Better Auth JWT and tenant header, 
 
 ## Tasks
 
-- [ ] Token cache and single-flight refresh tested (concurrent calls cause one `authClient.token()`)
-- [ ] `apiFetch` tests: success envelope, error envelope, 401 refresh-and-retry, second 401 signs out, network error, FormData
-- [ ] `usePermission` and `<Can>` tested for all three roles
-- [ ] SSE hook tested with a mocked stream (reconnect, resume id, invalidation mapping)
-- [ ] Sidebar filters by permission
-- [ ] Manual check against the real API (needs S02): `/me` shows the right role per demo account
-- [ ] Master plan row F04 set to `[x]`
+- [x] Token cache and single-flight refresh tested (concurrent calls cause one `authClient.token()`)
+- [x] `apiFetch` tests: success envelope, error envelope, 401 refresh-and-retry, second 401 signs out, network error, FormData
+- [x] `usePermission` and `<Can>` tested for all three roles
+- [x] SSE hook tested with a mocked stream (reconnect, resume id, invalidation mapping)
+- [x] Sidebar filters by permission
+- [x] Manual check against the real API (needs S02): `/me` shows the right role per demo account
+- [x] Master plan row F04 set to `[x]`
