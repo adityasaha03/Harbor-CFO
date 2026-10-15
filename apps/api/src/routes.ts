@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { createRateLimiter } from './core/security/rate-limit';
+import { authRouter } from './features/auth';
 
 export function createApiRouter(): Router {
   const router = Router();
@@ -8,7 +9,7 @@ export function createApiRouter(): Router {
   router.use(createRateLimiter());
 
   // Mount feature routers under /api/v1 (one line per feature):
-  // router.use('/me', meRouter);                         // B03: Auth middleware & me endpoint
+  router.use('/me', authRouter);                         // B03: Auth middleware & me endpoint
   // router.use('/tenant-settings', tenantSettingsRouter); // B05: Tenant data features
   // router.use('/accounts', accountsRouter);             // B05: Tenant data features
   // router.use('/ledger-entries', ledgerEntriesRouter);   // B05: Tenant data features
