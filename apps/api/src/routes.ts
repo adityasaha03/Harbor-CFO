@@ -3,6 +3,11 @@ import { createRateLimiter } from './core/security/rate-limit';
 import { authRouter } from './features/auth';
 import { auditRouter } from './features/audit';
 import { eventsRouter } from './features/events';
+import { tenantSettingsRouter } from './features/tenants';
+import { accountsRouter } from './features/accounts';
+import { ledgerEntriesRouter } from './features/ledger';
+import { invoicesRouter } from './features/invoices';
+import { commitmentsRouter } from './features/commitments';
 
 export function createApiRouter(): Router {
   const router = Router();
@@ -12,11 +17,11 @@ export function createApiRouter(): Router {
 
   // Mount feature routers under /api/v1 (one line per feature):
   router.use('/me', authRouter);                         // B03: Auth middleware & me endpoint
-  // router.use('/tenant-settings', tenantSettingsRouter); // B05: Tenant data features
-  // router.use('/accounts', accountsRouter);             // B05: Tenant data features
-  // router.use('/ledger-entries', ledgerEntriesRouter);   // B05: Tenant data features
-  // router.use('/invoices', invoicesRouter);             // B05: Tenant data features
-  // router.use('/commitments', commitmentsRouter);       // B05: Tenant data features
+  router.use('/tenant-settings', tenantSettingsRouter); // B05: Tenant data features
+  router.use('/accounts', accountsRouter);             // B05: Tenant data features
+  router.use('/ledger-entries', ledgerEntriesRouter);   // B05: Tenant data features
+  router.use('/invoices', invoicesRouter);             // B05: Tenant data features
+  router.use('/commitments', commitmentsRouter);       // B05: Tenant data features
   // router.use('/imports', importsRouter);               // B07: Import endpoints
   // router.use('/forecasts', forecastsRouter);           // B09: Forecast service & endpoints
   // router.use('/alerts', alertsRouter);                 // B10: Alerts endpoints

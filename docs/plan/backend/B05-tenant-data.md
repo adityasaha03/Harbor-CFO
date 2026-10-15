@@ -28,10 +28,10 @@ Create six feature folders under `apps/api/src/features/`, each with `model`, `r
 
 ## Tasks
 
-- [ ] Contracts filled for these features
-- [ ] Six models with indexes; tests that unique indexes reject duplicates
-- [ ] Repositories tenant-scoped; a test per repository proves tenant B cannot read or update tenant A rows
-- [ ] `getCashAt` tested: entries on or before the opening date are ignored; later entries counted once
-- [ ] `bumpDatasetVersion` atomic (`$inc`) and returns the new version; tested under concurrency
-- [ ] Endpoints with route tests (success, validation, 401, 403, tenant isolation)
-- [ ] DB_SCHEMA.md updated if anything changed; routes mounted; master plan row B05 set to `[x]`
+- [x] Contracts filled for these features
+- [x] Six models with indexes; tests that unique indexes reject duplicates
+- [x] Repositories tenant-scoped; a test per repository proves tenant B cannot read or update tenant A rows
+- [x] `getCashAt` tested: entries on or before the opening date are ignored; later entries counted once
+- [x] `bumpDatasetVersion` atomic (`$inc`) and returns the new version; tested under concurrency
+- [x] Endpoints with route tests (success, validation, 401, 403, tenant isolation)
+- [x] DB_SCHEMA.md updated if anything changed; routes mounted; master plan row B05 set to `[x]`
