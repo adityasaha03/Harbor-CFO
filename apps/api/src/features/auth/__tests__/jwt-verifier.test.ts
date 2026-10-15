@@ -4,15 +4,16 @@ import {
   exportJWK,
   SignJWT,
   createLocalJWKSet,
-  type KeyLike,
   type JWTVerifyGetKey,
 } from 'jose';
 import { verifyAccessToken, setRemoteJwksForTesting } from '../jwt-verifier';
 import { UnauthenticatedError } from '../../../core/http/app-error';
 import { env } from '../../../config/env';
 
+type KeyPair = Awaited<ReturnType<typeof generateKeyPair>>;
+
 describe('verifyAccessToken', () => {
-  let privateKey: KeyLike;
+  let privateKey: KeyPair['privateKey'];
   let localJwks: JWTVerifyGetKey;
 
   beforeAll(async () => {
@@ -104,7 +105,8 @@ describe('verifyAccessToken', () => {
     const token = await issueToken({ sub: 'user_clean' });
     const parts = token.split('.');
     // Corrupt the signature segment
-    const tampered = `${parts[0]}.${parts[1]}.bad${parts[2].slice(3)}`;
+    const signature = parts[2] ?? '';
+    const tampered = `${parts[0]}.${parts[1]}.bad${signature.slice(3)}`;
 
     await expect(verifyAccessToken(tampered, { keyResolver: localJwks })).rejects.toThrow(
       UnauthenticatedError,

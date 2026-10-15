@@ -2,6 +2,7 @@ import type { NextFunction, Request, RequestHandler, Response } from 'express';
 import { hasPermission, type Permission } from '@harbor/contracts';
 import { ForbiddenError } from '../../core/http/app-error';
 import { logger } from '../../core/logging/logger';
+import { recordAuthDenial } from './denial-hook';
 import { authenticate } from './authenticate.middleware';
 import { tenantContext } from './tenant-context.middleware';
 
@@ -26,6 +27,18 @@ export function requirePermission(permission: Permission): RequestHandler {
         },
         'Permission denied',
       );
+
+      recordAuthDenial({
+        tenantId: req.actor.tenantId,
+        actorId: req.actor.userId,
+        actorRole: req.actor.role,
+        action: 'permission.denied',
+        decision: 'denied',
+        reasonCode: 'MISSING_PERMISSION',
+        resourceRefs: [permission],
+        traceId: req.actor.requestId,
+      });
+
       return next(new ForbiddenError('Insufficient permissions'));
     }
 

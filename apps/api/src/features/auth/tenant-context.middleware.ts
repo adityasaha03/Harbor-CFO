@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import type { NextFunction, Request, Response } from 'express';
 import { ForbiddenError, UnauthenticatedError } from '../../core/http/app-error';
+import { recordAuthDenial } from './denial-hook';
 import { findMembership } from './membership.repository';
 import './auth.types';
 
@@ -29,17 +30,27 @@ export async function tenantContext(
     return next(new ForbiddenError(NOT_A_MEMBER_MESSAGE));
   }
 
+  const requestId =
+    (typeof req.id === 'string' && req.id.trim().length > 0 ? req.id.trim() : null) ??
+    (typeof req.headers['x-request-id'] === 'string' && req.headers['x-request-id'].trim().length > 0
+      ? req.headers['x-request-id'].trim()
+      : randomUUID());
+
   try {
     const membership = await findMembership(req.auth.userId, tenantId);
     if (!membership) {
+      recordAuthDenial({
+        tenantId,
+        actorId: req.auth.userId,
+        action: 'membership.denied',
+        decision: 'denied',
+        reasonCode: 'NOT_A_MEMBER',
+        resourceRefs: [],
+        traceId: requestId,
+      });
+
       return next(new ForbiddenError(NOT_A_MEMBER_MESSAGE));
     }
-
-    const requestId =
-      (typeof req.id === 'string' && req.id.trim().length > 0 ? req.id.trim() : null) ??
-      (typeof req.headers['x-request-id'] === 'string' && req.headers['x-request-id'].trim().length > 0
-        ? req.headers['x-request-id'].trim()
-        : randomUUID());
 
     req.actor = {
       userId: req.auth.userId,
