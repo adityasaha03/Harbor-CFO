@@ -27,10 +27,10 @@ Better Auth running inside the Next.js app with MongoDB, email/password, organiz
 
 ## Tasks
 
-- [ ] Packages installed per docs; env validated at startup with a clear message
-- [ ] Route handler responds at `/api/auth/*`; `curl <web>/api/auth/jwks` returns keys after the first token request (note the plugin may create the key on first use)
-- [ ] Roles defined; unit test of `access-control.ts` asserting the three roles exist and map to the `ROLES` from contracts
-- [ ] Sign-up, sign-in, create organization and `getSession` verified manually or with a script (the formal handshake test is S02)
-- [ ] `authClient.token()` returns a JWT for a signed-in user (verify, record the claim names the API must read: update B03 notes if they differ)
-- [ ] Rate limiting and trusted origins configured
-- [ ] Deviations (if any) logged; master plan row F02 set to `[x]`
+- [x] Packages installed per docs; env validated at startup with a clear message
+- [x] Route handler responds at `/api/auth/*`; `curl <web>/api/auth/jwks` returns keys after the first token request (note the plugin may create the key on first use)
+- [x] Roles defined; unit test of `access-control.ts` asserting the three roles exist and map to the `ROLES` from contracts
+- [x] Sign-up, sign-in, create organization and `getSession` verified manually or with a script (the formal handshake test is S02)
+- [x] `authClient.token()` returns a JWT for a signed-in user (verify, record the claim names the API must read: update B03 notes if they differ)
+- [x] Rate limiting and trusted origins configured
+- [x] Deviations (if any) logged; master plan row F02 set to `[x]`
