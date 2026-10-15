@@ -3,6 +3,9 @@ import { z } from 'zod';
 
 loadDotenv();
 
+const emptyToUndefined = (val: unknown) =>
+  typeof val === 'string' && val.trim() === '' ? undefined : val;
+
 export const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   PORT: z.coerce.number().int().positive().default(4000),
@@ -11,12 +14,12 @@ export const envSchema = z.object({
     .min(1, 'MONGODB_URI is required'),
   MONGODB_DB_NAME: z.string().min(1).default('harbor'),
   BETTER_AUTH_URL: z.string().url().default('http://localhost:3000'),
-  BETTER_AUTH_JWKS_URL: z.string().url().optional(),
+  BETTER_AUTH_JWKS_URL: z.preprocess(emptyToUndefined, z.string().url().optional()),
   WEB_ORIGIN: z.string().url().default('http://localhost:3000'),
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent']).default('info'),
   LLM_PROVIDER: z.enum(['gemini', 'replay']).default('replay'),
-  LLM_MODEL: z.string().optional(),
-  GEMINI_API_KEY: z.string().optional(),
+  LLM_MODEL: z.preprocess(emptyToUndefined, z.string().optional()),
+  GEMINI_API_KEY: z.preprocess(emptyToUndefined, z.string().optional()),
   AGENT_MAX_TOOL_CALLS: z.coerce.number().int().positive().default(6),
   AGENT_TIMEOUT_MS: z.coerce.number().int().positive().default(45000),
 });
