@@ -19,6 +19,7 @@ import { agentRouter } from './features/agent';
 
 import { demoRouter } from './features/demo';
 import { evidenceRouter, proofRouter } from './features/evidence';
+import { briefingsRouter } from './features/briefings';
 
 export function createApiRouter(): Router {
   const router = Router();
@@ -37,6 +38,7 @@ export function createApiRouter(): Router {
   router.use('/forecasts', forecastsRouter); // B09: Forecast service & endpoints
   router.use('/alerts', alertsRouter); // B10: Alerts endpoints
   router.use('/analytics', analyticsRouter); // B11: Analytics summary
+  router.use('/briefings', briefingsRouter); // B19: Weekly briefing
   router.use('/financing', financingRouter); // B12: Financing catalog & matching
   router.use('/scenarios', scenariosRouter); // B13: Scenarios compare
   router.use('/action-proposals', actionsRouter); // B14: Action approval & execution
