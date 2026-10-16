@@ -26,10 +26,10 @@ A copilot chat whose every step is visible: which tools ran, with what inputs, h
 
 ## Tasks
 
-- [ ] Chat UI, suggested prompts, style toggle, mode badge
-- [ ] Timeline driven by SSE events filtered by `runId`, with polling fallback
-- [ ] Evidence chips and proposal link card
-- [ ] Failed, fallback, timeout and rate-limit states
-- [ ] Text rendering is escaped (test with `<script>` and `<img onerror>` payloads in an answer)
-- [ ] RTL tests with a mocked event stream (order of timeline items, completion)
-- [ ] Master plan row F12 set to `[x]`
+- [x] Chat UI, suggested prompts, style toggle, mode badge
+- [x] Timeline driven by SSE events filtered by `runId`, with polling fallback
+- [x] Evidence chips and proposal link card
+- [x] Failed, fallback, timeout and rate-limit states
+- [x] Text rendering is escaped (test with `<script>` and `<img onerror>` payloads in an answer)
+- [x] RTL tests with a mocked event stream (order of timeline items, completion)
+- [x] Master plan row F12 set to `[x]`
