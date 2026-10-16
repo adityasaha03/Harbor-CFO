@@ -22,6 +22,7 @@ export const envSchema = z.object({
   GEMINI_API_KEY: z.preprocess(emptyToUndefined, z.string().optional()),
   AGENT_MAX_TOOL_CALLS: z.coerce.number().int().positive().default(6),
   AGENT_TIMEOUT_MS: z.coerce.number().int().positive().default(45000),
+  ENABLE_DEMO_RESET: z.preprocess((v) => v === 'true' || v === true, z.boolean()).default(false),
 });
 
 export type Env = z.infer<typeof envSchema>;

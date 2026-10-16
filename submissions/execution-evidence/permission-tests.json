@@ -1,0 +1,32 @@
+[
+  {
+    "testName": "Owner Action Execution",
+    "actorRole": "owner",
+    "permission": "actions:approve",
+    "expectedDecision": "allowed",
+    "actualDecision": "allowed",
+    "stateChanged": true,
+    "passed": true,
+    "details": "Owner successfully executed sandbox financing draw inside transaction"
+  },
+  {
+    "testName": "Employee Execution Denial",
+    "actorRole": "employee",
+    "permission": "actions:approve",
+    "expectedDecision": "denied",
+    "actualDecision": "denied",
+    "stateChanged": false,
+    "passed": true,
+    "details": "Non-owner execution denied with 403; ledger & approvals unchanged"
+  },
+  {
+    "testName": "Cross-Tenant Isolation",
+    "actorRole": "owner",
+    "permission": "finance:read",
+    "expectedDecision": "denied",
+    "actualDecision": "denied",
+    "stateChanged": false,
+    "passed": true,
+    "details": "Foreign tenant record query returned NOT_FOUND without leaking foreign data"
+  }
+]

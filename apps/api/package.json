@@ -12,7 +12,10 @@
     "test:watch": "vitest",
     "test:security": "vitest run src/__security__",
     "db:sync-indexes": "tsx src/core/db/sync-indexes.ts",
-    "auth:handshake": "tsx scripts/auth-handshake.ts"
+    "auth:handshake": "tsx scripts/auth-handshake.ts",
+    "seed:demo": "tsx src/features/demo/seed-demo.ts",
+    "reset:demo": "tsx src/features/demo/reset-demo.ts",
+    "evidence:export": "tsx src/features/evidence/export-evidence.ts"
   },
   "dependencies": {
     "@harbor/contracts": "workspace:*",

@@ -43,7 +43,7 @@ Read order for any chunk: `AGENTS.md`, `docs/ARCHITECTURE.md`, `docs/DB_SCHEMA.m
 | [x]    | B14 | Actions: proposal, approval, execution transaction                                       | P0  | B04, B12, B13           | plan/backend/B14-actions.md          | @Rohan  |
 | [x]    | B15 | Agent tools and registry                                                                 | P0  | B09, B11, B12, B13, B14 | plan/backend/B15-agent-tools.md      | @Rohan  |
 | [x]    | B16 | Agent runtime (provider adapter, loop, runs, telemetry)                                  | P0  | B15                     | plan/backend/B16-agent-runtime.md    | @shirsho |
-| [~]    | B17 | Demo seed, evidence export, proof endpoints                                              | P0  | B14, B16                | plan/backend/B17-demo-evidence.md    | @Aditya |
+| [x]    | B17 | Demo seed, evidence export, proof endpoints                                              | P0  | B14, B16                | plan/backend/B17-demo-evidence.md    | @Aditya |
 | [x]    | B18 | Security hardening and adversarial tests                                                 | P0  | B14, B16                | plan/backend/B18-security-tests.md   | @shirsho |
 | [ ]    | B19 | P1 extras (health score, briefing, collection drafts, report export)                     | P1  | B11, B15                | plan/backend/B19-p1-extras.md        |         |
 

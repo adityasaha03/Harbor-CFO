@@ -1,0 +1,16 @@
+{
+  "reportingCurrency": "CNY",
+  "minimumCashMinor": 1000000,
+  "businessTimezone": "Asia/Shanghai",
+  "forecastAsOfDate": "2026-10-20",
+  "overdueAlertDays": 7,
+  "concentrationThresholdPct": 40,
+  "staleDataDays": 14,
+  "isDemo": true,
+  "profile": {
+    "yearsInOperation": 2,
+    "employeeCount": 4,
+    "industry": "food_and_beverage",
+    "monthlyRevenueMinor": 3000000
+  }
+}

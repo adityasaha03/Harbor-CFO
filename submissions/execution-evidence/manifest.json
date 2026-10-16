@@ -1,0 +1,10 @@
+{
+  "run-metadata.json": "6dc042c27114db73186393cc9bb9758cbfbd3ee409df6fe2e2e50500e6de6dc9",
+  "operations.jsonl": "144cfc6b7d1f0acf1ab02ccbf7b52a09c60f457ca45a9db47b9d04dd49b80d61",
+  "agent-tools.jsonl": "8abfde040a38b4613e1525bd98406cc005f6200af91e656d6a8ba4a55d1a7dc7",
+  "permission-tests.json": "d9e94f85ef305701a0a8b2206d27354e9d0f85e2161509c63243359921f6b065",
+  "forecasts-before.json": "9b1e546032681db835406f9592f5e0c70e4ee26258be9a7d54dc785077223960",
+  "forecasts-after.json": "fa18550c8093cd47df5bec39fae7d27e0816d61de5b63def2ea7455d890ecc60",
+  "import-report.json": "97ea0e43925e3c1e178fd29f317df3ede7db5483ef68bf340f670eb50108b770",
+  "evidence-summary.md": "e2dcb3012634403303c4d5321ad8af5ed412a037b245c21a3a9e0df9a3138c83"
+}
