@@ -34,15 +34,15 @@ Contracts: fill `packages/contracts/src/actions.ts`.
 
 ## Tasks
 
-- [ ] Contracts filled; four models with the indexes from DB_SCHEMA.md
-- [ ] `payload.ts` tests: key order does not change the hash; any field change changes the hash
-- [ ] Proposal tests: gate failure, stale scenario, client-supplied fees ignored
-- [ ] Approval tests: employee 403; stale version 409; wrong hash 409; expired 409
-- [ ] Execution happy path on the anchor tenant: day-21 baseline cash goes from -2,000,000 to 3,880,000 fen with the bridge, ledger has exactly two new entries, one commitment, one operation, audit and events written, `datasetVersion` +1
-- [ ] Idempotency: same key twice returns the same operation (one ledger mutation); same key with a different hash returns 409
-- [ ] Concurrency test: 10 parallel executes of the same approval produce exactly one mutation
-- [ ] Mutated offer terms (version bump) after proposal invalidate the approval
-- [ ] Role revoked between approval and execution (change `member.role` in the test) blocks execution and changes nothing
-- [ ] Rolled-back transaction test (force a failure at step 7): zero partial writes, approval still unconsumed
-- [ ] Employee calling `execute` directly gets 403 and ledger/approval state is unchanged (state-delta assertion)
-- [ ] Routes mounted; master plan row B14 set to `[x]`
+- [x] Contracts filled; four models with the indexes from DB_SCHEMA.md
+- [x] `payload.ts` tests: key order does not change the hash; any field change changes the hash
+- [x] Proposal tests: gate failure, stale scenario, client-supplied fees ignored
+- [x] Approval tests: employee 403; stale version 409; wrong hash 409; expired 409
+- [x] Execution happy path on the anchor tenant: day-21 baseline cash goes from -2,000,000 to 3,880,000 fen with the bridge, ledger has exactly two new entries, one commitment, one operation, audit and events written, `datasetVersion` +1
+- [x] Idempotency: same key twice returns the same operation (one ledger mutation); same key with a different hash returns 409
+- [x] Concurrency test: 10 parallel executes of the same approval produce exactly one mutation
+- [x] Mutated offer terms (version bump) after proposal invalidate the approval
+- [x] Role revoked between approval and execution (change `member.role` in the test) blocks execution and changes nothing
+- [x] Rolled-back transaction test (force a failure at step 7): zero partial writes, approval still unconsumed
+- [x] Employee calling `execute` directly gets 403 and ledger/approval state is unchanged (state-delta assertion)
+- [x] Routes mounted; master plan row B14 set to `[x]`
