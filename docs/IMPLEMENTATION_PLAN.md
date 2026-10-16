@@ -37,7 +37,7 @@ Read order for any chunk: `AGENTS.md`, `docs/ARCHITECTURE.md`, `docs/DB_SCHEMA.m
 | [x]    | B08 | Forecast engine (pure) with anchor tests                                                 | P0  | S01                     | plan/backend/B08-forecast-engine.md  | @Raiyan |
 | [x]    | B09 | Forecast service and endpoints                                                           | P0  | B05, B08                | plan/backend/B09-forecast-service.md | @Rohan |
 | [ ]    | B10 | Alerts engine, service and endpoints                                                     | P0  | B04, B09, B11           | plan/backend/B10-alerts.md           |       |
-| [~]    | B11 | Analytics (aging, concentration, burn, collection quality)                               | P0  | B05                     | plan/backend/B11-analytics.md        | @Rohan |
+| [x]    | B11 | Analytics (aging, concentration, burn, collection quality)                               | P0  | B05                     | plan/backend/B11-analytics.md        | @Rohan |
 | [ ]    | B12 | Financing catalog, eligibility, ranking, cost schedule                                   | P0  | B09                     | plan/backend/B12-financing.md        |       |
 | [ ]    | B13 | Scenarios (typed deltas, compare)                                                        | P0  | B09, B12                | plan/backend/B13-scenarios.md        |       |
 | [ ]    | B14 | Actions: proposal, approval, execution transaction                                       | P0  | B04, B12, B13           | plan/backend/B14-actions.md          |       |
@@ -57,7 +57,7 @@ Read order for any chunk: `AGENTS.md`, `docs/ARCHITECTURE.md`, `docs/DB_SCHEMA.m
 | [x]    | F04 | API client, JWT handling, permissions layer, role-aware navigation | P0  | F03           | plan/frontend/F04-api-client-permissions.md | @shirsho |
 | [x]    | F05 | Dashboard overview                                                 | P0  | F04, B09, B11 | plan/frontend/F05-dashboard.md              | @shirsho |
 | [ ]    | F06 | Imports workspace                                                  | P0  | F04, B07      | plan/frontend/F06-imports.md                |       |
-| [ ]    | F07 | Forecast page with drill-down                                      | P0  | F04, B09      | plan/frontend/F07-forecast.md               |       |
+| [~]    | F07 | Forecast page with drill-down                                      | P0  | F04, B09      | plan/frontend/F07-forecast.md               | @shirsho |
 | [ ]    | F08 | Alerts panel                                                       | P0  | F04, B10      | plan/frontend/F08-alerts.md                 |       |
 | [ ]    | F09 | Financing offers and comparison                                    | P0  | F04, B12      | plan/frontend/F09-financing.md              |       |
 | [ ]    | F10 | Scenario studio                                                    | P0  | F07, F09, B13 | plan/frontend/F10-scenarios.md              |       |

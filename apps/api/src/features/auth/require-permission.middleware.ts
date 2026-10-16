@@ -11,7 +11,7 @@ import { tenantContext } from './tenant-context.middleware';
  * Denials are logged as a warning for auditing.
  */
 export function requirePermission(permission: Permission): RequestHandler {
-  return (req: Request, _res: Response, next: NextFunction): void => {
+  return async (req: Request, _res: Response, next: NextFunction): Promise<void> => {
     if (!req.actor) {
       return next(new ForbiddenError('Insufficient permissions'));
     }
@@ -28,7 +28,7 @@ export function requirePermission(permission: Permission): RequestHandler {
         'Permission denied',
       );
 
-      recordAuthDenial({
+      await recordAuthDenial({
         tenantId: req.actor.tenantId,
         actorId: req.actor.userId,
         actorRole: req.actor.role,
