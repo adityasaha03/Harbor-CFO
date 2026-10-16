@@ -33,7 +33,7 @@ Read order for any chunk: `AGENTS.md`, `docs/ARCHITECTURE.md`, `docs/DB_SCHEMA.m
 | [x]    | B04 | Audit log and events (SSE, replay)                                                       | P0  | B03                     | plan/backend/B04-audit-events.md     | @Raiyan |
 | [x]    | B05 | Tenant data features (settings, accounts, counterparties, ledger, invoices, commitments) | P0  | B03                     | plan/backend/B05-tenant-data.md      | @Raiyan |
 | [x]    | B06 | CSV import engine (pure parse, validate, normalize)                                      | P0  | S01                     | plan/backend/B06-import-engine.md    | @Raiyan |
-| [~]    | B07 | Import endpoints (preview, commit, dedupe, error report)                                 | P0  | B04, B05, B06           | plan/backend/B07-import-endpoints.md | @Rohan |
+| [x]    | B07 | Import endpoints (preview, commit, dedupe, error report)                                 | P0  | B04, B05, B06           | plan/backend/B07-import-endpoints.md | @Rohan |
 | [x]    | B08 | Forecast engine (pure) with anchor tests                                                 | P0  | S01                     | plan/backend/B08-forecast-engine.md  | @Raiyan |
 | [ ]    | B09 | Forecast service and endpoints                                                           | P0  | B05, B08                | plan/backend/B09-forecast-service.md |       |
 | [ ]    | B10 | Alerts engine, service and endpoints                                                     | P0  | B04, B09, B11           | plan/backend/B10-alerts.md           |       |
