@@ -1,8 +1,9 @@
 import type { ClientSession } from 'mongoose';
-import type { CreateScenarioInput, CreateScenarioResponse, ScenarioDto } from '@harbor/contracts';
-import { NotFoundError } from '../../core/http/app-error';
+import type { CreateScenarioInput, CreateScenarioResponse, ScenarioDto, ScenarioChange } from '@harbor/contracts';
+import { NotFoundError, ValidationError } from '../../core/http/app-error';
 import type { ActorContext } from '../auth/auth.types';
 import { tenantsRepository } from '../tenants';
+import { invoicesRepository } from '../invoices';
 import { forecastService, loadForecastInput } from '../forecast';
 import { financingRepository } from '../financing/financing.repository';
 import { applyChanges, compare, computeScenarioHash } from './engine';
@@ -115,5 +116,57 @@ export const scenariosService = {
     const currentDatasetVersion = settings?.datasetVersion ?? 1;
 
     return scenariosRepository.listRecent(tenantId, limit, currentDatasetVersion, session);
+  },
+
+  /**
+   * Helper that creates the "largest customer pays 14 days late" scenario
+   * using delay_customer_receipts.
+   */
+  async createStressPreset(
+    actor: ActorContext,
+    days = 14,
+    session?: ClientSession,
+  ): Promise<CreateScenarioResponse> {
+    const tenantId = actor.tenantId;
+
+    const outstanding = await invoicesRepository.listOutstanding(tenantId, session);
+    const arInvoices = outstanding.filter((inv) => inv.direction === 'AR');
+
+    if (arInvoices.length === 0) {
+      throw new ValidationError('No outstanding customer receivables found for stress testing');
+    }
+
+    // Group outstanding AR by counterpartyExternalId to find largest debtor
+    const customerTotals = new Map<string, number>();
+    for (const inv of arInvoices) {
+      const prev = customerTotals.get(inv.counterpartyExternalId) ?? 0;
+      customerTotals.set(inv.counterpartyExternalId, prev + inv.outstandingMinor);
+    }
+
+    let topCustomerExternalId = '';
+    let maxAr = -1;
+    for (const [cId, total] of customerTotals.entries()) {
+      if (total > maxAr) {
+        maxAr = total;
+        topCustomerExternalId = cId;
+      }
+    }
+
+    const changes: ScenarioChange[] = [
+      {
+        type: 'delay_customer_receipts',
+        counterpartyExternalId: topCustomerExternalId,
+        days,
+      },
+    ];
+
+    return this.createScenario(
+      actor,
+      {
+        name: `Stress Test: Largest Customer Pays ${days} Days Late`,
+        changes,
+      },
+      session,
+    );
   },
 };

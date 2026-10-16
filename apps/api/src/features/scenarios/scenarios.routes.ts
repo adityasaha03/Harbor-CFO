@@ -22,6 +22,14 @@ scenariosRouter.post(
   scenariosController.create,
 );
 
+// POST /api/v1/scenarios/presets/stress (scenarios:write, rate limited)
+scenariosRouter.post(
+  '/presets/stress',
+  protect('scenarios:write'),
+  scenarioWriteLimiter,
+  scenariosController.createStressPreset,
+);
+
 // GET /api/v1/scenarios (recent, finance:read)
 scenariosRouter.get('/', protect('finance:read'), scenariosController.list);
 
