@@ -80,12 +80,33 @@ export class GeminiProvider implements LlmProvider {
     this.fetchFn = options?.fetchFn ?? fetch;
   }
 
-  private transformTools(tools?: ModelFacingToolDefinition[]): { functionDeclarations: GeminiFunctionDeclaration[] }[] | undefined {
+  private cleanParameters(schema: Record<string, unknown>): Record<string, unknown> {
+    const cleaned: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(schema)) {
+      if (k === 'additionalProperties') continue;
+      if (v && typeof v === 'object' && !Array.isArray(v)) {
+        cleaned[k] = this.cleanParameters(v as Record<string, unknown>);
+      } else if (Array.isArray(v)) {
+        cleaned[k] = v.map((item) =>
+          item && typeof item === 'object'
+            ? this.cleanParameters(item as Record<string, unknown>)
+            : item,
+        );
+      } else {
+        cleaned[k] = v;
+      }
+    }
+    return cleaned;
+  }
+
+  private transformTools(
+    tools?: ModelFacingToolDefinition[],
+  ): { functionDeclarations: GeminiFunctionDeclaration[] }[] | undefined {
     if (!tools || tools.length === 0) return undefined;
     const declarations: GeminiFunctionDeclaration[] = tools.map((t) => ({
       name: t.name,
       description: t.description,
-      parameters: t.parameters,
+      parameters: this.cleanParameters(t.parameters),
     }));
     return [{ functionDeclarations: declarations }];
   }

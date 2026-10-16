@@ -6,12 +6,12 @@ import { seedAnchorTenant } from '../../scenarios/__tests__/fixtures/seed-anchor
 import { seedFinancingOffers } from '../../financing';
 import { InvoiceModel } from '../../invoices';
 import { LedgerEntryModel } from '../../ledger';
-import { ActionProposal, Approval, SandboxOperation } from '../../actions/actions.models';
+import { Approval, SandboxOperation } from '../../actions/actions.models';
 import { runTool } from '../tools/run-tool';
 import { ReplayProvider } from '../providers/replay.provider';
 import { executeAgentLoop } from '../agent.loop';
 import { agentRepository } from '../agent.repository';
-import type { LlmProvider, LlmMessage } from '../providers/llm-provider';
+import type { LlmProvider } from '../providers/llm-provider';
 import type { ListOverdueInvoicesOutput } from '@harbor/contracts';
 
 describe('B16 Prompt Injection Defense - Untrusted Invoice Text', () => {

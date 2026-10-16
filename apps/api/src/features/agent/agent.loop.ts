@@ -3,7 +3,7 @@ import { env } from '../../config/env';
 import { logger } from '../../core/logging/logger';
 import { eventsService } from '../events';
 import type { ActorContext } from '../auth/auth.types';
-import type { AgentStyle } from '@harbor/contracts';
+import type { AgentStyle, AgentToolName } from '@harbor/contracts';
 import { getModelFacingTools, getRegisteredTool } from './tools/registry';
 import { runTool } from './tools/run-tool';
 import { agentRepository } from './agent.repository';
@@ -124,10 +124,14 @@ export async function executeAgentLoop(options: ExecuteAgentLoopOptions): Promis
         const callResultRefs: string[] = [];
 
         try {
-          const res = await runTool(actor, {
-            name: call.name as any,
-            args: call.args,
-          }, { traceId });
+          const res = await runTool(
+            actor,
+            {
+              name: call.name as AgentToolName,
+              args: call.args,
+            },
+            { traceId },
+          );
 
           toolDuration = Date.now() - toolStart;
           toolOutput = res.data;
@@ -137,13 +141,18 @@ export async function executeAgentLoop(options: ExecuteAgentLoopOptions): Promis
             callResultRefs.push(ref);
           }
 
-          if (res.proposalId) {
-            proposalIds.add(res.proposalId);
+          if (
+            call.name === 'createActionProposal' &&
+            res.data &&
+            typeof (res.data as Record<string, unknown>).proposalId === 'string'
+          ) {
+            proposalIds.add((res.data as Record<string, unknown>).proposalId as string);
           }
-        } catch (err: any) {
+        } catch (err: unknown) {
           status = 'error';
           toolDuration = Date.now() - toolStart;
-          toolOutput = { error: err.message ?? 'Tool execution failed' };
+          const errMessage = err instanceof Error ? err.message : 'Tool execution failed';
+          toolOutput = { error: errMessage };
         }
 
         executedToolCalls.push({
@@ -215,8 +224,8 @@ export async function executeAgentLoop(options: ExecuteAgentLoopOptions): Promis
       resourceRefs: Array.from(proposalIds),
       runId,
     });
-  } catch (error: any) {
-    const errorMsg = error?.message || 'Unknown agent error';
+  } catch (error: unknown) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown agent error';
     const isTimeout = errorMsg.toLowerCase().includes('timed out');
     const runStatus = isTimeout ? 'timeout' : 'failed';
 
@@ -239,7 +248,7 @@ export async function executeAgentLoop(options: ExecuteAgentLoopOptions): Promis
 
     await eventsService.publish(actor.tenantId, {
       kind: 'run.failed',
-      publicSummary: `Agent copilot run ${runStatus}: ${errorMsg}`,
+      publicSummary: `Agent copilot run ${runStatus}: ${errorMsg}`.slice(0, 990),
       resourceRefs: fallback.evidenceRefs,
       runId,
     });

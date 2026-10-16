@@ -6,7 +6,7 @@ import { seedAnchorTenant } from '../../scenarios/__tests__/fixtures/seed-anchor
 import { seedFinancingOffers } from '../../financing';
 import { agentRepository } from '../agent.repository';
 import { executeAgentLoop } from '../agent.loop';
-import type { LlmProvider, LlmGenerateOptions, LlmGenerateResult } from '../providers/llm-provider';
+import type { LlmProvider } from '../providers/llm-provider';
 import { eventsService } from '../../events';
 
 describe('B16 Agent Loop Constraints and Invariants', () => {

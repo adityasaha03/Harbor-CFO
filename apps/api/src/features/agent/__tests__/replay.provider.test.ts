@@ -9,6 +9,7 @@ import { actionsRepository } from '../../actions';
 import { runTool } from '../tools/run-tool';
 import { ReplayProvider } from '../providers/replay.provider';
 import type { LlmMessage, LlmToolResult } from '../providers/llm-provider';
+import type { AgentToolName } from '@harbor/contracts';
 
 describe('B16 Replay Provider - Harbor Story against Anchor Tenant', () => {
   useTestDb();
@@ -47,7 +48,7 @@ describe('B16 Replay Provider - Harbor Story against Anchor Tenant', () => {
     // Execute the tool call using real runTool
     const toolCall = turn1.toolCalls![0]!;
     const toolExecution = await runTool(actor, {
-      name: toolCall.name as any,
+      name: toolCall.name as AgentToolName,
       args: toolCall.args,
     });
 

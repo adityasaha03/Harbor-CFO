@@ -1,5 +1,5 @@
 import { Types, type ClientSession } from 'mongoose';
-import type { AgentRunDto, AgentRunStatus } from '@harbor/contracts';
+import type { AgentRunDto, AgentToolName } from '@harbor/contracts';
 import { AgentRunModel, type AgentRunDoc } from './agent.model';
 
 function toRunDto(doc: AgentRunDoc): AgentRunDto {
@@ -11,7 +11,7 @@ function toRunDto(doc: AgentRunDoc): AgentRunDto {
     prompt: doc.prompt,
     status: doc.status,
     toolCalls: doc.toolCalls.map((tc) => ({
-      name: tc.name as any,
+      name: tc.name as AgentToolName,
       argsSanitized: tc.argsSanitized,
       status: tc.status,
       durationMs: tc.durationMs,
@@ -83,8 +83,8 @@ export const agentRepository = {
 
   async listRuns(
     tenantId: string,
-    page: number = 1,
-    pageSize: number = 20,
+    page = 1,
+    pageSize = 20,
   ): Promise<{ runs: AgentRunDto[]; total: number }> {
     const skip = (page - 1) * pageSize;
     const [total, docs] = await Promise.all([

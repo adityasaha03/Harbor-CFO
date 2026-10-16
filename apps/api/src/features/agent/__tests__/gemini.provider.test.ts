@@ -2,6 +2,19 @@ import { describe, it, expect, vi } from 'vitest';
 import { GeminiProvider } from '../providers/gemini.provider';
 import type { LlmMessage } from '../providers/llm-provider';
 
+interface CapturedGeminiBody {
+  systemInstruction?: { parts: { text: string }[] };
+  tools?: { functionDeclarations: { name: string }[] }[];
+  contents: {
+    role: string;
+    parts: {
+      text?: string;
+      functionCall?: { name: string };
+      functionResponse?: { name: string; response: { output: { minCashMinor?: number } } };
+    }[];
+  }[];
+}
+
 describe('B16 GeminiProvider - Mocked HTTP Contract Tests', () => {
   it('throws an error if apiKey is missing', async () => {
     const provider = new GeminiProvider({ apiKey: undefined });
@@ -14,11 +27,11 @@ describe('B16 GeminiProvider - Mocked HTTP Contract Tests', () => {
 
   it('correctly maps function declarations and parses function calls from response', async () => {
     let capturedUrl = '';
-    let capturedBody: any = null;
+    let capturedBody: CapturedGeminiBody = { contents: [] };
 
-    const mockFetch = vi.fn().mockImplementation(async (url: string, init: any) => {
+    const mockFetch = vi.fn().mockImplementation(async (url: string, init?: RequestInit) => {
       capturedUrl = url;
-      capturedBody = JSON.parse(init.body);
+      capturedBody = JSON.parse(init?.body as string) as CapturedGeminiBody;
 
       return {
         ok: true,
@@ -69,10 +82,10 @@ describe('B16 GeminiProvider - Mocked HTTP Contract Tests', () => {
     expect(capturedUrl).toContain('models/gemini-2.5-flash:generateContent');
     expect(capturedUrl).toContain('key=test-gemini-key');
 
-    expect(capturedBody.systemInstruction.parts[0].text).toBe('You are a finance copilot.');
-    expect(capturedBody.tools[0].functionDeclarations[0].name).toBe('getForecast');
-    expect(capturedBody.contents[0].role).toBe('user');
-    expect(capturedBody.contents[0].parts[0].text).toBe('What is our forecast?');
+    expect(capturedBody?.systemInstruction?.parts[0]?.text).toBe('You are a finance copilot.');
+    expect(capturedBody?.tools?.[0]?.functionDeclarations[0]?.name).toBe('getForecast');
+    expect(capturedBody?.contents[0]?.role).toBe('user');
+    expect(capturedBody?.contents[0]?.parts[0]?.text).toBe('What is our forecast?');
 
     expect(result.toolCalls).toHaveLength(1);
     expect(result.toolCalls![0]!.name).toBe('getForecast');
@@ -81,10 +94,10 @@ describe('B16 GeminiProvider - Mocked HTTP Contract Tests', () => {
   });
 
   it('correctly maps multi-turn tool results back to Gemini format and extracts final text', async () => {
-    let capturedBody: any = null;
+    let capturedBody: CapturedGeminiBody = { contents: [] };
 
-    const mockFetch = vi.fn().mockImplementation(async (_url: string, init: any) => {
-      capturedBody = JSON.parse(init.body);
+    const mockFetch = vi.fn().mockImplementation(async (_url: string, init?: RequestInit) => {
+      capturedBody = JSON.parse(init?.body as string) as CapturedGeminiBody;
       return {
         ok: true,
         json: async () => ({
@@ -128,16 +141,18 @@ describe('B16 GeminiProvider - Mocked HTTP Contract Tests', () => {
 
     const result = await provider.generate({ messages });
 
-    expect(capturedBody.contents).toHaveLength(3);
+    expect(capturedBody?.contents).toHaveLength(3);
     // User message
-    expect(capturedBody.contents[0].role).toBe('user');
+    expect(capturedBody?.contents[0]?.role).toBe('user');
     // Model function call
-    expect(capturedBody.contents[1].role).toBe('model');
-    expect(capturedBody.contents[1].parts[0].functionCall.name).toBe('getForecast');
+    expect(capturedBody?.contents[1]?.role).toBe('model');
+    expect(capturedBody?.contents[1]?.parts[0]?.functionCall?.name).toBe('getForecast');
     // User function response
-    expect(capturedBody.contents[2].role).toBe('user');
-    expect(capturedBody.contents[2].parts[0].functionResponse.name).toBe('getForecast');
-    expect(capturedBody.contents[2].parts[0].functionResponse.response.output.minCashMinor).toBe(-2000000);
+    expect(capturedBody?.contents[2]?.role).toBe('user');
+    expect(capturedBody?.contents[2]?.parts[0]?.functionResponse?.name).toBe('getForecast');
+    expect(
+      capturedBody?.contents[2]?.parts[0]?.functionResponse?.response.output.minCashMinor,
+    ).toBe(-2000000);
 
     expect(result.text).toBe('Your liquidity gap is ¥50,000.00.');
     expect(result.toolCalls).toBeUndefined();

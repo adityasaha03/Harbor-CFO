@@ -33,7 +33,7 @@ export class ReplayProvider implements LlmProvider {
       }
     }
     // Default to explain_gap or first story
-    return this.stories.find((s) => s.intent === 'explain_gap') ?? this.stories[0];
+    return this.stories.find((s) => s.intent === 'explain_gap') ?? this.stories[0]!;
   }
 
   private countExecutedTurns(options: LlmGenerateOptions): number {
@@ -124,14 +124,16 @@ export class ReplayProvider implements LlmProvider {
 
     if (executedTurns < story.turns.length) {
       const nextTurn = story.turns[executedTurns];
-      return {
-        toolCalls: nextTurn.toolCalls.map((tc, idx) => ({
-          id: `call_${executedTurns}_${idx}`,
-          name: tc.name,
-          args: tc.args,
-        })),
-        usage: { inputTokens: 50, outputTokens: 25 },
-      };
+      if (nextTurn) {
+        return {
+          toolCalls: nextTurn.toolCalls.map((tc, idx) => ({
+            id: `call_${executedTurns}_${idx}`,
+            name: tc.name,
+            args: tc.args,
+          })),
+          usage: { inputTokens: 50, outputTokens: 25 },
+        };
+      }
     }
 
     const allResults = this.extractToolResults(options);
