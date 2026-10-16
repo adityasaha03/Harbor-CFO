@@ -1,5 +1,6 @@
+import * as React from 'react';
 import { PageHeader } from '@/components/layout/page-header';
-import { Card, CardContent } from '@/components/ui/card';
+import { ActionsWorkspace } from '@/features/actions';
 
 export default function ActionsPage() {
   return (
@@ -8,11 +9,9 @@ export default function ActionsPage() {
         title="Action Approval Flow"
         description="Owner approval and cryptographic execution of simulated financing remedies."
       />
-      <Card>
-        <CardContent className="flex min-h-[200px] items-center justify-center p-6 text-sm text-muted-foreground">
-          Action approval flow will be initialized in chunk F11.
-        </CardContent>
-      </Card>
+      <React.Suspense fallback={<div className="p-6 text-xs text-muted-foreground">Loading action proposals…</div>}>
+        <ActionsWorkspace />
+      </React.Suspense>
     </div>
   );
 }
