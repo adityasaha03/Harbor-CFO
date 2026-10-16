@@ -16,6 +16,10 @@ export function createRateLimiter(options: RateLimiterOptions = {}): RequestHand
   const keyGenerator =
     options.keyGenerator ??
     ((req: Request) => {
+      const reqActor = (req as { actor?: { userId?: string } }).actor;
+      if (reqActor?.userId) {
+        return reqActor.userId;
+      }
       const actorContext = (req as { actorContext?: { userId?: string } }).actorContext;
       if (actorContext?.userId) {
         return actorContext.userId;
