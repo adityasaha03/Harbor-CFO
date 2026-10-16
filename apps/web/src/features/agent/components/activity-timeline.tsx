@@ -48,8 +48,8 @@ export function ActivityTimeline({
       }));
     }
 
-    return liveEvents.map((event) => ({
-      id: event.id,
+    return liveEvents.map((event, index) => ({
+      id: event.id ? `${event.id}-${index}` : `live-${index}`,
       name: event.name,
       status: event.status,
       durationMs: event.durationMs,
@@ -112,7 +112,7 @@ export function ActivityTimeline({
           <div className="flex flex-col">
             {items.map((item, index) => (
               <TimelineItem
-                key={item.id}
+                key={`${item.id}-${index}`}
                 name={item.name}
                 status={item.status}
                 durationMs={item.durationMs}

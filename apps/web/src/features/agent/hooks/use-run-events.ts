@@ -67,17 +67,22 @@ export function useRunEvents(runId: string | null | undefined): UseRunEventsRetu
         const argsSanitized = (data?.argsSanitized as Record<string, unknown>) || {};
         const summary = (data?.publicSummary as string) || `Tool started: ${toolName}`;
 
-        setEvents((prev) => [
-          ...prev,
-          {
-            id: domainEvent.id,
-            name: toolName,
-            status: 'running',
-            argsSanitized,
-            startedAt: domainEvent.timestamp,
-            publicSummary: summary,
-          },
-        ]);
+        setEvents((prev) => {
+          if (domainEvent.id && prev.some((e) => e.id === domainEvent.id)) {
+            return prev;
+          }
+          return [
+            ...prev,
+            {
+              id: domainEvent.id || `live-${Date.now()}-${prev.length}`,
+              name: toolName,
+              status: 'running',
+              argsSanitized,
+              startedAt: domainEvent.timestamp,
+              publicSummary: summary,
+            },
+          ];
+        });
       } else if (kind === 'tool.completed') {
         const resourceRefs = Array.isArray(data?.resourceRefs) ? data.resourceRefs : [];
         const summary = (data?.publicSummary as string) || '';
@@ -111,8 +116,13 @@ export function useRunEvents(runId: string | null | undefined): UseRunEventsRetu
 
           if (!updated) {
             const toolName = (resourceRefs[0] as string) || (data?.name as string) || 'Tool execution';
+            const fallbackId = domainEvent.id
+              ? prev.some((e) => e.id === domainEvent.id)
+                ? `${domainEvent.id}-completed`
+                : domainEvent.id
+              : `live-${Date.now()}-${prev.length}`;
             next.push({
-              id: domainEvent.id,
+              id: fallbackId,
               name: toolName,
               status: 'success',
               durationMs,
