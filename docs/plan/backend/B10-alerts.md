@@ -27,10 +27,10 @@ Contracts: fill `packages/contracts/src/alerts.ts`.
 
 ## Tasks
 
-- [ ] Contracts filled; model with unique `(tenantId, fingerprint)` index
-- [ ] Rule tests for every rule: triggers, does not trigger, boundary (exactly at threshold), zero AR for concentration
-- [ ] Dedup test: evaluating twice creates one alert; changed severity updates it
-- [ ] Resolution test: after the condition clears the alert becomes `resolved`
-- [ ] Integration test: importing the fixture publishes `forecast.updated` then creates `floor_breach`, `negative_cash`, `customer_concentration` and `overdue_receivable` alerts without any other call
-- [ ] Endpoint tests including tenant isolation
-- [ ] Routes mounted; master plan row B10 set to `[x]`
+- [x] Contracts filled; model with unique `(tenantId, fingerprint)` index
+- [x] Rule tests for every rule: triggers, does not trigger, boundary (exactly at threshold), zero AR for concentration
+- [x] Dedup test: evaluating twice creates one alert; changed severity updates it
+- [x] Resolution test: after the condition clears the alert becomes `resolved`
+- [x] Integration test: importing the fixture publishes `forecast.updated` then creates `floor_breach`, `negative_cash`, `customer_concentration` and `overdue_receivable` alerts without any other call
+- [x] Endpoint tests including tenant isolation
+- [x] Routes mounted; master plan row B10 set to `[x]`
