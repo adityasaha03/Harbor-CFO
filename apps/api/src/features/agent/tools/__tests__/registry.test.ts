@@ -13,7 +13,7 @@ describe("B15 Tool Registry Tests", () => {
     const expectedNames = [...AGENT_TOOL_NAMES].sort();
 
     expect(registeredNames).toEqual(expectedNames);
-    expect(registeredNames).toHaveLength(8);
+    expect(registeredNames).toHaveLength(10);
   });
 
   it("registry is frozen and cannot be modified at runtime", () => {
@@ -58,7 +58,7 @@ describe("B15 Tool Registry Tests", () => {
 
   it("getModelFacingTools generates valid JSON schema parameters for LLM", () => {
     const modelFacing = getModelFacingTools();
-    expect(modelFacing).toHaveLength(8);
+    expect(modelFacing).toHaveLength(10);
 
     for (const tool of modelFacing) {
       expect(tool.name).toBeTruthy();

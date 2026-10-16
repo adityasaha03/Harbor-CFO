@@ -9,6 +9,8 @@ import { matchFinancingTool } from "./match-financing.tool";
 import { simulateScenarioTool } from "./simulate-scenario.tool";
 import { createActionProposalTool } from "./create-action-proposal.tool";
 import { getActionStatusTool } from "./get-action-status.tool";
+import { draftCollectionMessageTool } from "./draft-collection-message.tool";
+import { generateReportTool } from "./generate-report.tool";
 
 export const TOOLS_MAP = {
   getCashPosition: getCashPositionTool,
@@ -19,6 +21,8 @@ export const TOOLS_MAP = {
   simulateScenario: simulateScenarioTool,
   createActionProposal: createActionProposalTool,
   getActionStatus: getActionStatusTool,
+  draftCollectionMessage: draftCollectionMessageTool,
+  generateReport: generateReportTool,
 } as const;
 
 export const REGISTRY: Readonly<

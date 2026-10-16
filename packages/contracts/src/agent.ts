@@ -20,6 +20,8 @@ export const AGENT_TOOL_NAMES = [
   "simulateScenario",
   "createActionProposal",
   "getActionStatus",
+  "draftCollectionMessage",
+  "generateReport",
 ] as const;
 
 export type AgentToolName = (typeof AGENT_TOOL_NAMES)[number];
@@ -340,4 +342,54 @@ export const agentRunDtoSchema = z.object({
   completedAt: z.string().optional(),
 });
 export type AgentRunDto = z.infer<typeof agentRunDtoSchema>;
+
+// -----------------------------------------------------------------------------
+// 9. draftCollectionMessage (B19 P1)
+// -----------------------------------------------------------------------------
+export const draftCollectionMessageInputSchema = z
+  .object({
+    invoiceExternalId: z.string().min(1),
+  })
+  .strict();
+export type DraftCollectionMessageInput = z.infer<
+  typeof draftCollectionMessageInputSchema
+>;
+
+export const draftCollectionMessageOutputSchema = z.object({
+  invoiceExternalId: z.string(),
+  counterpartyMaskedName: z.string(),
+  amountMinor: minorSchema,
+  amountFormatted: z.string(),
+  dueOn: dateOnlySchema,
+  daysOverdue: z.number().int().nonnegative(),
+  draftText: z.string(),
+  label: z.literal("draft, nothing is sent"),
+  isDraft: z.literal(true),
+  evidenceRefs: z.array(z.string()),
+});
+export type DraftCollectionMessageOutput = z.infer<
+  typeof draftCollectionMessageOutputSchema
+>;
+
+// -----------------------------------------------------------------------------
+// 10. generateReport (B19 P1)
+// -----------------------------------------------------------------------------
+export const generateReportInputSchema = z
+  .object({
+    month: z.string().regex(/^\d{4}-\d{2}$/),
+    format: z.enum(["csv", "pdf"]).default("csv"),
+  })
+  .strict();
+export type GenerateReportInput = z.infer<typeof generateReportInputSchema>;
+
+export const generateReportOutputSchema = z.object({
+  reportType: z.literal("cash_summary"),
+  month: z.string(),
+  format: z.enum(["csv", "pdf"]),
+  downloadPath: z.string(),
+  summary: z.string(),
+  generatedAt: z.string(),
+});
+export type GenerateReportOutput = z.infer<typeof generateReportOutputSchema>;
+
 
