@@ -1,19 +1,7 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
+import './load-env';
 import { DEMO_EMAILS, DEMO_TENANTS } from '@harbor/contracts';
 import { auth, testMemoryDb } from '../src/features/auth/server/auth';
 import { mongoDb, mongoClient } from '../src/features/auth/server/mongo';
-
-// Ensure .env is loaded if running directly via tsx / node
-if (typeof process.loadEnvFile === 'function') {
-  try {
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = path.dirname(__filename);
-    process.loadEnvFile(path.resolve(__dirname, '../.env'));
-  } catch {
-    // Handled if environment is already configured
-  }
-}
 
 export interface SeededUser {
   id: string;
@@ -211,25 +199,45 @@ export async function seedAuth(options?: { password?: string }): Promise<SeedAut
       continue;
     }
 
-    const created = await auth.api.addMember({
-      body: {
+    try {
+      const created = await auth.api.addMember({
+        body: {
+          userId: target.userId,
+          organizationId: target.orgId,
+          role: target.role,
+        },
+      });
+
+      if (!created) {
+        throw new Error(`Failed to add user ${target.userId} to org ${target.orgId}`);
+      }
+
+      members.push({
+        id: created.id,
         userId: target.userId,
         organizationId: target.orgId,
         role: target.role,
-      },
-    });
-
-    if (!created) {
-      throw new Error(`Failed to add user ${target.userId} to org ${target.orgId}`);
+        created: true,
+      });
+    } catch (err: unknown) {
+      const errObj = err as { body?: { code?: string; message?: string }; message?: string };
+      const code = errObj?.body?.code ?? '';
+      const msg = errObj?.body?.message ?? errObj?.message ?? '';
+      if (
+        code === 'USER_IS_ALREADY_A_MEMBER_OF_THIS_ORGANIZATION' ||
+        msg.includes('already a member')
+      ) {
+        members.push({
+          id: `${target.userId}-${target.orgId}`,
+          userId: target.userId,
+          organizationId: target.orgId,
+          role: target.role,
+          created: false,
+        });
+      } else {
+        throw err;
+      }
     }
-
-    members.push({
-      id: created.id,
-      userId: target.userId,
-      organizationId: target.orgId,
-      role: target.role,
-      created: true,
-    });
   }
 
   return { users, organizations, members };

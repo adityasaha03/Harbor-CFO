@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { requireServerSession } from '@/features/auth';
+import { requireServerSession } from '@/features/auth/server';
 import { CompanyOnboarding } from '@/features/tenants';
 
 export const metadata: Metadata = {

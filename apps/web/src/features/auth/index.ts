@@ -14,9 +14,6 @@ export {
   validateContractRoles,
   type HarborRole,
 } from './server/access-control';
-export { getServerSession, requireServerSession } from './server/session';
-export { auth, type Auth } from './server/auth';
-export { GET, POST } from './server/handler';
 
 // Client hooks and components
 export { useSession, type UseSessionReturn } from './hooks/use-session';

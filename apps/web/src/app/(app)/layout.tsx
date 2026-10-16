@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { redirect } from 'next/navigation';
 import { AppShell } from '@/components/layout/app-shell';
-import { requireServerSession } from '@/features/auth';
+import { requireServerSession } from '@/features/auth/server';
 import { EventStreamListener } from '@/features/events';
 
 export default async function AppLayout({
