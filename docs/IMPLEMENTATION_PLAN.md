@@ -20,7 +20,7 @@ Read order for any chunk: `AGENTS.md`, `docs/ARCHITECTURE.md`, `docs/DB_SCHEMA.m
 | ------ | --- | ------------------------------------------------------------------- | --- | -------- | --------------------------------- | ------- |
 | [x]    | S00 | Monorepo bootstrap and CI                                           | P0  | none     | plan/shared/S00-bootstrap.md      | @Mahtab |
 | [x]    | S01 | Contracts package (shared schemas, permissions, money/date helpers) | P0  | S00      | plan/shared/S01-contracts.md      | @Mahtab |
-| [~]    | S02 | Demo auth seed and auth handshake check (web <-> api)               | P0  | F02, B03 | plan/shared/S02-demo-auth-seed.md | @Aditya |
+| [x]    | S02 | Demo auth seed and auth handshake check (web <-> api)               | P0  | F02, B03 | plan/shared/S02-demo-auth-seed.md | @Aditya |
 | [ ]    | S03 | Deployment, README and release packaging                            | P0  | all P0   | plan/shared/S03-deploy-release.md |         |
 
 ## Backend (apps/api)
@@ -93,3 +93,4 @@ Read order for any chunk: `AGENTS.md`, `docs/ARCHITECTURE.md`, `docs/DB_SCHEMA.m
 ## Deviation Log (append only: date, chunk, what, why, impact)
 
 - 2026-10-15 | F05 | Used fallback static stubs (anchor fixtures) in useLatestForecast and useAnalyticsSummary hooks because B09 and B11 backend endpoints are in parallel development | Authorized by human lead to unblock F05 UI development | Zero impact on backend, seamless swap when endpoints become live.
+- 2026-10-16 | S02 | Removed .attach() from unauthenticated test in imports.preview.test.ts | Node.js socket emits ECONNRESET on Windows when Supertest streams multipart data to an immediately closed 401 response | No API or contract impact, test reliably passes across all platforms.
