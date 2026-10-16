@@ -20,7 +20,7 @@ Read order for any chunk: `AGENTS.md`, `docs/ARCHITECTURE.md`, `docs/DB_SCHEMA.m
 | ------ | --- | ------------------------------------------------------------------- | --- | -------- | --------------------------------- | ------- |
 | [x]    | S00 | Monorepo bootstrap and CI                                           | P0  | none     | plan/shared/S00-bootstrap.md      | @Mahtab |
 | [x]    | S01 | Contracts package (shared schemas, permissions, money/date helpers) | P0  | S00      | plan/shared/S01-contracts.md      | @Mahtab |
-| [ ]    | S02 | Demo auth seed and auth handshake check (web <-> api)               | P0  | F02, B03 | plan/shared/S02-demo-auth-seed.md |         |
+| [~]    | S02 | Demo auth seed and auth handshake check (web <-> api)               | P0  | F02, B03 | plan/shared/S02-demo-auth-seed.md | @Aditya |
 | [ ]    | S03 | Deployment, README and release packaging                            | P0  | all P0   | plan/shared/S03-deploy-release.md |         |
 
 ## Backend (apps/api)
