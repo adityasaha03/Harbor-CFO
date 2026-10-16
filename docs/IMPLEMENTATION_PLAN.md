@@ -41,7 +41,7 @@ Read order for any chunk: `AGENTS.md`, `docs/ARCHITECTURE.md`, `docs/DB_SCHEMA.m
 | [x]    | B12 | Financing catalog, eligibility, ranking, cost schedule                                   | P0  | B09                     | plan/backend/B12-financing.md        | @Mahtab |
 | [x]    | B13 | Scenarios (typed deltas, compare)                                                        | P0  | B09, B12                | plan/backend/B13-scenarios.md        | @Rohan  |
 | [x]    | B14 | Actions: proposal, approval, execution transaction                                       | P0  | B04, B12, B13           | plan/backend/B14-actions.md          | @Rohan  |
-| [ ]    | B15 | Agent tools and registry                                                                 | P0  | B09, B11, B12, B13, B14 | plan/backend/B15-agent-tools.md      |         |
+| [~]    | B15 | Agent tools and registry                                                                 | P0  | B09, B11, B12, B13, B14 | plan/backend/B15-agent-tools.md      | @Rohan  |
 | [ ]    | B16 | Agent runtime (provider adapter, loop, runs, telemetry)                                  | P0  | B15                     | plan/backend/B16-agent-runtime.md    |         |
 | [ ]    | B17 | Demo seed, evidence export, proof endpoints                                              | P0  | B14, B16                | plan/backend/B17-demo-evidence.md    |         |
 | [ ]    | B18 | Security hardening and adversarial tests                                                 | P0  | B14, B16                | plan/backend/B18-security-tests.md   |         |
