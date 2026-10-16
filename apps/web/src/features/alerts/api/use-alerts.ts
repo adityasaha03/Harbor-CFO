@@ -3,7 +3,7 @@
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/api/client';
 import { queryKeys } from '@/lib/query/keys';
-import type { Alert } from '@harbor/contracts';
+import type { Alert, AlertsQuery } from '@harbor/contracts';
 
 export const ANCHOR_ALERTS_MOCK: Alert[] = [
   {
@@ -64,16 +64,16 @@ export const ANCHOR_ALERTS_MOCK: Alert[] = [
   },
 ];
 
-export function useAlerts(): UseQueryResult<Alert[], Error> {
+export function useAlerts(query?: AlertsQuery): UseQueryResult<Alert[], Error> {
   return useQuery<Alert[], Error>({
-    queryKey: queryKeys.alerts.list(),
+    queryKey: queryKeys.alerts.list(query),
     queryFn: async () => {
-      try {
-        return await apiFetch<Alert[]>('/alerts');
-      } catch {
-        // Fallback stub while backend B10 is in development
-        return ANCHOR_ALERTS_MOCK;
+      const search = new URLSearchParams();
+      if (query?.status) {
+        search.set('status', query.status);
       }
+      const qs = search.toString();
+      return await apiFetch<Alert[]>(qs ? `/alerts?${qs}` : '/alerts');
     },
   });
 }
