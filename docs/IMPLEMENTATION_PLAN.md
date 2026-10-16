@@ -25,27 +25,27 @@ Read order for any chunk: `AGENTS.md`, `docs/ARCHITECTURE.md`, `docs/DB_SCHEMA.m
 
 ## Backend (apps/api)
 
-| Status | ID  | Title                                                                                    | Pri | Depends                 | Chunk file                           | Owner   |
-| ------ | --- | ---------------------------------------------------------------------------------------- | --- | ----------------------- | ------------------------------------ | ------- |
-| [x]    | B01 | Express foundation (app, env, errors, validation, logging, health)                       | P0  | S00, S01                | plan/backend/B01-foundation.md       | @Mahtab |
-| [x]    | B02 | MongoDB connection, transactions, test harness                                           | P0  | B01                     | plan/backend/B02-database.md         | @Mahtab |
-| [x]    | B03 | Auth middleware (JWT verify, tenant context, permissions)                                | P0  | B02                     | plan/backend/B03-auth-middleware.md  | @Mahtab |
-| [x]    | B04 | Audit log and events (SSE, replay)                                                       | P0  | B03                     | plan/backend/B04-audit-events.md     | @Raiyan |
-| [x]    | B05 | Tenant data features (settings, accounts, counterparties, ledger, invoices, commitments) | P0  | B03                     | plan/backend/B05-tenant-data.md      | @Raiyan |
-| [x]    | B06 | CSV import engine (pure parse, validate, normalize)                                      | P0  | S01                     | plan/backend/B06-import-engine.md    | @Raiyan |
-| [x]    | B07 | Import endpoints (preview, commit, dedupe, error report)                                 | P0  | B04, B05, B06           | plan/backend/B07-import-endpoints.md | @Rohan  |
-| [x]    | B08 | Forecast engine (pure) with anchor tests                                                 | P0  | S01                     | plan/backend/B08-forecast-engine.md  | @Raiyan |
-| [x]    | B09 | Forecast service and endpoints                                                           | P0  | B05, B08                | plan/backend/B09-forecast-service.md | @Rohan  |
-| [x]    | B10 | Alerts engine, service and endpoints                                                     | P0  | B04, B09, B11           | plan/backend/B10-alerts.md           | @Rohan  |
-| [x]    | B11 | Analytics (aging, concentration, burn, collection quality)                               | P0  | B05                     | plan/backend/B11-analytics.md        | @Rohan  |
-| [x]    | B12 | Financing catalog, eligibility, ranking, cost schedule                                   | P0  | B09                     | plan/backend/B12-financing.md        | @Mahtab |
-| [x]    | B13 | Scenarios (typed deltas, compare)                                                        | P0  | B09, B12                | plan/backend/B13-scenarios.md        | @Rohan  |
-| [x]    | B14 | Actions: proposal, approval, execution transaction                                       | P0  | B04, B12, B13           | plan/backend/B14-actions.md          | @Rohan  |
-| [x]    | B15 | Agent tools and registry                                                                 | P0  | B09, B11, B12, B13, B14 | plan/backend/B15-agent-tools.md      | @Rohan  |
+| Status | ID  | Title                                                                                    | Pri | Depends                 | Chunk file                           | Owner    |
+| ------ | --- | ---------------------------------------------------------------------------------------- | --- | ----------------------- | ------------------------------------ | -------- |
+| [x]    | B01 | Express foundation (app, env, errors, validation, logging, health)                       | P0  | S00, S01                | plan/backend/B01-foundation.md       | @Mahtab  |
+| [x]    | B02 | MongoDB connection, transactions, test harness                                           | P0  | B01                     | plan/backend/B02-database.md         | @Mahtab  |
+| [x]    | B03 | Auth middleware (JWT verify, tenant context, permissions)                                | P0  | B02                     | plan/backend/B03-auth-middleware.md  | @Mahtab  |
+| [x]    | B04 | Audit log and events (SSE, replay)                                                       | P0  | B03                     | plan/backend/B04-audit-events.md     | @Raiyan  |
+| [x]    | B05 | Tenant data features (settings, accounts, counterparties, ledger, invoices, commitments) | P0  | B03                     | plan/backend/B05-tenant-data.md      | @Raiyan  |
+| [x]    | B06 | CSV import engine (pure parse, validate, normalize)                                      | P0  | S01                     | plan/backend/B06-import-engine.md    | @Raiyan  |
+| [x]    | B07 | Import endpoints (preview, commit, dedupe, error report)                                 | P0  | B04, B05, B06           | plan/backend/B07-import-endpoints.md | @Rohan   |
+| [x]    | B08 | Forecast engine (pure) with anchor tests                                                 | P0  | S01                     | plan/backend/B08-forecast-engine.md  | @Raiyan  |
+| [x]    | B09 | Forecast service and endpoints                                                           | P0  | B05, B08                | plan/backend/B09-forecast-service.md | @Rohan   |
+| [x]    | B10 | Alerts engine, service and endpoints                                                     | P0  | B04, B09, B11           | plan/backend/B10-alerts.md           | @Rohan   |
+| [x]    | B11 | Analytics (aging, concentration, burn, collection quality)                               | P0  | B05                     | plan/backend/B11-analytics.md        | @Rohan   |
+| [x]    | B12 | Financing catalog, eligibility, ranking, cost schedule                                   | P0  | B09                     | plan/backend/B12-financing.md        | @Mahtab  |
+| [x]    | B13 | Scenarios (typed deltas, compare)                                                        | P0  | B09, B12                | plan/backend/B13-scenarios.md        | @Rohan   |
+| [x]    | B14 | Actions: proposal, approval, execution transaction                                       | P0  | B04, B12, B13           | plan/backend/B14-actions.md          | @Rohan   |
+| [x]    | B15 | Agent tools and registry                                                                 | P0  | B09, B11, B12, B13, B14 | plan/backend/B15-agent-tools.md      | @Rohan   |
 | [x]    | B16 | Agent runtime (provider adapter, loop, runs, telemetry)                                  | P0  | B15                     | plan/backend/B16-agent-runtime.md    | @shirsho |
-| [x]    | B17 | Demo seed, evidence export, proof endpoints                                              | P0  | B14, B16                | plan/backend/B17-demo-evidence.md    | @Aditya |
+| [x]    | B17 | Demo seed, evidence export, proof endpoints                                              | P0  | B14, B16                | plan/backend/B17-demo-evidence.md    | @Aditya  |
 | [x]    | B18 | Security hardening and adversarial tests                                                 | P0  | B14, B16                | plan/backend/B18-security-tests.md   | @shirsho |
-| [x]    | B19 | P1 extras (health score, briefing, collection drafts, report export)                     | P1  | B11, B15                | plan/backend/B19-p1-extras.md        | @Aditya |
+| [x]    | B19 | P1 extras (health score, briefing, collection drafts, report export)                     | P1  | B11, B15                | plan/backend/B19-p1-extras.md        | @Aditya  |
 
 ## Frontend (apps/web)
 
@@ -59,14 +59,14 @@ Read order for any chunk: `AGENTS.md`, `docs/ARCHITECTURE.md`, `docs/DB_SCHEMA.m
 | [x]    | F06 | Imports workspace                                                  | P0  | F04, B07      | plan/frontend/F06-imports.md                | @shirsho |
 | [x]    | F07 | Forecast page with drill-down                                      | P0  | F04, B09      | plan/frontend/F07-forecast.md               | @shirsho |
 | [x]    | F08 | Alerts panel                                                       | P0  | F04, B10      | plan/frontend/F08-alerts.md                 | @shirsho |
-| [x]    | F09 | Financing offers and comparison                                    | P0  | F04, B12      | plan/frontend/F09-financing.md              | @Mahtab |
-| [x]    | F10 | Scenario studio                                                    | P0  | F07, F09, B13 | plan/frontend/F10-scenarios.md              | @Aditya |
-| [x]    | F11 | Action approval flow                                               | P0  | F10, B14      | plan/frontend/F11-actions.md                | @Aditya |
+| [x]    | F09 | Financing offers and comparison                                    | P0  | F04, B12      | plan/frontend/F09-financing.md              | @Mahtab  |
+| [x]    | F10 | Scenario studio                                                    | P0  | F07, F09, B13 | plan/frontend/F10-scenarios.md              | @Aditya  |
+| [x]    | F11 | Action approval flow                                               | P0  | F10, B14      | plan/frontend/F11-actions.md                | @Aditya  |
 | [x]    | F12 | Agent chat and live activity timeline                              | P0  | F04, B16      | plan/frontend/F12-agent.md                  | @shirsho |
 | [x]    | F13 | Proof and security page, audit viewer                              | P0  | F04, B17      | plan/frontend/F13-proof.md                  | @Aditya  |
-| [x]    | F14 | Settings and team management                                       | P0  | F04, B05      | plan/frontend/F14-settings-team.md          | @Mahtab |
-| [ ]    | F15 | UX polish (states, accessibility, responsive, demo hints)          | P1  | F05-F14       | plan/frontend/F15-polish.md                 |       |
-| [~]    | F16 | End-to-end tests (Playwright)                                      | P0  | F11, F12, B17 | plan/frontend/F16-e2e.md                    | @Mahtab |
+| [x]    | F14 | Settings and team management                                       | P0  | F04, B05      | plan/frontend/F14-settings-team.md          | @Mahtab  |
+| [ ]    | F15 | UX polish (states, accessibility, responsive, demo hints)          | P1  | F05-F14       | plan/frontend/F15-polish.md                 |          |
+| [x]    | F16 | End-to-end tests (Playwright)                                      | P0  | F11, F12, B17 | plan/frontend/F16-e2e.md                    | @Mahtab  |
 
 ## Suggested lanes (adjust to your team)
 

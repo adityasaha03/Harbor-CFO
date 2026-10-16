@@ -36,8 +36,11 @@ pnpm lint
 # Format code
 pnpm format
 
-# Run tests
+# Run unit and integration tests
 pnpm test
+
+# Run Playwright End-to-End tests (headless Chromium, ~45s runtime)
+pnpm test:e2e
 
 # Run development servers (API & Web)
 pnpm dev
@@ -51,4 +54,3 @@ pnpm reset:demo
 # Run end-to-end evidence runner and generate verified artifact package
 pnpm evidence:export
 ```
-

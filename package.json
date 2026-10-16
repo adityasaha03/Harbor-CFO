@@ -13,6 +13,7 @@
     "lint:fix": "eslint . --fix",
     "typecheck": "pnpm -r --if-present typecheck",
     "test": "pnpm -r --if-present test",
+    "test:e2e": "pnpm --filter @harbor/web test:e2e",
     "seed:demo": "pnpm --filter @harbor/api seed:demo",
     "reset:demo": "pnpm --filter @harbor/api reset:demo",
     "evidence:export": "pnpm --filter @harbor/api evidence:export",
