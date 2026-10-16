@@ -19,6 +19,6 @@ Small, high-visibility features that improve clarity and the demo without adding
 - [x] Health score with unit tests (all-good = 100, floor breach lowers liquidity, no AR handled)
 - [x] Briefing endpoint with a snapshot test on the anchor tenant
 - [x] `draftCollectionMessage` tool with sanitization tests
-- [ ] Report export CSV (formula escaping tested) and PDF
+- [x] Report export CSV (formula escaping tested) and PDF
 - [ ] Stress preset tested against the anchor tenant
 - [ ] Registry allow-list test updated; master plan row B19 set to `[x]`
