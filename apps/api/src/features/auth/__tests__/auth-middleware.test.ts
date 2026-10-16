@@ -171,15 +171,15 @@ describe('Auth middlewares unit tests', () => {
   });
 
   describe('requirePermission', () => {
-    it('denies access if req.actor is missing', () => {
+    it('denies access if req.actor is missing', async () => {
       const { req, res, next, nextCalledWith } = createMockReqRes();
       const mw = requirePermission('finance:read');
-      mw(req, res, next);
+      await mw(req, res, next);
 
       expect(nextCalledWith()).toBeInstanceOf(ForbiddenError);
     });
 
-    it('grants access when role holds the requested permission', () => {
+    it('grants access when role holds the requested permission', async () => {
       const { req, res, next, nextCalledWith } = createMockReqRes();
       req.actor = {
         userId: 'user_m_01',
@@ -189,12 +189,12 @@ describe('Auth middlewares unit tests', () => {
       };
 
       const mw = requirePermission('settings:manage');
-      mw(req, res, next);
+      await mw(req, res, next);
 
       expect(nextCalledWith()).toBeUndefined();
     });
 
-    it('denies access when role lacks the permission and logs warning', () => {
+    it('denies access when role lacks the permission and logs warning', async () => {
       const { req, res, next, nextCalledWith } = createMockReqRes();
       req.actor = {
         userId: 'user_m_02',
@@ -204,7 +204,7 @@ describe('Auth middlewares unit tests', () => {
       };
 
       const mw = requirePermission('actions:approve');
-      mw(req, res, next);
+      await mw(req, res, next);
 
       const err = nextCalledWith() as ForbiddenError;
       expect(err).toBeInstanceOf(ForbiddenError);

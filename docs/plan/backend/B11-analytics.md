@@ -23,10 +23,10 @@ Contracts: fill `packages/contracts/src/analytics.ts`.
 
 ## Tasks
 
-- [ ] Contracts filled
-- [ ] Aging tests: boundaries at 0, 1, 30, 31, 60, 61 days; paid invoices excluded; AR and AP separately
-- [ ] Concentration tests: zero AR, single customer (100%), equal split, threshold shown by the alert layer, not here
-- [ ] Burn tests: insufficient history, net inflow (no burn), loan entries excluded
-- [ ] Collection quality tests with excluded and eligible invoices
-- [ ] Summary endpoint tested on the anchor tenant (AR concentration of the late customer is 66.7%) with tenant isolation
-- [ ] Routes mounted; master plan row B11 set to `[x]`
+- [x] Contracts filled
+- [x] Aging tests: boundaries at 0, 1, 30, 31, 60, 61 days; paid invoices excluded; AR and AP separately
+- [x] Concentration tests: zero AR, single customer (100%), equal split, threshold shown by the alert layer, not here
+- [x] Burn tests: insufficient history, net inflow (no burn), loan entries excluded
+- [x] Collection quality tests with excluded and eligible invoices
+- [x] Summary endpoint tested on the anchor tenant (AR concentration of the late customer is 66.7%) with tenant isolation
+- [x] Routes mounted; master plan row B11 set to `[x]`

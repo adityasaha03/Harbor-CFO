@@ -39,7 +39,7 @@ export async function tenantContext(
   try {
     const membership = await findMembership(req.auth.userId, tenantId);
     if (!membership) {
-      recordAuthDenial({
+      await recordAuthDenial({
         tenantId,
         actorId: req.auth.userId,
         action: 'membership.denied',

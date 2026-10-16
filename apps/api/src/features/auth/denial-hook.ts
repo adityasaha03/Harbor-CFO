@@ -15,11 +15,13 @@ export function setDenialAuditLogger(fn: DenialAuditLogger): void {
 /**
  * Safely dispatches an audit record for an authentication or authorization denial.
  */
-export function recordAuthDenial(input: RecordAuditInput): void {
+export async function recordAuthDenial(input: RecordAuditInput): Promise<void> {
   if (activeDenialLogger) {
-    activeDenialLogger(input).catch((err) => {
+    try {
+      await activeDenialLogger(input);
+    } catch (err) {
       logger.error({ err }, 'Failed to record auth denial in audit log');
-    });
+    }
   }
 }
 
