@@ -78,6 +78,15 @@ function hasLoadingEllipsis(node: React.ReactNode): boolean {
   return false;
 }
 
+function isPromiseLike(val: unknown): val is PromiseLike<unknown> {
+  return (
+    typeof val === 'object' &&
+    val !== null &&
+    'then' in val &&
+    typeof (val as { then: unknown }).then === 'function'
+  );
+}
+
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
@@ -121,8 +130,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       }
       if (onClick) {
         try {
-          const res = onClick(e);
-          if (res && typeof (res as Promise<unknown>).then === 'function') {
+          const res: unknown = (onClick as (event: React.MouseEvent<HTMLButtonElement>) => unknown)(e);
+          if (isPromiseLike(res)) {
             setIsActionPending(true);
             await res;
           }
