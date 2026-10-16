@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import type { ClientSession } from "mongoose";
 import type {
   ActionProposalDto,
@@ -200,7 +201,7 @@ export const proposalsService = {
         payloadHash,
         beforeVersion: tenantSettings.datasetVersion,
         afterVersion: tenantSettings.datasetVersion,
-        traceId: actor.requestId,
+        traceId: actor.requestId || randomUUID(),
       },
       session,
     );

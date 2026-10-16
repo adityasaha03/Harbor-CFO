@@ -1,4 +1,4 @@
-import { randomBytes } from "node:crypto";
+import { randomBytes, randomUUID } from "node:crypto";
 import type {
   ExecuteActionProposalResponse,
 } from "@harbor/contracts";
@@ -43,7 +43,7 @@ export const executionService = {
         decision: "denied",
         reasonCode: AUDIT_REASONS.NOT_APPROVER,
         resourceRefs: [id],
-        traceId: actor.requestId,
+        traceId: actor.requestId || randomUUID(),
       });
       throw new ForbiddenError("Only owners can execute action proposals");
     }
@@ -126,7 +126,7 @@ export const executionService = {
             reasonCode: AUDIT_REASONS.APPROVAL_CONSUMED,
             resourceRefs: [id],
             payloadHash: proposal.payloadHash,
-            traceId: actor.requestId,
+            traceId: actor.requestId || randomUUID(),
           },
           session,
         );
@@ -154,7 +154,7 @@ export const executionService = {
             reasonCode: AUDIT_REASONS.ROLE_REVOKED,
             resourceRefs: [id, approval.id],
             payloadHash: proposal.payloadHash,
-            traceId: actor.requestId,
+            traceId: actor.requestId || randomUUID(),
           },
           session,
         );
@@ -189,7 +189,7 @@ export const executionService = {
             resourceRefs: [id],
             payloadHash: proposal.payloadHash,
             beforeVersion: proposal.baseInputVersion,
-            traceId: actor.requestId,
+            traceId: actor.requestId || randomUUID(),
           },
           session,
         );
@@ -300,7 +300,7 @@ export const executionService = {
           payloadHash: proposal.payloadHash,
           beforeVersion: proposal.baseInputVersion,
           afterVersion: proposal.baseInputVersion + 1,
-          traceId: actor.requestId,
+          traceId: actor.requestId || randomUUID(),
         },
         session,
       );

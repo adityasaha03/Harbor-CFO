@@ -15,7 +15,7 @@ export const actionsRouter: Router = Router();
 // Approvals / execution rate limiter: 10 per minute per user
 const executionLimiter = createRateLimiter({
   windowMs: 60 * 1000,
-  max: process.env.NODE_ENV === "test" ? 50 : 10,
+  max: process.env.NODE_ENV === "test" ? 500 : 10,
 });
 
 // POST /api/v1/action-proposals (actions:propose)
