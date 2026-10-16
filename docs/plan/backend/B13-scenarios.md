@@ -27,11 +27,11 @@ Contracts: fill `packages/contracts/src/scenarios.ts` (discriminated union of ch
 
 ## Tasks
 
-- [ ] Contracts filled
-- [ ] `applyChanges` tests: move receipt (no duplicate), add financing flows, recurring expense, deferral requires assumption, delay customer
-- [ ] Anchor tests through the service: move `INV-AR-LATE` to 2026-10-30 gives day-21 cash 2,000,000 fen; bridge gives 3,880,000; move + revolver 1,200,000 gives 3,176,000 with total cost 42,000
-- [ ] Bridge scenario shows a repayment warning (first below floor after funding on 2026-12-08)
-- [ ] Validation tests: unknown invoice, paid invoice, date outside the horizon, offer gate failure, missing assumption
-- [ ] Stale scenario flagged after a dataset version bump
-- [ ] Employee can create, Reviewer cannot (403); tenant isolation on all routes
-- [ ] Routes mounted; master plan row B13 set to `[x]`
+- [x] Contracts filled
+- [x] `applyChanges` tests: move receipt (no duplicate), add financing flows, recurring expense, deferral requires assumption, delay customer
+- [x] Anchor tests through the service: move `INV-AR-LATE` to 2026-10-30 gives day-21 cash 2,000,000 fen; bridge gives 3,880,000; move + revolver 1,200,000 gives 3,176,000 with total cost 42,000
+- [x] Bridge scenario shows a repayment warning (first below floor after funding on 2026-12-08)
+- [x] Validation tests: unknown invoice, paid invoice, date outside the horizon, offer gate failure, missing assumption
+- [x] Stale scenario flagged after a dataset version bump
+- [x] Employee can create, Reviewer cannot (403); tenant isolation on all routes
+- [x] Routes mounted; master plan row B13 set to `[x]`
