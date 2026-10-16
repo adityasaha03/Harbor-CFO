@@ -208,8 +208,7 @@ describe('Imports preview endpoint (POST /api/v1/imports/preview)', () => {
     const res = await request(app)
       .post('/api/v1/imports/preview')
       .set('X-Tenant-Id', tenantId)
-      .field('kind', 'transactions')
-      .attach('file', TX_CLEAN);
+      .field('kind', 'transactions');
 
     expect(res.status).toBe(401);
     expect(res.body.error.code).toBe('UNAUTHENTICATED');

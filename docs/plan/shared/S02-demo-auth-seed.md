@@ -22,8 +22,8 @@ Seed demo users, companies and roles through Better Auth itself, then prove the 
 
 ## Tasks
 
-- [ ] `seed:auth` creates 4 users, 2 organizations, 3 Harbor members with the right roles; second run changes nothing
-- [ ] `auth:handshake` passes all scenarios above
-- [ ] DB_SCHEMA.md section 2 updated with verified id types
-- [ ] Any B03 fix needed is made with a test, and noted in the Deviation Log if the plan changed
-- [ ] Master plan row S02 set to `[x]`
+- [x] `seed:auth` creates 4 users, 2 organizations, 3 Harbor members with the right roles; second run changes nothing
+- [x] `auth:handshake` passes all scenarios above
+- [x] DB_SCHEMA.md section 2 updated with verified id types
+- [x] Any B03 fix needed is made with a test, and noted in the Deviation Log if the plan changed
+- [x] Master plan row S02 set to `[x]`

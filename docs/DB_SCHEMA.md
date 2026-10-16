@@ -47,18 +47,23 @@ Relations by key (no MongoDB joins in the domain; services resolve them):
 
 ## 2. Better Auth collections (owned by Better Auth, do not write from the API)
 
-The web app's Better Auth instance creates and manages these. The API only reads `member` and `organization` (and `user` for display), never writes. Exact stored field types (ObjectId vs string for ids) must be verified in chunk S02 and recorded here.
+The web app's Better Auth instance creates and manages these. The API only reads `member` and `organization` (and `user` for display), never writes.
 
-| Collection   | Key fields (per Better Auth docs)                                        | Used by API                              |
+**Verified in chunk S02 (`@better-auth/mongo-adapter` reality check):**
+- **Document IDs (`_id`)**: Better Auth's mongo-adapter generates 24-character hex strings (`new ObjectId().toString()`) and coerces `_id` into native BSON `ObjectId` in MongoDB (`user`, `organization`, `member`, `session`, `account`, `verification`, `invitation`, `jwks`). The Better Auth API exposes them as string hex IDs in responses.
+- **Foreign reference fields**: Fields referencing an `id` (such as `member.userId`, `member.organizationId`, `session.userId`, `session.activeOrganizationId`) are stored as BSON `ObjectId` in MongoDB.
+- **API membership resolution**: `apps/api/src/features/auth/membership.repository.ts` normalizes all ID lookups via `toIdQuery(id)` returning `{ $in: [id, new ObjectId(id)] }`, guaranteeing bidirectional compatibility whether an ID is stored as a native BSON `ObjectId` or as a string.
+
+| Collection   | Key fields (per Better Auth docs & verified mongo-adapter)               | Used by API                              |
 | ------------ | ------------------------------------------------------------------------ | ---------------------------------------- |
-| user         | id, name, email, emailVerified, image, createdAt, updatedAt              | read (display names)                     |
-| session      | id, userId, token, expiresAt, ipAddress, userAgent, activeOrganizationId | no                                       |
-| account      | id, userId, providerId, accountId, password (hash), timestamps           | no                                       |
-| verification | id, identifier, value, expiresAt                                         | no                                       |
-| organization | id, name, slug, logo, metadata, createdAt                                | read (tenant exists)                     |
-| member       | id, organizationId, userId, role, createdAt                              | read (role per request)                  |
-| invitation   | id, organizationId, email, role, status, expiresAt, inviterId            | no                                       |
-| jwks         | id, publicKey, privateKey (encrypted), createdAt                         | no (API reads the public JWKS over HTTP) |
+| user         | _id (ObjectId), name, email, emailVerified, image, createdAt, updatedAt  | read (display names)                     |
+| session      | _id (ObjectId), userId (ObjectId), token, expiresAt, activeOrganizationId| no                                       |
+| account      | _id (ObjectId), userId (ObjectId), providerId, accountId, password (hash)| no                                       |
+| verification | _id (ObjectId), identifier, value, expiresAt                             | no                                       |
+| organization | _id (ObjectId), name, slug, logo, metadata, createdAt                    | read (tenant exists)                     |
+| member       | _id (ObjectId), organizationId (ObjectId), userId (ObjectId), role       | read (role per request)                  |
+| invitation   | _id (ObjectId), organizationId (ObjectId), email, role, status, expiresAt| no                                       |
+| jwks         | _id (ObjectId), publicKey, privateKey (encrypted), createdAt             | no (API reads the public JWKS over HTTP) |
 
 Roles stored in `member.role`: `owner`, `employee`, `reviewer`.
 
