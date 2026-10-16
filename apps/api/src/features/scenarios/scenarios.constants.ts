@@ -1,0 +1,4 @@
+export const SCENARIO_EXPIRY_HOURS = 24;
+export const SCENARIOS_DEFAULT_LIMIT = 50;
+export const SCENARIO_RATE_LIMIT_WINDOW_MS = 60 * 1000;
+export const SCENARIO_RATE_LIMIT_MAX = 30;
