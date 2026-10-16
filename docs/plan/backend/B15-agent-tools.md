@@ -22,10 +22,10 @@ Contracts: fill `packages/contracts/src/agent.ts` (tool names, RunEvent shapes).
 
 ## Tasks
 
-- [ ] Contracts filled
-- [ ] Registry exactly matches the tool list; test fails if a tool is added without an explicit allow-list entry
-- [ ] `runTool` tests: unregistered tool, unknown arg key, forged `tenantId` argument ignored/rejected, permission denied for Reviewer on `simulateScenario`, budget exhausted
-- [ ] Each tool tested against the anchor tenant with exact numbers from earlier chunks
-- [ ] Sanitization tests: masked names, no PII, truncated untrusted text, no description leakage elsewhere
-- [ ] `createActionProposal` produces a pending proposal and never executes anything (ledger unchanged)
-- [ ] Master plan row B15 set to `[x]`
+- [x] Contracts filled
+- [x] Registry exactly matches the tool list; test fails if a tool is added without an explicit allow-list entry
+- [x] `runTool` tests: unregistered tool, unknown arg key, forged `tenantId` argument ignored/rejected, permission denied for Reviewer on `simulateScenario`, budget exhausted
+- [x] Each tool tested against the anchor tenant with exact numbers from earlier chunks
+- [x] Sanitization tests: masked names, no PII, truncated untrusted text, no description leakage elsewhere
+- [x] `createActionProposal` produces a pending proposal and never executes anything (ledger unchanged)
+- [x] Master plan row B15 set to `[x]`
