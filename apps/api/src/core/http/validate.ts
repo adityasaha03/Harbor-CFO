@@ -9,8 +9,24 @@ export interface ValidationSchemas {
   params?: ZodType;
 }
 
+function hasMongoOperator(obj: unknown): boolean {
+  if (!obj || typeof obj !== 'object') return false;
+  for (const [key, val] of Object.entries(obj as Record<string, unknown>)) {
+    if (key.startsWith('$') || key.includes('.') || key.includes('[$') || key.endsWith(']')) return true;
+    if (typeof val === 'object' && val !== null && hasMongoOperator(val)) return true;
+  }
+  return false;
+}
+
 export function validate(schemas: ValidationSchemas) {
   return (req: Request, _res: Response, next: NextFunction): void => {
+    if (
+      (req.params && hasMongoOperator(req.params)) ||
+      (req.query && hasMongoOperator(req.query)) ||
+      (req.body && hasMongoOperator(req.body))
+    ) {
+      return next(new ValidationError('Request contains forbidden operator characters ($ or .)'));
+    }
     if (schemas.params) {
       const result = schemas.params.safeParse(req.params);
       if (!result.success) {
