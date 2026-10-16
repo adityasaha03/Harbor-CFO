@@ -22,7 +22,7 @@ export function AppShell({ children }: AppShellProps) {
   return (
     <div className="flex min-h-screen w-full bg-background">
       {/* Desktop Sidebar */}
-      <aside className="hidden w-64 shrink-0 border-r border-sidebar-border bg-sidebar md:flex md:flex-col">
+      <aside className="hidden w-64 shrink-0 border-r border-sidebar-border bg-sidebar md:sticky md:top-0 md:flex md:h-screen md:flex-col">
         <div className="flex h-16 items-center gap-2.5 border-b border-sidebar-border px-6">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow">
             <Compass className="h-5 w-5" />
@@ -66,7 +66,7 @@ export function AppShell({ children }: AppShellProps) {
       </aside>
 
       {/* Main Content Area */}
-      <div className="flex flex-1 flex-col overflow-hidden">
+      <div className="flex min-w-0 flex-1 flex-col">
         {/* Header */}
         <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border/80 bg-background/95 px-4 backdrop-blur sm:px-6">
           <div className="flex items-center gap-3">
@@ -113,7 +113,7 @@ export function AppShell({ children }: AppShellProps) {
         </header>
 
         {/* Page body */}
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8">
+        <main className="flex-1 p-4 sm:p-6 md:p-8">
           <div className="mx-auto max-w-7xl space-y-6">{children}</div>
         </main>
       </div>
