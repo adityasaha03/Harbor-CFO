@@ -11,6 +11,7 @@ import { commitmentsRouter } from './features/commitments';
 import { importsRouter } from './features/imports';
 import { forecastsRouter } from './features/forecast';
 import { analyticsRouter } from './features/analytics';
+import { financingRouter } from './features/financing';
 
 export function createApiRouter(): Router {
   const router = Router();
@@ -29,7 +30,7 @@ export function createApiRouter(): Router {
   router.use('/forecasts', forecastsRouter);           // B09: Forecast service & endpoints
   // router.use('/alerts', alertsRouter);                 // B10: Alerts endpoints
   router.use('/analytics', analyticsRouter);           // B11: Analytics summary
-  // router.use('/financing', financingRouter);           // B12: Financing catalog & matching
+  router.use('/financing', financingRouter);           // B12: Financing catalog & matching
   // router.use('/scenarios', scenariosRouter);           // B13: Scenarios compare
   // router.use('/action-proposals', actionsRouter);       // B14: Action approval & execution
   // router.use('/agent', agentRouter);                   // B16: Agent runtime & runs

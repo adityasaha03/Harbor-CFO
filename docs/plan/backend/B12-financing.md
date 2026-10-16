@@ -44,10 +44,10 @@ Contracts: fill `packages/contracts/src/financing.ts`.
 
 ## Tasks
 
-- [ ] Contracts filled; offers seed function `seedFinancingOffers()` is idempotent (upsert by `(code, version)`)
-- [ ] Schedule tests with the exact numbers above
-- [ ] Eligibility tests for every gate: equipment excluded for working_capital, merchant advance `cannot_assess`, slow term loan `FUNDS_TOO_LATE`, invoice advance blocked without open AR
-- [ ] Scoring tests: components, ordering, tie handling, cost normalization with equal costs
-- [ ] On the anchor tenant: gap 5,000,000 fen, breach date 2026-10-29, `bridge-term` suggested 6,000,000 and eligible, `revolver-flex` eligible with gap coverage 0.98, `term-loan-slow` excluded with `FUNDS_TOO_LATE`, `merchant-advance` cannot assess, `equipment-lease` excluded
-- [ ] Endpoint tests with tenant isolation; Reviewer can read
-- [ ] Routes mounted; DB_SCHEMA.md unchanged or updated; master plan row B12 set to `[x]`
+- [x] Contracts filled; offers seed function `seedFinancingOffers()` is idempotent (upsert by `(code, version)`)
+- [x] Schedule tests with the exact numbers above
+- [x] Eligibility tests for every gate: equipment excluded for working_capital, merchant advance `cannot_assess`, slow term loan `FUNDS_TOO_LATE`, invoice advance blocked without open AR
+- [x] Scoring tests: components, ordering, tie handling, cost normalization with equal costs
+- [x] On the anchor tenant: gap 5,000,000 fen, breach date 2026-10-29, `bridge-term` suggested 6,000,000 and eligible, `revolver-flex` eligible with gap coverage 0.98, `term-loan-slow` excluded with `FUNDS_TOO_LATE`, `merchant-advance` cannot assess, `equipment-lease` excluded
+- [x] Endpoint tests with tenant isolation; Reviewer can read
+- [x] Routes mounted; DB_SCHEMA.md unchanged or updated; master plan row B12 set to `[x]`
