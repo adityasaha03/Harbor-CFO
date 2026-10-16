@@ -24,10 +24,10 @@ The Owner sees the exact action, its consequences and the current state, approve
 
 ## Tasks
 
-- [ ] List, card, dialog and payload details
-- [ ] Approve -> execute flow with idempotency key reuse; double-click cannot create two executions (button lock plus server idempotency)
-- [ ] Result view with operation id, ledger entries and before/after forecast
-- [ ] Conflict, expired and stale-version states with regenerate action
-- [ ] Role-based read-only mode
-- [ ] RTL tests: owner flow with mocked API (calls in order, same idempotency key on retry), employee disabled state, 409 handling
-- [ ] Master plan row F11 set to `[x]`
+- [x] List, card, dialog and payload details
+- [x] Approve -> execute flow with idempotency key reuse; double-click cannot create two executions (button lock plus server idempotency)
+- [x] Result view with operation id, ledger entries and before/after forecast
+- [x] Conflict, expired and stale-version states with regenerate action
+- [x] Role-based read-only mode
+- [x] RTL tests: owner flow with mocked API (calls in order, same idempotency key on retry), employee disabled state, 409 handling
+- [x] Master plan row F11 set to `[x]`
