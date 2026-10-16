@@ -44,3 +44,18 @@ export const alertSchema = z.object({
 });
 
 export type Alert = z.infer<typeof alertSchema>;
+export type AlertDto = Alert;
+
+export const alertsQuerySchema = z.object({
+  status: alertStatusSchema.optional(),
+});
+export type AlertsQuery = z.infer<typeof alertsQuerySchema>;
+
+export const raiseRepaymentPressureInputSchema = z.object({
+  refId: z.string().min(1),
+  title: z.string().min(1),
+  summary: z.string().min(1),
+  evidence: z.array(alertEvidenceItemSchema).default([]),
+  inputVersion: z.number().int().optional(),
+});
+export type RaiseRepaymentPressureInput = z.infer<typeof raiseRepaymentPressureInputSchema>;

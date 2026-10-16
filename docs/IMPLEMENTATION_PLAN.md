@@ -36,7 +36,7 @@ Read order for any chunk: `AGENTS.md`, `docs/ARCHITECTURE.md`, `docs/DB_SCHEMA.m
 | [x]    | B07 | Import endpoints (preview, commit, dedupe, error report)                                 | P0  | B04, B05, B06           | plan/backend/B07-import-endpoints.md | @Rohan |
 | [x]    | B08 | Forecast engine (pure) with anchor tests                                                 | P0  | S01                     | plan/backend/B08-forecast-engine.md  | @Raiyan |
 | [x]    | B09 | Forecast service and endpoints                                                           | P0  | B05, B08                | plan/backend/B09-forecast-service.md | @Rohan |
-| [~]    | B10 | Alerts engine, service and endpoints                                                     | P0  | B04, B09, B11           | plan/backend/B10-alerts.md           | @Rohan |
+| [x]    | B10 | Alerts engine, service and endpoints                                                     | P0  | B04, B09, B11           | plan/backend/B10-alerts.md           | @Rohan |
 | [x]    | B11 | Analytics (aging, concentration, burn, collection quality)                               | P0  | B05                     | plan/backend/B11-analytics.md        | @Rohan |
 | [ ]    | B12 | Financing catalog, eligibility, ranking, cost schedule                                   | P0  | B09                     | plan/backend/B12-financing.md        |       |
 | [ ]    | B13 | Scenarios (typed deltas, compare)                                                        | P0  | B09, B12                | plan/backend/B13-scenarios.md        |       |
