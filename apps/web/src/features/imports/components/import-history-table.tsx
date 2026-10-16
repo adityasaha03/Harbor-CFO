@@ -1,0 +1,184 @@
+import * as React from 'react';
+import { useImports } from '../api/use-imports';
+import { downloadErrorReport } from '../api/download-error-report';
+import type { ImportStatus } from '@harbor/contracts';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Download, FileText, RefreshCw, AlertCircle } from 'lucide-react';
+
+export function ImportHistoryTable() {
+  const { data: imports, isLoading, isError, error, refetch, isRefetching } = useImports();
+
+  const handleDownloadErrors = async (id: string, fileName: string) => {
+    try {
+      await downloadErrorReport(id, fileName);
+    } catch {
+      // Handled silently
+    }
+  };
+
+  return (
+    <div className="space-y-3" data-testid="import-history-table">
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 className="text-base font-semibold text-foreground">Import History</h3>
+          <p className="text-xs text-muted-foreground">
+            Audit log of all uploaded files, validation results, and commits
+          </p>
+        </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => refetch()}
+          disabled={isLoading || isRefetching}
+          className="h-8 px-2 text-xs"
+        >
+          <RefreshCw className={`h-3.5 w-3.5 mr-1.5 ${isRefetching ? 'animate-spin' : ''}`} />
+          Refresh
+        </Button>
+      </div>
+
+      <div className="rounded-md border bg-card overflow-hidden">
+        {isLoading ? (
+          <div className="p-6 space-y-3">
+            <Skeleton className="h-6 w-full" />
+            <Skeleton className="h-6 w-full" />
+            <Skeleton className="h-6 w-full" />
+          </div>
+        ) : isError ? (
+          <div className="p-6 text-center text-sm text-destructive flex items-center justify-center gap-2">
+            <AlertCircle className="h-4 w-4" />
+            <span>Failed to load import history: {error?.message || 'Unknown error'}</span>
+          </div>
+        ) : !imports || imports.length === 0 ? (
+          <div className="p-8 text-center text-sm text-muted-foreground">
+            <FileText className="h-8 w-8 mx-auto mb-2 opacity-50" />
+            <p>No imports recorded yet.</p>
+            <p className="text-xs text-muted-foreground/80 mt-1">
+              Upload a transaction or invoice CSV above to stage your first import.
+            </p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[180px]">File Name</TableHead>
+                  <TableHead className="w-[100px]">Kind</TableHead>
+                  <TableHead className="w-[110px]">Status</TableHead>
+                  <TableHead className="w-[140px]">Rows (Acc/Rej)</TableHead>
+                  <TableHead className="w-[150px]">Date</TableHead>
+                  <TableHead className="w-[100px]">Actor</TableHead>
+                  <TableHead className="text-right w-[110px]">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {imports.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell className="font-mono text-xs font-medium max-w-[200px] truncate" title={item.fileName}>
+                      {item.fileName}
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="outline" className="capitalize text-xs font-normal">
+                        {item.kind}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <StatusBadge status={item.status} />
+                    </TableCell>
+                    <TableCell className="text-xs">
+                      <span className="text-emerald-600 dark:text-emerald-400 font-medium">
+                        {item.acceptedRows}
+                      </span>
+                      <span className="text-muted-foreground mx-1">/</span>
+                      <span className={item.rejectedRows > 0 ? 'text-destructive font-medium' : 'text-muted-foreground'}>
+                        {item.rejectedRows}
+                      </span>
+                      <span className="text-muted-foreground text-[10px] ml-1">
+                        (tot {item.rowCount})
+                      </span>
+                    </TableCell>
+                    <TableCell className="text-xs text-muted-foreground">
+                      {formatDate(item.committedAt || item.createdAt)}
+                    </TableCell>
+                    <TableCell className="font-mono text-xs text-muted-foreground max-w-[100px] truncate" title={item.actorId}>
+                      {item.actorId ? item.actorId.slice(0, 8) : 'system'}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {item.rejectedRows > 0 && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-7 px-2 text-xs text-destructive hover:text-destructive"
+                          onClick={() => handleDownloadErrors(item.id, item.fileName)}
+                          title="Download error CSV"
+                        >
+                          <Download className="h-3 w-3 mr-1" />
+                          Errors
+                        </Button>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function StatusBadge({ status }: { status: ImportStatus }) {
+  switch (status) {
+    case 'committed':
+      return (
+        <Badge variant="default" className="bg-emerald-600 hover:bg-emerald-600 text-white text-xs">
+          Committed
+        </Badge>
+      );
+    case 'rejected':
+      return (
+        <Badge variant="destructive" className="text-xs">
+          Rejected
+        </Badge>
+      );
+    case 'previewed':
+      return (
+        <Badge variant="outline" className="text-amber-600 border-amber-300 dark:border-amber-700 text-xs">
+          Previewed
+        </Badge>
+      );
+    case 'expired':
+      return (
+        <Badge variant="secondary" className="text-xs text-muted-foreground">
+          Expired
+        </Badge>
+      );
+    default:
+      return <Badge variant="outline" className="text-xs">{status}</Badge>;
+  }
+}
+
+function formatDate(iso: string): string {
+  try {
+    const d = new Date(iso);
+    return d.toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  } catch {
+    return iso;
+  }
+}
