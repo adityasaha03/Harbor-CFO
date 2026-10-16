@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:e2e": "playwright test",
     "seed:auth": "tsx scripts/seed-auth.ts"
   },
   "dependencies": {
@@ -44,6 +45,7 @@
   },
   "devDependencies": {
     "@better-auth/memory-adapter": "^1.7.9",
+    "@playwright/test": "^1.64.1",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
     "@testing-library/user-event": "^14.6.1",
