@@ -25,9 +25,9 @@ Upload a CSV, see an exact preview or row-level errors, commit atomically, and w
 
 ## Tasks
 
-- [ ] Dropzone, templates download, preview and error views
-- [ ] Commit flow with confirmation, 409 and expired handling
-- [ ] History table
-- [ ] Re-uploading the same file shows the duplicate message and does not change totals (manual check against the API)
-- [ ] RTL tests: error list rendering, commit disabled while pending, Reviewer view
-- [ ] Master plan row F06 set to `[x]`
+- [x] Dropzone, templates download, preview and error views
+- [x] Commit flow with confirmation, 409 and expired handling
+- [x] History table
+- [x] Re-uploading the same file shows the duplicate message and does not change totals (manual check against the API)
+- [x] RTL tests: error list rendering, commit disabled while pending, Reviewer view
+- [x] Master plan row F06 set to `[x]`

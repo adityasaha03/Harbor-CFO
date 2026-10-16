@@ -56,7 +56,7 @@ Read order for any chunk: `AGENTS.md`, `docs/ARCHITECTURE.md`, `docs/DB_SCHEMA.m
 | [x]    | F03 | Auth pages, company onboarding, route guards                       | P0  | F02           | plan/frontend/F03-auth-pages.md             | @shirsho |
 | [x]    | F04 | API client, JWT handling, permissions layer, role-aware navigation | P0  | F03           | plan/frontend/F04-api-client-permissions.md | @shirsho |
 | [x]    | F05 | Dashboard overview                                                 | P0  | F04, B09, B11 | plan/frontend/F05-dashboard.md              | @shirsho |
-| [~]    | F06 | Imports workspace                                                  | P0  | F04, B07      | plan/frontend/F06-imports.md                | @shirsho |
+| [x]    | F06 | Imports workspace                                                  | P0  | F04, B07      | plan/frontend/F06-imports.md                | @shirsho |
 | [x]    | F07 | Forecast page with drill-down                                      | P0  | F04, B09      | plan/frontend/F07-forecast.md               | @shirsho |
 | [ ]    | F08 | Alerts panel                                                       | P0  | F04, B10      | plan/frontend/F08-alerts.md                 |       |
 | [ ]    | F09 | Financing offers and comparison                                    | P0  | F04, B12      | plan/frontend/F09-financing.md              |       |
