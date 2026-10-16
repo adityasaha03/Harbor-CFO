@@ -24,10 +24,10 @@ Let a user build a what-if (collect a receipt early, borrow, defer a payment, ad
 
 ## Tasks
 
-- [ ] Builder with the four forms and client-side validation
-- [ ] Preset prefill and URL handling
-- [ ] Comparison chart and metrics table; changed dates highlighted
-- [ ] Repayment warning and stale banner
-- [ ] On anchor data: moving `INV-AR-LATE` to 2026-10-30 shows day-21 cash 20,000.00; the bridge shows 38,800.00 with total cost 3,000.00 and a warning on 2026-12-08; move + 12,000 revolver shows 31,760.00 with cost 420.00
-- [ ] RTL tests: validation errors, warning rendering, stale banner
-- [ ] Master plan row F10 set to `[x]`
+- [x] Builder with the four forms and client-side validation
+- [x] Preset prefill and URL handling
+- [x] Comparison chart and metrics table; changed dates highlighted
+- [x] Repayment warning and stale banner
+- [x] On anchor data: moving `INV-AR-LATE` to 2026-10-30 shows day-21 cash 20,000.00; the bridge shows 38,800.00 with total cost 3,000.00 and a warning on 2026-12-08; move + 12,000 revolver shows 31,760.00 with cost 420.00
+- [x] RTL tests: validation errors, warning rendering, stale banner
+- [x] Master plan row F10 set to `[x]`

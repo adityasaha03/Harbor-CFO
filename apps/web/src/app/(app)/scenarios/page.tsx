@@ -1,18 +1,17 @@
+import * as React from 'react';
 import { PageHeader } from '@/components/layout/page-header';
-import { Card, CardContent } from '@/components/ui/card';
+import { ScenarioStudio } from '@/features/scenarios';
 
 export default function ScenariosPage() {
   return (
     <div className="space-y-6">
       <PageHeader
         title="Scenario Studio"
-        description="Model non-committing what-if cash modifications and remedy comparisons."
+        description="Model non-committing what-if cash modifications, simulate liquidity remedies, and analyze trade-offs."
       />
-      <Card>
-        <CardContent className="flex min-h-[200px] items-center justify-center p-6 text-sm text-muted-foreground">
-          Scenario studio will be initialized in chunk F10.
-        </CardContent>
-      </Card>
+      <React.Suspense fallback={<div className="p-6 text-sm text-muted-foreground">Loading Scenario Studio…</div>}>
+        <ScenarioStudio />
+      </React.Suspense>
     </div>
   );
 }
