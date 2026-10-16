@@ -23,11 +23,11 @@ Load a tenant's data into the engine, persist forecast runs (cached by input ver
 
 ## Tasks
 
-- [ ] Model with unique index on `(tenantId, inputVersion, algorithmVersion, scenarioHash)`
-- [ ] Loader tested against seeded tenant data (use the B08 anchor fixture as DB data)
-- [ ] Baseline for the seeded anchor tenant returns day-21 closing -2,000,000 via the API
-- [ ] Caching test: second request does not recompute; changing `datasetVersion` triggers a new run
-- [ ] Listener test: committing an import (or publishing `import.committed`) produces a new baseline and a `forecast.updated` event
-- [ ] Day drill-down endpoint tested; tenant isolation test for all three endpoints
-- [ ] Contributor extension point documented and tested with a fake contributor
-- [ ] Routes mounted; master plan row B09 set to `[x]`
+- [x] Model with unique index on `(tenantId, inputVersion, algorithmVersion, scenarioHash)`
+- [x] Loader tested against seeded tenant data (use the B08 anchor fixture as DB data)
+- [x] Baseline for the seeded anchor tenant returns day-21 closing -2,000,000 via the API
+- [x] Caching test: second request does not recompute; changing `datasetVersion` triggers a new run
+- [x] Listener test: committing an import (or publishing `import.committed`) produces a new baseline and a `forecast.updated` event
+- [x] Day drill-down endpoint tested; tenant isolation test for all three endpoints
+- [x] Contributor extension point documented and tested with a fake contributor
+- [x] Routes mounted; master plan row B09 set to `[x]`

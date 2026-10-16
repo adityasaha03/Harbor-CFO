@@ -147,3 +147,76 @@ export const forecastResultSchema = z.object({
 });
 
 export type ForecastResult = z.infer<typeof forecastResultSchema>;
+
+// ---------------------------------------------------------------------------
+// Forecast run DTO and API schemas
+// ---------------------------------------------------------------------------
+
+export const forecastSummaryWithConservativeSchema = forecastSummarySchema.extend({
+  conservativeMinCashMinor: minorSchema.optional(),
+});
+
+export type ForecastSummaryWithConservative = z.infer<
+  typeof forecastSummaryWithConservativeSchema
+>;
+
+export const forecastRunDtoSchema = z.object({
+  id: z.string(),
+  tenantId: z.string(),
+  inputVersion: z.number().int(),
+  algorithmVersion: z.string(),
+  scenarioHash: z.string(),
+  scenarioId: z.string().optional(),
+  asOfDate: dateOnlySchema,
+  horizonDays: z.number().int(),
+  floorMinor: minorSchema,
+  openingCashMinor: minorSchema,
+  points: z.array(forecastPointSchema),
+  summary: forecastSummaryWithConservativeSchema,
+  createdAt: z.string(),
+  updatedAt: z.string(),
+});
+
+export type ForecastRunDto = z.infer<typeof forecastRunDtoSchema>;
+
+export const latestForecastResponseSchema = z.object({
+  run: forecastRunDtoSchema,
+  weeklyBuckets: z.array(weeklyBucketSchema),
+  asOfDate: dateOnlySchema,
+  horizonDays: z.number().int(),
+  assumptions: z.array(z.string()),
+  inputVersion: z.number().int(),
+  isStale: z.boolean(),
+});
+
+export type LatestForecastResponse = z.infer<typeof latestForecastResponseSchema>;
+
+export const forecastDayDrilldownResponseSchema = z.object({
+  date: dateOnlySchema,
+  closingMinor: minorSchema,
+  receiptsMinor: minorSchema,
+  paymentsMinor: minorSchema,
+  financingMinor: minorSchema,
+  feesMinor: minorSchema,
+  repaymentsMinor: minorSchema,
+  sources: z.array(flowSourceSchema),
+  invoices: z.array(z.record(z.unknown())),
+  commitments: z.array(z.record(z.unknown())),
+});
+
+export type ForecastDayDrilldownResponse = z.infer<
+  typeof forecastDayDrilldownResponseSchema
+>;
+
+export const forecastIdParamSchema = z.object({
+  id: z.string().min(1),
+});
+
+export type ForecastIdParam = z.infer<typeof forecastIdParamSchema>;
+
+export const forecastDayParamSchema = z.object({
+  date: dateOnlySchema,
+});
+
+export type ForecastDayParam = z.infer<typeof forecastDayParamSchema>;
+

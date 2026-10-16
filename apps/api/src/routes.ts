@@ -9,6 +9,7 @@ import { ledgerEntriesRouter } from './features/ledger';
 import { invoicesRouter } from './features/invoices';
 import { commitmentsRouter } from './features/commitments';
 import { importsRouter } from './features/imports';
+import { forecastsRouter } from './features/forecast';
 
 export function createApiRouter(): Router {
   const router = Router();
@@ -24,7 +25,7 @@ export function createApiRouter(): Router {
   router.use('/invoices', invoicesRouter);             // B05: Tenant data features
   router.use('/commitments', commitmentsRouter);       // B05: Tenant data features
   router.use('/imports', importsRouter);               // B07: Import endpoints
-  // router.use('/forecasts', forecastsRouter);           // B09: Forecast service & endpoints
+  router.use('/forecasts', forecastsRouter);           // B09: Forecast service & endpoints
   // router.use('/alerts', alertsRouter);                 // B10: Alerts endpoints
   // router.use('/analytics', analyticsRouter);           // B11: Analytics summary
   // router.use('/financing', financingRouter);           // B12: Financing catalog & matching
