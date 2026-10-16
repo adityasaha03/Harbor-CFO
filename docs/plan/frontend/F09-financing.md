@@ -24,8 +24,8 @@ Show eligible offers ranked with exact costs and repayment impact, excluded offe
 
 ## Tasks
 
-- [ ] Controls, header, eligible cards with score breakdown and schedule
-- [ ] Excluded and cannot-assess sections with plain-language reasons
-- [ ] On anchor data: `bridge-term` suggested 60,000.00 with total cost 3,000.00; `term-loan-slow` excluded (funds too late); `merchant-advance` cannot assess; `equipment-lease` excluded for purpose
-- [ ] RTL tests: reason mapping, warning badge, no-gap state
-- [ ] Master plan row F09 set to `[x]`
+- [x] Controls, header, eligible cards with score breakdown and schedule
+- [x] Excluded and cannot-assess sections with plain-language reasons
+- [x] On anchor data: `bridge-term` suggested 60,000.00 with total cost 3,000.00; `term-loan-slow` excluded (funds too late); `merchant-advance` cannot assess; `equipment-lease` excluded for purpose
+- [x] RTL tests: reason mapping, warning badge, no-gap state
+- [x] Master plan row F09 set to `[x]`

@@ -34,6 +34,7 @@ export const queryKeys = {
   financing: {
     all: ['financing'] as const,
     offers: () => [...queryKeys.financing.all, 'offers'] as const,
+    match: (params?: unknown) => [...queryKeys.financing.all, 'match', params] as const,
   },
 
   scenarios: {
