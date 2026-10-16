@@ -1,0 +1,8 @@
+{
+  "commit": "ab9b7755669c7d4a0a53ca3ed3494c42a9a18048",
+  "seedVersion": 1,
+  "environment": "test",
+  "llmProvider": "replay",
+  "timestamp": "2026-10-16T10:06:02.392Z",
+  "nodeVersion": "v24.19.0"
+}

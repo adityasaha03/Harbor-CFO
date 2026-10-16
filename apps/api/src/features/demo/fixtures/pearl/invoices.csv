@@ -1,0 +1,4 @@
+invoiceId,direction,counterpartyId,total,outstanding,currency,dueDate,expectedSettlementDate,status
+PEARL-INV-001,AR,PEARL-CUST-1,8000.00,8000.00,CNY,2026-10-31,2026-11-05,open
+PEARL-INV-002,AP,PEARL-FLOUR-SUPPLIER,4500.00,4500.00,CNY,2026-10-28,2026-10-28,open
+PEARL-INV-003,AR,PEARL-CUST-2,6000.00,0.00,CNY,2026-09-30,2026-09-29,paid

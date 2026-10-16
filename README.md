@@ -41,4 +41,14 @@ pnpm test
 
 # Run development servers (API & Web)
 pnpm dev
+
+# Seed demo data (Harbor Wholesale & Pearl Bakery via authentic import pipeline)
+pnpm seed:demo
+
+# Reset active demo tenant (requires ENABLE_DEMO_RESET=true)
+pnpm reset:demo
+
+# Run end-to-end evidence runner and generate verified artifact package
+pnpm evidence:export
 ```
+

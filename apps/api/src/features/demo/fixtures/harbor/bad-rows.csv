@@ -1,0 +1,4 @@
+invoiceId,direction,counterpartyId,total,outstanding,currency,dueDate,expectedSettlementDate,status
+INV-BAD-01,AR,CUSTOMER-A,10000.00,10000.00,USD,2026-11-01,2026-11-05,open
+INV-BAD-02,AR,CUSTOMER-B,-5000.00,5000.00,CNY,2026-11-02,2026-11-06,open
+INV-BAD-03,XX,CUSTOMER-C,8000.00,8000.00,CNY,invalid-date,2026-11-07,open

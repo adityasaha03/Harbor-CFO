@@ -17,6 +17,9 @@ import { scenariosRouter } from './features/scenarios';
 import { actionsRouter } from './features/actions';
 import { agentRouter } from './features/agent';
 
+import { demoRouter } from './features/demo';
+import { evidenceRouter, proofRouter } from './features/evidence';
+
 export function createApiRouter(): Router {
   const router = Router();
 
@@ -40,9 +43,9 @@ export function createApiRouter(): Router {
   router.use('/agent', agentRouter); // B16: Agent runtime & runs
   router.use('/events', eventsRouter); // B04: Event stream & replay
   router.use('/audit-events', auditRouter); // B04: Audit log endpoints
-  // router.use('/evidence', evidenceRouter);             // B17: Evidence export
-  // router.use('/proof', proofRouter);                   // B17: Proof endpoints
-  // router.use('/demo', demoRouter);                     // B17: Demo reset
+  router.use('/evidence', evidenceRouter); // B17: Evidence export
+  router.use('/proof', proofRouter); // B17: Proof endpoints
+  router.use('/demo', demoRouter); // B17: Demo reset
 
   return router;
 }

@@ -1,0 +1,28 @@
+{
+  "tenantAlias": "HarborWholesale",
+  "totalImports": 2,
+  "committedImports": 2,
+  "deduplicatedCount": 0,
+  "records": [
+    {
+      "importId": "6ad1f704b8383da2a2f06094",
+      "kind": "transactions",
+      "fileName": "transactions.csv",
+      "status": "committed",
+      "rowCount": 19,
+      "acceptedRows": 19,
+      "rejectedRows": 0,
+      "committedAt": "2026-10-16T10:05:56.335Z"
+    },
+    {
+      "importId": "6ad1f704b8383da2a2f060a1",
+      "kind": "invoices",
+      "fileName": "invoices.csv",
+      "status": "committed",
+      "rowCount": 12,
+      "acceptedRows": 12,
+      "rejectedRows": 0,
+      "committedAt": "2026-10-16T10:05:56.376Z"
+    }
+  ]
+}
