@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
@@ -41,24 +43,19 @@ export interface ButtonProps
   loadingText?: string;
 }
 
-function hasLoaderInDescendants(node: React.ReactNode): boolean {
+function hasSpinningLoader(node: React.ReactNode): boolean {
   if (!node) return false;
   if (React.isValidElement(node)) {
     const props = node.props as { className?: string; children?: React.ReactNode };
     if (props?.className && props.className.includes('animate-spin')) {
       return true;
     }
-    const type = node.type as { displayName?: string; name?: string };
-    const name = type?.displayName || type?.name || '';
-    if (name.toLowerCase().includes('loader') || name.toLowerCase().includes('spin')) {
-      return true;
-    }
     if (props?.children) {
-      return hasLoaderInDescendants(props.children);
+      return hasSpinningLoader(props.children);
     }
   }
   if (Array.isArray(node)) {
-    return node.some(hasLoaderInDescendants);
+    return node.some(hasSpinningLoader);
   }
   return false;
 }
@@ -79,61 +76,6 @@ function hasLoadingEllipsis(node: React.ReactNode): boolean {
     return node.some(hasLoadingEllipsis);
   }
   return false;
-}
-
-function isIconElement(node: React.ReactNode): boolean {
-  if (!React.isValidElement(node)) return false;
-  if (node.type === 'svg') return true;
-  const props = node.props as { className?: string };
-  if (props?.className && /\b(h-[345]|w-[345])\b/.test(props.className)) {
-    return true;
-  }
-  const type = node.type as { displayName?: string; name?: string };
-  const name = type?.displayName || type?.name || '';
-  return Boolean(name && props?.className);
-}
-
-function renderButtonContent(
-  children: React.ReactNode,
-  showLoader: boolean,
-  loadingText?: string,
-): React.ReactNode {
-  if (!showLoader) {
-    return children;
-  }
-
-  if (loadingText) {
-    return (
-      <>
-        <Loader2 className="mr-2 h-4 w-4 animate-spin shrink-0" />
-        {loadingText}
-      </>
-    );
-  }
-
-  if (hasLoaderInDescendants(children)) {
-    return children;
-  }
-
-  if (Array.isArray(children)) {
-    const firstNonEmptyIndex = children.findIndex((c) => Boolean(c));
-    if (firstNonEmptyIndex !== -1 && isIconElement(children[firstNonEmptyIndex])) {
-      const cloned = [...children];
-      cloned[firstNonEmptyIndex] = (
-        <Loader2 key="button-loader-spinner" className="mr-2 h-4 w-4 animate-spin shrink-0" />
-      );
-      return cloned;
-    }
-  } else if (isIconElement(children)) {
-    return <Loader2 className="h-4 w-4 animate-spin shrink-0" />;
-  }
-
-  return (
-    <>
-      <Loader2 className="mr-2 h-4 w-4 animate-spin shrink-0" />
-      {children}
-    </>
-  );
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -169,6 +111,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const isEllipsisLoading = Boolean(disabled && hasLoadingEllipsis(children));
     const showLoader = Boolean(isLoading || isActionPending || isEllipsisLoading);
     const isDisabled = Boolean(disabled || showLoader);
+    const alreadyHasSpinner = hasSpinningLoader(children);
 
     const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
       if (isDisabled) {
@@ -198,7 +141,10 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         onClick={handleClick}
         {...props}
       >
-        {renderButtonContent(children, showLoader, loadingText)}
+        {showLoader && !alreadyHasSpinner && (
+          <Loader2 className="mr-2 h-4 w-4 animate-spin shrink-0" />
+        )}
+        {showLoader && loadingText ? loadingText : children}
       </button>
     );
   },
