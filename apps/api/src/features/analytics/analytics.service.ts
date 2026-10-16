@@ -1,15 +1,17 @@
 import type { ClientSession } from 'mongoose';
-import type { CompleteAnalyticsSummary } from '@harbor/contracts';
+import type { CompleteAnalyticsSummary, HealthScoreResponse } from '@harbor/contracts';
 import { tenantsRepository } from '../tenants';
 import { ledgerService } from '../ledger';
 import { LedgerEntryModel } from '../ledger/ledger.model';
 import { invoicesRepository } from '../invoices';
 import { ImportModel } from '../imports/imports.model';
+import { forecastService } from '../forecast';
 import {
   computeAging,
   computeConcentration,
   computeBurn,
   computeCollectionQuality,
+  computeHealthScore,
   type AnalyticsInvoiceItem,
   type AnalyticsLedgerItem,
 } from './engine';
@@ -149,5 +151,38 @@ export const analyticsService = {
           : null,
       lastImportAt,
     };
+  },
+
+  /**
+   * Computes the cash health score (0-100) and top deduction reasons.
+   */
+  async getHealthScore(
+    tenantId: string,
+    session?: ClientSession,
+  ): Promise<HealthScoreResponse> {
+    const [summary, baseline, settings] = await Promise.all([
+      this.getSummary(tenantId, session),
+      forecastService.getBaseline(tenantId, session),
+      tenantsRepository.findByTenantId(tenantId, session),
+    ]);
+
+    const totalArMinor = summary.arAging.totalMinor;
+    const overdueArMinor =
+      summary.arAging.days1to30Minor +
+      summary.arAging.days31to60Minor +
+      summary.arAging.days61to90Minor +
+      summary.arAging.daysOver90Minor;
+
+    return computeHealthScore({
+      minCashMinor: baseline.run.summary.minCashMinor,
+      floorMinor: summary.floorMinor,
+      totalArMinor,
+      overdueArMinor,
+      topCustomerSharePct: summary.concentration.shareBps / 100,
+      concentrationThresholdPct: settings?.concentrationThresholdPct ?? 40,
+      lastImportAt: summary.dataCompleteness?.lastImportAt ?? null,
+      asOfDate: summary.asOf,
+      staleDataDays: settings?.staleDataDays ?? 14,
+    });
   },
 };

@@ -9,3 +9,15 @@ analyticsRouter.get(
   protect('finance:read'),
   analyticsController.getSummary,
 );
+
+analyticsRouter.get(
+  '/health-score',
+  protect('finance:read'),
+  analyticsController.getHealthScore,
+);
+
+analyticsRouter.get(
+  '/health',
+  protect('finance:read'),
+  analyticsController.getHealthScore,
+);

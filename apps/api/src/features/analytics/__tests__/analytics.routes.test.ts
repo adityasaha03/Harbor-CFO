@@ -162,4 +162,34 @@ describe('B11 Analytics Summary Route & Anchor Assertions', () => {
 
     expect(res.status).toBe(401);
   });
+
+  it('GET /api/v1/analytics/health-score returns calculated score and top deductions', async () => {
+    const res = await request(app)
+      .get('/api/v1/analytics/health-score')
+      .set('Authorization', `Bearer ${tokenAnchor}`)
+      .set('X-Tenant-Id', tenantAnchor);
+
+    expect(res.status).toBe(200);
+    const data = res.body.data;
+    expect(data.score).toBeGreaterThanOrEqual(0);
+    expect(data.score).toBeLessThanOrEqual(100);
+    expect(['Excellent', 'Good', 'Fair', 'Poor']).toContain(data.rating);
+    expect(data.components).toHaveProperty('liquidity');
+    expect(data.components).toHaveProperty('receivables');
+    expect(data.components).toHaveProperty('concentration');
+    expect(data.components).toHaveProperty('freshness');
+    expect(data.deductions).toHaveProperty('liquidity');
+    expect(Array.isArray(data.reasons)).toBe(true);
+    expect(data.summary).toBeTruthy();
+  });
+
+  it('GET /api/v1/analytics/health alias route works seamlessly', async () => {
+    const res = await request(app)
+      .get('/api/v1/analytics/health')
+      .set('Authorization', `Bearer ${tokenAnchor}`)
+      .set('X-Tenant-Id', tenantAnchor);
+
+    expect(res.status).toBe(200);
+    expect(res.body.data.score).toBeDefined();
+  });
 });

@@ -144,3 +144,33 @@ export type CompleteAnalyticsSummary = AnalyticsSummary & {
   collectionQuality: CollectionQualityResult;
   dataCompleteness: DataCompleteness;
 };
+
+// ---------------------------------------------------------------------------
+// Health Score (B19 P1)
+// ---------------------------------------------------------------------------
+
+export const healthScoreComponentsSchema = z.object({
+  liquidity: z.number().min(0).max(1),
+  receivables: z.number().min(0).max(1),
+  concentration: z.number().min(0).max(1),
+  freshness: z.number().min(0).max(1),
+});
+export type HealthScoreComponents = z.infer<typeof healthScoreComponentsSchema>;
+
+export const healthScoreDeductionsSchema = z.object({
+  liquidity: z.number().nonnegative(),
+  receivables: z.number().nonnegative(),
+  concentration: z.number().nonnegative(),
+  freshness: z.number().nonnegative(),
+});
+export type HealthScoreDeductions = z.infer<typeof healthScoreDeductionsSchema>;
+
+export const healthScoreResponseSchema = z.object({
+  score: z.number().int().min(0).max(100),
+  rating: z.enum(['Excellent', 'Good', 'Fair', 'Poor']),
+  components: healthScoreComponentsSchema,
+  deductions: healthScoreDeductionsSchema,
+  reasons: z.array(z.string()),
+  summary: z.string(),
+});
+export type HealthScoreResponse = z.infer<typeof healthScoreResponseSchema>;
