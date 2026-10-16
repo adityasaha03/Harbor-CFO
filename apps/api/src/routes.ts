@@ -15,6 +15,7 @@ import { analyticsRouter } from './features/analytics';
 import { financingRouter } from './features/financing';
 import { scenariosRouter } from './features/scenarios';
 import { actionsRouter } from './features/actions';
+import { agentRouter } from './features/agent';
 
 export function createApiRouter(): Router {
   const router = Router();
@@ -36,7 +37,7 @@ export function createApiRouter(): Router {
   router.use('/financing', financingRouter); // B12: Financing catalog & matching
   router.use('/scenarios', scenariosRouter); // B13: Scenarios compare
   router.use('/action-proposals', actionsRouter); // B14: Action approval & execution
-  // router.use('/agent', agentRouter);                   // B16: Agent runtime & runs
+  router.use('/agent', agentRouter); // B16: Agent runtime & runs
   router.use('/events', eventsRouter); // B04: Event stream & replay
   router.use('/audit-events', auditRouter); // B04: Audit log endpoints
   // router.use('/evidence', evidenceRouter);             // B17: Evidence export

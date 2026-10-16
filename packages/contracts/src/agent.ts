@@ -292,6 +292,31 @@ export const agentToolCallRecordSchema = z.object({
 });
 export type AgentToolCallRecord = z.infer<typeof agentToolCallRecordSchema>;
 
+export const AGENT_STYLES = ["standard", "plain"] as const;
+export type AgentStyle = (typeof AGENT_STYLES)[number];
+export const agentStyleSchema = z.enum(AGENT_STYLES);
+
+export const createAgentRunInputSchema = z
+  .object({
+    prompt: z.string().trim().min(1).max(1000),
+    style: agentStyleSchema.optional().default("standard"),
+  })
+  .strict();
+export type CreateAgentRunInput = z.infer<typeof createAgentRunInputSchema>;
+
+export const createAgentRunResponseSchema = z.object({
+  runId: z.string(),
+});
+export type CreateAgentRunResponse = z.infer<
+  typeof createAgentRunResponseSchema
+>;
+
+export const agentRunsQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  pageSize: z.coerce.number().int().min(1).max(100).default(20),
+});
+export type AgentRunsQuery = z.infer<typeof agentRunsQuerySchema>;
+
 export const agentRunDtoSchema = z.object({
   id: z.string(),
   tenantId: z.string(),
@@ -301,6 +326,7 @@ export const agentRunDtoSchema = z.object({
   status: agentRunStatusSchema,
   toolCalls: z.array(agentToolCallRecordSchema),
   finalAnswer: z.string().optional(),
+  evidenceRefs: z.array(z.string()).default([]),
   proposalIds: z.array(z.string()).default([]),
   tokenUsage: z
     .object({
@@ -314,3 +340,4 @@ export const agentRunDtoSchema = z.object({
   completedAt: z.string().optional(),
 });
 export type AgentRunDto = z.infer<typeof agentRunDtoSchema>;
+

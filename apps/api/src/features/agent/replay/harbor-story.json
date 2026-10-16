@@ -1,0 +1,77 @@
+{
+  "stories": [
+    {
+      "intent": "propose_bridge",
+      "keywords": ["propose", "bridge", "loan", "apply", "action", "borrow", "financing proposal"],
+      "turns": [
+        {
+          "toolCalls": [
+            {
+              "name": "createActionProposal",
+              "args": {
+                "offerCode": "bridge-term",
+                "principalMinor": 6000000
+              }
+            }
+          ]
+        }
+      ],
+      "finalTemplate": "A sandbox financing proposal has been prepared for {{principalFormatted}} using the Bridge Term Loan (Offer: bridge-term, Proposal ID: {{proposalId}}). Upfront fee is {{upfrontFeeFormatted}}. Note: Approval by the Owner is required in the Action Approval flow before any execution can occur. All actions remain simulated."
+    },
+    {
+      "intent": "compare_remedies",
+      "keywords": ["remedy", "remedies", "options", "compare", "alternative", "solve", "solution", "fix"],
+      "turns": [
+        {
+          "toolCalls": [
+            {
+              "name": "matchFinancing",
+              "args": {
+                "desiredAmountMinor": 5000000,
+                "purpose": "working_capital"
+              }
+            }
+          ]
+        },
+        {
+          "toolCalls": [
+            {
+              "name": "getForecast",
+              "args": {}
+            }
+          ]
+        }
+      ],
+      "finalTemplate": "We analyzed available remedies for Harbor Wholesale's projected cash gap:\n1. **Do Nothing**: Cash falls to {{minCashFormatted}} on day 21 (gap of {{liquidityGapFormatted}}), borrowing cost ¥0.00.\n2. **Accelerate Receivables**: Collecting the overdue ¥40,000 receivable eliminates most of the immediate pressure.\n3. **Bridge Term Loan**: Drawing {{bestOfferPrincipal}} through {{bestOfferName}} restores cash at day 21 to {{bestOfferDay21}} with total financing cost of {{bestOfferCost}}.\n\nYou can review and simulate these options or propose the financing remedy directly."
+    },
+    {
+      "intent": "explain_gap",
+      "keywords": ["gap", "short", "explain", "liquidity", "position", "why", "cash", "forecast", "overview"],
+      "turns": [
+        {
+          "toolCalls": [
+            {
+              "name": "getForecast",
+              "args": {}
+            },
+            {
+              "name": "getKpis",
+              "args": {}
+            }
+          ]
+        },
+        {
+          "toolCalls": [
+            {
+              "name": "listOverdueInvoices",
+              "args": {
+                "minDays": 0
+              }
+            }
+          ]
+        }
+      ],
+      "finalTemplate": "Harbor Wholesale faces a projected liquidity gap of {{liquidityGapFormatted}} by {{minCashDate}}. On day 21, cash drops to {{minCashFormatted}}, falling below the target floor of {{floorFormatted}}. This drop is driven by ¥120,000 in upcoming operational disbursements against only ¥20,000 in scheduled collections. There are {{overdueCount}} overdue invoice(s) totaling {{totalOverdueFormatted}} that could provide immediate relief if expedited."
+    }
+  ]
+}
