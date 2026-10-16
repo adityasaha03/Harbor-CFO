@@ -21,8 +21,8 @@ A prioritized, deduplicated list of alerts with evidence, updating live.
 
 ## Tasks
 
-- [ ] Panel, cards, filters, evidence links
-- [ ] Reused on the dashboard (replaces the temporary banner list if needed)
-- [ ] RTL tests for sorting, empty state, resolved filter
-- [ ] After importing the anchor data the four expected alerts appear (manual check)
-- [ ] Master plan row F08 set to `[x]`
+- [x] Panel, cards, filters, evidence links
+- [x] Reused on the dashboard (replaces the temporary banner list if needed)
+- [x] RTL tests for sorting, empty state, resolved filter
+- [x] After importing the anchor data the four expected alerts appear (manual check)
+- [x] Master plan row F08 set to `[x]`
