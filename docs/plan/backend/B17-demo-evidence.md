@@ -44,9 +44,9 @@ Scripts in `apps/api/package.json`: `seed:demo`, `reset:demo`, `evidence:export`
 
 ## Tasks
 
-- [ ] Fixtures created; after `seed:demo` the baseline forecast day-21 closing is -2,000,000 fen and the alerts from B10 exist
-- [ ] Seed is idempotent (run twice: identical counts) and uses the import service
-- [ ] Reset endpoint guarded (non-demo tenant 403, env flag off 404)
-- [ ] `evidence:export` produces every listed file; `manifest.json` checksums verify; evidence includes the denied cases
-- [ ] Proof checks implemented with tests for Owner, Employee, Reviewer
-- [ ] Scripts documented in the README section of S03; master plan row B17 set to `[x]`
+- [x] Fixtures created; after `seed:demo` the baseline forecast day-21 closing is -2,000,000 fen and the alerts from B10 exist
+- [x] Seed is idempotent (run twice: identical counts) and uses the import service
+- [x] Reset endpoint guarded (non-demo tenant 403, env flag off 404)
+- [x] `evidence:export` produces every listed file; `manifest.json` checksums verify; evidence includes the denied cases
+- [x] Proof checks implemented with tests for Owner, Employee, Reviewer
+- [x] Scripts documented in the README section of S03; master plan row B17 set to `[x]`

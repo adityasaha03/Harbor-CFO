@@ -1,0 +1,34 @@
+[
+  {
+    "label": "Office rent",
+    "direction": "outflow",
+    "category": "rent",
+    "amountMinor": 1200000,
+    "frequency": "monthly",
+    "anchorOn": "2026-10-25"
+  },
+  {
+    "label": "Staff payroll",
+    "direction": "outflow",
+    "category": "payroll",
+    "amountMinor": 4500000,
+    "frequency": "monthly",
+    "anchorOn": "2026-11-03"
+  },
+  {
+    "label": "Quarterly overhead",
+    "direction": "outflow",
+    "category": "overhead",
+    "amountMinor": 800000,
+    "frequency": "once",
+    "anchorOn": "2026-11-07"
+  },
+  {
+    "label": "Recurring retail receipts",
+    "direction": "inflow",
+    "category": "customer_receipt",
+    "amountMinor": 1000000,
+    "frequency": "weekly",
+    "anchorOn": "2026-11-11"
+  }
+]

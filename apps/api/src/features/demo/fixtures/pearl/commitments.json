@@ -1,0 +1,18 @@
+[
+  {
+    "label": "Bakery space lease",
+    "direction": "outflow",
+    "category": "rent",
+    "amountMinor": 500000,
+    "frequency": "monthly",
+    "anchorOn": "2026-10-25"
+  },
+  {
+    "label": "Bakers staff wages",
+    "direction": "outflow",
+    "category": "payroll",
+    "amountMinor": 1200000,
+    "frequency": "monthly",
+    "anchorOn": "2026-11-05"
+  }
+]

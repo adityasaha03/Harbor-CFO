@@ -1,0 +1,16 @@
+{
+  "reportingCurrency": "CNY",
+  "minimumCashMinor": 3000000,
+  "businessTimezone": "Asia/Shanghai",
+  "forecastAsOfDate": "2026-10-20",
+  "overdueAlertDays": 7,
+  "concentrationThresholdPct": 40,
+  "staleDataDays": 14,
+  "isDemo": true,
+  "profile": {
+    "yearsInOperation": 6,
+    "employeeCount": 14,
+    "industry": "wholesale_trade",
+    "monthlyRevenueMinor": 10000000
+  }
+}

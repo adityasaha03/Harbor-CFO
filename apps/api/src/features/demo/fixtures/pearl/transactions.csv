@@ -1,0 +1,4 @@
+externalId,date,accountId,amount,currency,category,description
+TX-PEARL-01,2026-09-29,OPERATING,6000.00,CNY,customer_receipt,Payment from Pearl Cust 2
+TX-PEARL-02,2026-09-30,OPERATING,-12000.00,CNY,payroll,September bakery payroll
+TX-PEARL-03,2026-10-10,OPERATING,-3500.00,CNY,overhead,Packaging materials

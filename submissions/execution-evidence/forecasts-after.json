@@ -1,0 +1,1106 @@
+{
+  "_id": "6ad1f70a23c04410761ef4e1",
+  "inputVersion": 4,
+  "tenantId": "6ad1f6f2b8383da2a2f05aa7",
+  "algorithmVersion": "fc-1",
+  "scenarioHash": "base",
+  "asOfDate": "2026-10-20",
+  "createdAt": "2026-10-16T10:06:02.211Z",
+  "floorMinor": 3000000,
+  "horizonDays": 91,
+  "openingCashMinor": 8000000,
+  "points": [
+    {
+      "date": "2026-10-20",
+      "closingMinor": 8000000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-10-21",
+      "closingMinor": 8000000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-10-22",
+      "closingMinor": 13880000,
+      "receiptsMinor": 6000000,
+      "paymentsMinor": 120000,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": [
+        {
+          "type": "ledger",
+          "id": "6ad1f70a23c04410761ef4c8",
+          "label": "Upfront fee - bridge-term",
+          "amountMinor": -120000
+        },
+        {
+          "type": "ledger",
+          "id": "6ad1f70a23c04410761ef4c7",
+          "label": "Sandbox financing draw - bridge-term",
+          "amountMinor": 6000000
+        }
+      ]
+    },
+    {
+      "date": "2026-10-23",
+      "closingMinor": 13880000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-10-24",
+      "closingMinor": 13880000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-10-25",
+      "closingMinor": 12680000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 1200000,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": [
+        {
+          "type": "commitment",
+          "id": "6ad1f704b8383da2a2f06086",
+          "label": "Office rent",
+          "amountMinor": -1200000
+        }
+      ]
+    },
+    {
+      "date": "2026-10-26",
+      "closingMinor": 12680000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-10-27",
+      "closingMinor": 12680000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-10-28",
+      "closingMinor": 12680000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-10-29",
+      "closingMinor": 7180000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 5500000,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": [
+        {
+          "type": "invoice",
+          "id": "INV-AP-201",
+          "label": "AP INV-AP-201 (VENDOR-X)",
+          "amountMinor": -5500000
+        }
+      ]
+    },
+    {
+      "date": "2026-10-30",
+      "closingMinor": 7180000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-10-31",
+      "closingMinor": 7180000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-11-01",
+      "closingMinor": 9180000,
+      "receiptsMinor": 2000000,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": [
+        {
+          "type": "invoice",
+          "id": "INV-AR-101",
+          "label": "AR INV-AR-101 (CUSTOMER-B)",
+          "amountMinor": 2000000
+        }
+      ]
+    },
+    {
+      "date": "2026-11-02",
+      "closingMinor": 9180000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-11-03",
+      "closingMinor": 4680000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 4500000,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": [
+        {
+          "type": "commitment",
+          "id": "6ad1f704b8383da2a2f06088",
+          "label": "Staff payroll",
+          "amountMinor": -4500000
+        }
+      ]
+    },
+    {
+      "date": "2026-11-04",
+      "closingMinor": 4680000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-11-05",
+      "closingMinor": 4680000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-11-06",
+      "closingMinor": 4680000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-11-07",
+      "closingMinor": 3880000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 800000,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": [
+        {
+          "type": "commitment",
+          "id": "6ad1f704b8383da2a2f0608a",
+          "label": "Quarterly overhead",
+          "amountMinor": -800000
+        }
+      ]
+    },
+    {
+      "date": "2026-11-08",
+      "closingMinor": 3880000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-11-09",
+      "closingMinor": 3880000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-11-10",
+      "closingMinor": 3880000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-11-11",
+      "closingMinor": 4880000,
+      "receiptsMinor": 1000000,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": [
+        {
+          "type": "commitment",
+          "id": "6ad1f704b8383da2a2f0608c",
+          "label": "Recurring retail receipts",
+          "amountMinor": 1000000
+        }
+      ]
+    },
+    {
+      "date": "2026-11-12",
+      "closingMinor": 4880000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-11-13",
+      "closingMinor": 8880000,
+      "receiptsMinor": 4000000,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": [
+        {
+          "type": "invoice",
+          "id": "INV-AR-LATE",
+          "label": "AR INV-AR-LATE (CUSTOMER-A)",
+          "amountMinor": 4000000
+        }
+      ]
+    },
+    {
+      "date": "2026-11-14",
+      "closingMinor": 8880000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-11-15",
+      "closingMinor": 8880000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-11-16",
+      "closingMinor": 8880000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-11-17",
+      "closingMinor": 8880000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-11-18",
+      "closingMinor": 9880000,
+      "receiptsMinor": 1000000,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": [
+        {
+          "type": "commitment",
+          "id": "6ad1f704b8383da2a2f0608c",
+          "label": "Recurring retail receipts",
+          "amountMinor": 1000000
+        }
+      ]
+    },
+    {
+      "date": "2026-11-19",
+      "closingMinor": 9880000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-11-20",
+      "closingMinor": 9880000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-11-21",
+      "closingMinor": 9880000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-11-22",
+      "closingMinor": 9880000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-11-23",
+      "closingMinor": 9880000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-11-24",
+      "closingMinor": 7820000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 2060000,
+      "sources": [
+        {
+          "type": "financing",
+          "id": "op_d843328a24135285",
+          "label": "Financing commitment bridge-term (repayment)",
+          "amountMinor": -2060000
+        }
+      ]
+    },
+    {
+      "date": "2026-11-25",
+      "closingMinor": 7620000,
+      "receiptsMinor": 1000000,
+      "paymentsMinor": 1200000,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": [
+        {
+          "type": "commitment",
+          "id": "6ad1f704b8383da2a2f06086",
+          "label": "Office rent",
+          "amountMinor": -1200000
+        },
+        {
+          "type": "commitment",
+          "id": "6ad1f704b8383da2a2f0608c",
+          "label": "Recurring retail receipts",
+          "amountMinor": 1000000
+        }
+      ]
+    },
+    {
+      "date": "2026-11-26",
+      "closingMinor": 7620000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-11-27",
+      "closingMinor": 7620000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-11-28",
+      "closingMinor": 7620000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-11-29",
+      "closingMinor": 7620000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-11-30",
+      "closingMinor": 7620000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-12-01",
+      "closingMinor": 7620000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-12-02",
+      "closingMinor": 8620000,
+      "receiptsMinor": 1000000,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": [
+        {
+          "type": "commitment",
+          "id": "6ad1f704b8383da2a2f0608c",
+          "label": "Recurring retail receipts",
+          "amountMinor": 1000000
+        }
+      ]
+    },
+    {
+      "date": "2026-12-03",
+      "closingMinor": 4120000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 4500000,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": [
+        {
+          "type": "commitment",
+          "id": "6ad1f704b8383da2a2f06088",
+          "label": "Staff payroll",
+          "amountMinor": -4500000
+        }
+      ]
+    },
+    {
+      "date": "2026-12-04",
+      "closingMinor": 4120000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-12-05",
+      "closingMinor": 4120000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-12-06",
+      "closingMinor": 4120000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-12-07",
+      "closingMinor": 4120000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-12-08",
+      "closingMinor": 2060000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 2060000,
+      "sources": [
+        {
+          "type": "financing",
+          "id": "op_d843328a24135285",
+          "label": "Financing commitment bridge-term (repayment)",
+          "amountMinor": -2060000
+        }
+      ]
+    },
+    {
+      "date": "2026-12-09",
+      "closingMinor": 3060000,
+      "receiptsMinor": 1000000,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": [
+        {
+          "type": "commitment",
+          "id": "6ad1f704b8383da2a2f0608c",
+          "label": "Recurring retail receipts",
+          "amountMinor": 1000000
+        }
+      ]
+    },
+    {
+      "date": "2026-12-10",
+      "closingMinor": 3060000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-12-11",
+      "closingMinor": 3060000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-12-12",
+      "closingMinor": 3060000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-12-13",
+      "closingMinor": 3060000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-12-14",
+      "closingMinor": 3060000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-12-15",
+      "closingMinor": 3060000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-12-16",
+      "closingMinor": 4060000,
+      "receiptsMinor": 1000000,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": [
+        {
+          "type": "commitment",
+          "id": "6ad1f704b8383da2a2f0608c",
+          "label": "Recurring retail receipts",
+          "amountMinor": 1000000
+        }
+      ]
+    },
+    {
+      "date": "2026-12-17",
+      "closingMinor": 4060000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-12-18",
+      "closingMinor": 4060000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-12-19",
+      "closingMinor": 4060000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-12-20",
+      "closingMinor": 4060000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-12-21",
+      "closingMinor": 4060000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-12-22",
+      "closingMinor": 2000000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 2060000,
+      "sources": [
+        {
+          "type": "financing",
+          "id": "op_d843328a24135285",
+          "label": "Financing commitment bridge-term (repayment)",
+          "amountMinor": -2060000
+        }
+      ]
+    },
+    {
+      "date": "2026-12-23",
+      "closingMinor": 3000000,
+      "receiptsMinor": 1000000,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": [
+        {
+          "type": "commitment",
+          "id": "6ad1f704b8383da2a2f0608c",
+          "label": "Recurring retail receipts",
+          "amountMinor": 1000000
+        }
+      ]
+    },
+    {
+      "date": "2026-12-24",
+      "closingMinor": 3000000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-12-25",
+      "closingMinor": 1800000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 1200000,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": [
+        {
+          "type": "commitment",
+          "id": "6ad1f704b8383da2a2f06086",
+          "label": "Office rent",
+          "amountMinor": -1200000
+        }
+      ]
+    },
+    {
+      "date": "2026-12-26",
+      "closingMinor": 1800000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-12-27",
+      "closingMinor": 1800000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-12-28",
+      "closingMinor": 1800000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-12-29",
+      "closingMinor": 1800000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2026-12-30",
+      "closingMinor": 2800000,
+      "receiptsMinor": 1000000,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": [
+        {
+          "type": "commitment",
+          "id": "6ad1f704b8383da2a2f0608c",
+          "label": "Recurring retail receipts",
+          "amountMinor": 1000000
+        }
+      ]
+    },
+    {
+      "date": "2026-12-31",
+      "closingMinor": 2800000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2027-01-01",
+      "closingMinor": 2800000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2027-01-02",
+      "closingMinor": 2800000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2027-01-03",
+      "closingMinor": -1700000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 4500000,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": [
+        {
+          "type": "commitment",
+          "id": "6ad1f704b8383da2a2f06088",
+          "label": "Staff payroll",
+          "amountMinor": -4500000
+        }
+      ]
+    },
+    {
+      "date": "2027-01-04",
+      "closingMinor": -1700000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2027-01-05",
+      "closingMinor": -1700000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2027-01-06",
+      "closingMinor": -700000,
+      "receiptsMinor": 1000000,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": [
+        {
+          "type": "commitment",
+          "id": "6ad1f704b8383da2a2f0608c",
+          "label": "Recurring retail receipts",
+          "amountMinor": 1000000
+        }
+      ]
+    },
+    {
+      "date": "2027-01-07",
+      "closingMinor": -700000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2027-01-08",
+      "closingMinor": -700000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2027-01-09",
+      "closingMinor": -700000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2027-01-10",
+      "closingMinor": -700000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2027-01-11",
+      "closingMinor": -700000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2027-01-12",
+      "closingMinor": -700000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2027-01-13",
+      "closingMinor": 300000,
+      "receiptsMinor": 1000000,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": [
+        {
+          "type": "commitment",
+          "id": "6ad1f704b8383da2a2f0608c",
+          "label": "Recurring retail receipts",
+          "amountMinor": 1000000
+        }
+      ]
+    },
+    {
+      "date": "2027-01-14",
+      "closingMinor": 300000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2027-01-15",
+      "closingMinor": 300000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2027-01-16",
+      "closingMinor": 300000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2027-01-17",
+      "closingMinor": 300000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    },
+    {
+      "date": "2027-01-18",
+      "closingMinor": 300000,
+      "receiptsMinor": 0,
+      "paymentsMinor": 0,
+      "financingMinor": 0,
+      "feesMinor": 0,
+      "repaymentsMinor": 0,
+      "sources": []
+    }
+  ],
+  "summary": {
+    "minCashMinor": -1700000,
+    "minCashDate": "2027-01-03",
+    "firstBelowFloorDate": "2026-12-08",
+    "firstNegativeDate": "2027-01-03",
+    "liquidityGapMinor": 4700000,
+    "conservativeMinCashMinor": -1700000
+  },
+  "updatedAt": "2026-10-16T10:06:02.217Z"
+}
