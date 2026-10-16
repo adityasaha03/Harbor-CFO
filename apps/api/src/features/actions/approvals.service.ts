@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import type { ClientSession } from "mongoose";
 import type {
   ApprovalDto,
@@ -43,7 +44,7 @@ export const approvalsService = {
           decision: "denied",
           reasonCode: AUDIT_REASONS.NOT_APPROVER,
           resourceRefs: [id],
-          traceId: actor.requestId,
+          traceId: actor.requestId || randomUUID(),
         },
         session,
       );
@@ -79,7 +80,7 @@ export const approvalsService = {
           reasonCode: AUDIT_REASONS.EXPIRED,
           resourceRefs: [id],
           payloadHash: proposal.payloadHash,
-          traceId: actor.requestId,
+          traceId: actor.requestId || randomUUID(),
         },
         session,
       );
@@ -114,7 +115,7 @@ export const approvalsService = {
           payloadHash: proposal.payloadHash,
           beforeVersion: proposal.baseInputVersion,
           afterVersion: tenantSettings.datasetVersion,
-          traceId: actor.requestId,
+          traceId: actor.requestId || randomUUID(),
         },
         session,
       );
@@ -143,7 +144,7 @@ export const approvalsService = {
           reasonCode: AUDIT_REASONS.STALE_VERSION,
           resourceRefs: [id, proposal.canonicalPayload.offerCode],
           payloadHash: proposal.payloadHash,
-          traceId: actor.requestId,
+          traceId: actor.requestId || randomUUID(),
         },
         session,
       );
@@ -164,7 +165,7 @@ export const approvalsService = {
           reasonCode: AUDIT_REASONS.HASH_MISMATCH,
           resourceRefs: [id],
           payloadHash: input.payloadHash,
-          traceId: actor.requestId,
+          traceId: actor.requestId || randomUUID(),
         },
         session,
       );
@@ -211,7 +212,7 @@ export const approvalsService = {
         payloadHash: proposal.payloadHash,
         beforeVersion: tenantSettings.datasetVersion,
         afterVersion: tenantSettings.datasetVersion,
-        traceId: actor.requestId,
+        traceId: actor.requestId || randomUUID(),
       },
       session,
     );
@@ -268,7 +269,7 @@ export const approvalsService = {
         reasonCode: AUDIT_REASONS.SUCCESS,
         resourceRefs: [id],
         payloadHash: proposal.payloadHash,
-        traceId: actor.requestId,
+        traceId: actor.requestId || randomUUID(),
       },
       session,
     );

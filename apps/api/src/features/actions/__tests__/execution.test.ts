@@ -24,18 +24,20 @@ describe("B14 Actions - Execution Tests", () => {
   useTestDb();
   const app = createApp();
 
-  const tenantId = "tenant_actions_execution_test";
-
   beforeAll(async () => {
     await setupTestAuth();
   });
 
   beforeEach(async () => {
-    await seedAnchorTenant(tenantId);
     await seedFinancingOffers();
   });
 
-  async function createAndApproveProposal(ownerId: string, ownerToken: string, principalMinor = 6_000_000) {
+  async function createAndApproveProposal(
+    tenantId: string,
+    ownerId: string,
+    ownerToken: string,
+    principalMinor = 6_000_000,
+  ) {
     const propRes = await request(app)
       .post("/api/v1/action-proposals")
       .set("Authorization", `Bearer ${ownerToken}`)
@@ -63,6 +65,8 @@ describe("B14 Actions - Execution Tests", () => {
   }
 
   it("Execution happy path on the anchor tenant: day-21 cash goes from -2,000,000 to 3,880,000 fen with the bridge, exactly 2 ledger entries, 1 commitment, 1 operation, datasetVersion +1", async () => {
+    const tenantId = "tenant_exec_happy";
+    await seedAnchorTenant(tenantId);
     const ownerId = "usr_exec_happy";
     await seedTestMember(tenantId, ownerId, "owner");
     const ownerToken = await issueTestToken(ownerId);
@@ -75,7 +79,7 @@ describe("B14 Actions - Execution Tests", () => {
     const initialDatasetVersion = baselineBefore.inputVersion;
 
     // 2. Propose & approve 6,000,000 fen bridge term loan
-    const { proposal } = await createAndApproveProposal(ownerId, ownerToken, 6_000_000);
+    const { proposal } = await createAndApproveProposal(tenantId, ownerId, ownerToken, 6_000_000);
 
     // Count ledger entries before
     const ledgerCountBefore = await LedgerEntryModel.countDocuments({ tenantId });
@@ -136,11 +140,14 @@ describe("B14 Actions - Execution Tests", () => {
   });
 
   it("Idempotency: same key twice returns the same operation without mutating ledger; different hash returns 409", async () => {
+    const tenantId = "tenant_exec_idemp";
+    await seedAnchorTenant(tenantId);
     const ownerId = "usr_exec_idemp";
     await seedTestMember(tenantId, ownerId, "owner");
     const ownerToken = await issueTestToken(ownerId);
 
-    const { proposal } = await createAndApproveProposal(ownerId, ownerToken, 6_000_000);
+    const { proposal } = await createAndApproveProposal(tenantId, ownerId, ownerToken, 6_000_000);
+
 
     // First call
     const res1 = await request(app)
@@ -168,7 +175,7 @@ describe("B14 Actions - Execution Tests", () => {
     expect(ledgerCountAfterSecond).toBe(ledgerCountAfterFirst);
 
     // Reusing same idempotency key for another proposal with different hash returns 409
-    const { proposal: proposal2 } = await createAndApproveProposal(ownerId, ownerToken, 7_000_000);
+    const { proposal: proposal2 } = await createAndApproveProposal(tenantId, ownerId, ownerToken, 7_000_000);
     const conflictRes = await request(app)
       .post(`/api/v1/action-proposals/${proposal2.id}/execute`)
       .set("Authorization", `Bearer ${ownerToken}`)
@@ -180,11 +187,13 @@ describe("B14 Actions - Execution Tests", () => {
   });
 
   it("Concurrency: 10 parallel executes of the same approval produce exactly one mutation", async () => {
+    const tenantId = "tenant_exec_concur";
+    await seedAnchorTenant(tenantId);
     const ownerId = "usr_exec_concur";
     await seedTestMember(tenantId, ownerId, "owner");
     const ownerToken = await issueTestToken(ownerId);
 
-    const { proposal } = await createAndApproveProposal(ownerId, ownerToken, 6_000_000);
+    const { proposal } = await createAndApproveProposal(tenantId, ownerId, ownerToken, 6_000_000);
 
     const initialDatasetVersion = (await tenantsRepository.findByTenantId(tenantId))!.datasetVersion;
     const initialLedgerCount = await LedgerEntryModel.countDocuments({ tenantId });
@@ -224,6 +233,8 @@ describe("B14 Actions - Execution Tests", () => {
   });
 
   it("Mutated offer terms (version bump) after proposal invalidate the approval", async () => {
+    const tenantId = "tenant_exec_mutate";
+    await seedAnchorTenant(tenantId);
     const ownerId = "usr_exec_mutate";
     await seedTestMember(tenantId, ownerId, "owner");
     const ownerToken = await issueTestToken(ownerId);
@@ -258,11 +269,13 @@ describe("B14 Actions - Execution Tests", () => {
   });
 
   it("Role revoked between approval and execution blocks execution and changes nothing", async () => {
+    const tenantId = "tenant_exec_revoke";
+    await seedAnchorTenant(tenantId);
     const ownerId = "usr_exec_revoke";
     await seedTestMember(tenantId, ownerId, "owner");
     const ownerToken = await issueTestToken(ownerId);
 
-    const { proposal } = await createAndApproveProposal(ownerId, ownerToken, 6_000_000);
+    const { proposal } = await createAndApproveProposal(tenantId, ownerId, ownerToken, 6_000_000);
 
     const initialLedgerCount = await LedgerEntryModel.countDocuments({ tenantId });
 
@@ -291,11 +304,13 @@ describe("B14 Actions - Execution Tests", () => {
   });
 
   it("Rolled-back transaction test (force a failure): zero partial writes, approval still unconsumed", async () => {
+    const tenantId = "tenant_exec_rollback";
+    await seedAnchorTenant(tenantId);
     const ownerId = "usr_exec_rollback";
     await seedTestMember(tenantId, ownerId, "owner");
     const ownerToken = await issueTestToken(ownerId);
 
-    const { proposal, approval } = await createAndApproveProposal(ownerId, ownerToken, 6_000_000);
+    const { proposal, approval } = await createAndApproveProposal(tenantId, ownerId, ownerToken, 6_000_000);
 
     const initialLedgerCount = await LedgerEntryModel.countDocuments({ tenantId });
 
@@ -326,6 +341,8 @@ describe("B14 Actions - Execution Tests", () => {
   });
 
   it("Employee calling execute directly gets 403 and ledger/approval state is unchanged", async () => {
+    const tenantId = "tenant_exec_guard";
+    await seedAnchorTenant(tenantId);
     const ownerId = "usr_exec_guard_owner";
     const employeeId = "usr_exec_guard_emp";
     await seedTestMember(tenantId, ownerId, "owner");
@@ -333,7 +350,7 @@ describe("B14 Actions - Execution Tests", () => {
     const ownerToken = await issueTestToken(ownerId);
     const employeeToken = await issueTestToken(employeeId);
 
-    const { proposal, approval } = await createAndApproveProposal(ownerId, ownerToken, 6_000_000);
+    const { proposal, approval } = await createAndApproveProposal(tenantId, ownerId, ownerToken, 6_000_000);
 
     const initialLedgerCount = await LedgerEntryModel.countDocuments({ tenantId });
 
