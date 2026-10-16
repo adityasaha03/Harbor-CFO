@@ -23,9 +23,9 @@ Show the 91-day cash forecast, the assumptions behind it, and let the user click
 
 ## Tasks
 
-- [ ] Chart with toggle, floor/zero lines, conservative line and legend
-- [ ] Breach summary and assumptions panel
-- [ ] Drill-down drawer works from click and from URL
-- [ ] On anchor data the drawer for 2026-11-07 shows the 8,000.00 overhead payment and ends at -20,000.00
-- [ ] RTL tests: no-breach, breach, stale indicator, drawer content
-- [ ] Master plan row F07 set to `[x]`
+- [x] Chart with toggle, floor/zero lines, conservative line and legend
+- [x] Breach summary and assumptions panel
+- [x] Drill-down drawer works from click and from URL
+- [x] On anchor data the drawer for 2026-11-07 shows the 8,000.00 overhead payment and ends at -20,000.00
+- [x] RTL tests: no-breach, breach, stale indicator, drawer content
+- [x] Master plan row F07 set to `[x]`
