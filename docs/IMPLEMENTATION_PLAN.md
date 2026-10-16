@@ -60,7 +60,7 @@ Read order for any chunk: `AGENTS.md`, `docs/ARCHITECTURE.md`, `docs/DB_SCHEMA.m
 | [x]    | F07 | Forecast page with drill-down                                      | P0  | F04, B09      | plan/frontend/F07-forecast.md               | @shirsho |
 | [x]    | F08 | Alerts panel                                                       | P0  | F04, B10      | plan/frontend/F08-alerts.md                 | @shirsho |
 | [x]    | F09 | Financing offers and comparison                                    | P0  | F04, B12      | plan/frontend/F09-financing.md              | @Mahtab |
-| [ ]    | F10 | Scenario studio                                                    | P0  | F07, F09, B13 | plan/frontend/F10-scenarios.md              |       |
+| [~]    | F10 | Scenario studio                                                    | P0  | F07, F09, B13 | plan/frontend/F10-scenarios.md              | @Aditya |
 | [ ]    | F11 | Action approval flow                                               | P0  | F10, B14      | plan/frontend/F11-actions.md                |       |
 | [ ]    | F12 | Agent chat and live activity timeline                              | P0  | F04, B16      | plan/frontend/F12-agent.md                  |       |
 | [ ]    | F13 | Proof and security page, audit viewer                              | P0  | F04, B17      | plan/frontend/F13-proof.md                  |       |
