@@ -156,6 +156,71 @@ export interface ImportFailureResult {
 export type ImportResult<T> = ImportSuccessResult<T> | ImportFailureResult;
 
 // ---------------------------------------------------------------------------
+// Import statuses and DTOs
+// ---------------------------------------------------------------------------
+
+export const IMPORT_STATUSES = ['previewed', 'committed', 'rejected', 'expired'] as const;
+export const importStatusSchema = z.enum(IMPORT_STATUSES);
+export type ImportStatus = z.infer<typeof importStatusSchema>;
+
+export const importDtoSchema = z.object({
+  id: z.string(),
+  tenantId: z.string(),
+  kind: importKindSchema,
+  fileName: z.string(),
+  checksum: z.string(),
+  mappingVersion: z.number().int(),
+  status: importStatusSchema,
+  rowCount: z.number().int(),
+  acceptedRows: z.number().int(),
+  rejectedRows: z.number().int(),
+  errors: z.array(importErrorItemSchema),
+  actorId: z.string(),
+  expiresAt: z.string(),
+  committedAt: z.string().optional(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+});
+
+export type ImportDto = z.infer<typeof importDtoSchema>;
+
+export const importPreviewResponseSchema = z.object({
+  importId: z.string(),
+  kind: importKindSchema,
+  fileName: z.string(),
+  status: importStatusSchema,
+  rowCount: z.number().int(),
+  acceptedRows: z.number().int(),
+  rejectedRows: z.number().int(),
+  warnings: z.array(importWarningSchema),
+  errors: z.array(importErrorItemSchema),
+  sampleRows: z.array(z.record(z.unknown())).optional(),
+});
+
+export type ImportPreviewResponse = z.infer<typeof importPreviewResponseSchema>;
+
+export const importsQuerySchema = z.object({
+  page: z.coerce.number().int().positive().default(1),
+  pageSize: z.coerce.number().int().positive().max(100).default(20),
+  kind: importKindSchema.optional(),
+  status: importStatusSchema.optional(),
+});
+
+export type ImportsQuery = z.infer<typeof importsQuerySchema>;
+
+export const importIdParamSchema = z.object({
+  id: z.string().min(1),
+});
+
+export type ImportIdParam = z.infer<typeof importIdParamSchema>;
+
+export const importPreviewBodySchema = z.object({
+  kind: importKindSchema,
+});
+
+export type ImportPreviewBody = z.infer<typeof importPreviewBodySchema>;
+
+// ---------------------------------------------------------------------------
 // Limits
 // ---------------------------------------------------------------------------
 
@@ -166,3 +231,4 @@ export const IMPORT_LIMITS = {
   MAX_CELL_LENGTH: 2_000,
   MAX_ERRORS: 200,
 } as const;
+

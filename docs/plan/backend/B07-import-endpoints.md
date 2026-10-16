@@ -25,11 +25,11 @@ Upload -> preview -> commit with atomic, idempotent persistence; a committed imp
 
 ## Tasks
 
-- [ ] Model with partial unique index on committed imports; TTL on `expiresAt`
-- [ ] Preview endpoint: clean file, bad file (errors listed), oversize (413), wrong content type (400)
-- [ ] Commit endpoint transactional; test that a failure in step 5 rolls back steps 3 and 4
-- [ ] Re-upload of the same file returns 409 and creates zero records; a reordered file with the same rows creates zero new records and totals are unchanged
-- [ ] Employee can import; reviewer gets 403; other tenant's import id returns 404
-- [ ] Audit and event records created; `datasetVersion` increments exactly once per commit
-- [ ] Error report CSV download tested (formula cells escaped)
-- [ ] Routes mounted; DB_SCHEMA.md and contracts updated; master plan row B07 set to `[x]`
+- [x] Model with partial unique index on committed imports; TTL on `expiresAt`
+- [x] Preview endpoint: clean file, bad file (errors listed), oversize (413), wrong content type (400)
+- [x] Commit endpoint transactional; test that a failure in step 5 rolls back steps 3 and 4
+- [x] Re-upload of the same file returns 409 and creates zero records; a reordered file with the same rows creates zero new records and totals are unchanged
+- [x] Employee can import; reviewer gets 403; other tenant's import id returns 404
+- [x] Audit and event records created; `datasetVersion` increments exactly once per commit
+- [x] Error report CSV download tested (formula cells escaped)
+- [x] Routes mounted; DB_SCHEMA.md and contracts updated; master plan row B07 set to `[x]`
