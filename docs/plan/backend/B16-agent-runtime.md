@@ -23,7 +23,7 @@ A bounded agent loop that calls registered tools, streams telemetry events, pers
 
 ## Tasks
 
-- [ ] Contracts for run DTOs and events completed
+- [x] Contracts for run DTOs and events completed
 - [ ] Provider interface and replay provider; replay test runs the full story against the anchor tenant and creates one pending proposal with zero ledger changes
 - [ ] Gemini provider implemented per current SDK docs; contract-tested with a mocked HTTP layer (no real network in CI); manual live test noted in the PR
 - [ ] Loop tests: 6 tool call limit, timeout, one retry then failure, unregistered tool from the model rejected with no DB mutation
