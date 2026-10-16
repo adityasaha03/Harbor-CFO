@@ -24,9 +24,9 @@ The Owner configures company settings and recurring commitments and manages team
 
 ## Tasks
 
-- [ ] Settings and profile forms with Zod validation and money conversion
-- [ ] Commitments CRUD
-- [ ] Team table with role change and removal via the Better Auth client; last-owner guard
-- [ ] Read-only mode for Employee and Reviewer
-- [ ] RTL tests: money conversion, last-owner guard, read-only rendering
-- [ ] Master plan row F14 set to `[x]`
+- [x] Settings and profile forms with Zod validation and money conversion
+- [x] Commitments CRUD
+- [x] Team table with role change and removal via the Better Auth client; last-owner guard
+- [x] Read-only mode for Employee and Reviewer
+- [x] RTL tests: money conversion, last-owner guard, read-only rendering
+- [x] Master plan row F14 set to `[x]`

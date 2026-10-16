@@ -70,4 +70,9 @@ export const queryKeys = {
     all: ['settings'] as const,
     tenant: () => [...queryKeys.settings.all, 'tenant'] as const,
   },
+
+  commitments: {
+    all: ['commitments'] as const,
+    list: () => [...queryKeys.commitments.all, 'list'] as const,
+  },
 } as const;
