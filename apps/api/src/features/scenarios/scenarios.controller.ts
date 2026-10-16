@@ -6,6 +6,7 @@ import { scenariosService } from './scenarios.service';
 
 export const scenariosController: {
   create: RequestHandler;
+  createStressPreset: RequestHandler;
   list: RequestHandler;
   getById: RequestHandler;
 } = {
@@ -13,6 +14,13 @@ export const scenariosController: {
     const actor = req.actor!;
     const input = req.body as CreateScenarioInput;
     const result = await scenariosService.createScenario(actor, input);
+    created(res, result);
+  }),
+
+  createStressPreset: asyncHandler(async (req: Request, res: Response) => {
+    const actor = req.actor!;
+    const days = typeof req.body?.days === 'number' ? req.body.days : 14;
+    const result = await scenariosService.createStressPreset(actor, days);
     created(res, result);
   }),
 

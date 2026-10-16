@@ -10,3 +10,5 @@ export * from "./match-financing.tool";
 export * from "./simulate-scenario.tool";
 export * from "./create-action-proposal.tool";
 export * from "./get-action-status.tool";
+export * from "./draft-collection-message.tool";
+export * from "./generate-report.tool";
