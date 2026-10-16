@@ -13,13 +13,13 @@ export interface CashSummaryReportData {
   minCashMinor: number;
   floorMinor: number;
   liquidityGapMinor: number;
-  entries: Array<{
+  entries: {
     bookedOn: string;
     externalId: string;
     category: string;
     description: string;
     amountMinor: number;
-  }>;
+  }[];
 }
 
 function formatAmount(minor: number): string {

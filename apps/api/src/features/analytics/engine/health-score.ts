@@ -125,7 +125,7 @@ export function computeHealthScore(input: HealthScoreInput): HealthScoreResponse
   else rating = 'Poor';
 
   // Build candidate deduction reasons
-  const deductionItems: Array<{ deduction: number; reason: string }> = [];
+  const deductionItems: { deduction: number; reason: string }[] = [];
 
   if (liquidityDeduction > 0) {
     if (input.minCashMinor < 0) {

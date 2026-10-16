@@ -21,4 +21,4 @@ Small, high-visibility features that improve clarity and the demo without adding
 - [x] `draftCollectionMessage` tool with sanitization tests
 - [x] Report export CSV (formula escaping tested) and PDF
 - [x] Stress preset tested against the anchor tenant
-- [ ] Registry allow-list test updated; master plan row B19 set to `[x]`
+- [x] Registry allow-list test updated; master plan row B19 set to `[x]`

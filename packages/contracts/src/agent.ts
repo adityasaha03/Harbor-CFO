@@ -377,7 +377,7 @@ export type DraftCollectionMessageOutput = z.infer<
 export const generateReportInputSchema = z
   .object({
     month: z.string().regex(/^\d{4}-\d{2}$/),
-    format: z.enum(["csv", "pdf"]).default("csv"),
+    format: z.enum(["csv", "pdf"]).optional(),
   })
   .strict();
 export type GenerateReportInput = z.infer<typeof generateReportInputSchema>;

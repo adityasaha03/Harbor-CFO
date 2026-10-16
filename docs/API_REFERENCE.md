@@ -25,6 +25,7 @@ Headers on every request except `/health/*`: `Authorization: Bearer <jwt>`, `X-T
 | GET /financing/offers                               | finance:read    | B12      |                                                |
 | POST /financing/match                               | finance:read    | B12      | read-only                                      |
 | POST /scenarios                                     | scenarios:write | B13      | typed changes; returns comparison              |
+| POST /scenarios/presets/stress                      | scenarios:write | B19 (P1) | 14-day delay on largest debtor                 |
 | GET /scenarios, /scenarios/:id                      | finance:read    | B13      | includes isStale                               |
 | POST /action-proposals                              | actions:propose | B14      | server resolves terms                          |
 | GET /action-proposals, /action-proposals/:id        | finance:read    | B14      |                                                |

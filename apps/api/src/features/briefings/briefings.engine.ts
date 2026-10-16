@@ -23,12 +23,12 @@ export interface GenerateBriefingInput {
   liquidityGapMinor: number;
   totalArMinor: number;
   overdueArMinor: number;
-  openAlerts: Array<{
+  openAlerts: {
     ruleId: string;
     severity: string;
     title: string;
     summary: string;
-  }>;
+  }[];
   healthScore: number;
   topOverdueInvoice?: {
     externalId: string;

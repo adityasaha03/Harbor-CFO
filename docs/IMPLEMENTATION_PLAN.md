@@ -45,7 +45,7 @@ Read order for any chunk: `AGENTS.md`, `docs/ARCHITECTURE.md`, `docs/DB_SCHEMA.m
 | [x]    | B16 | Agent runtime (provider adapter, loop, runs, telemetry)                                  | P0  | B15                     | plan/backend/B16-agent-runtime.md    | @shirsho |
 | [x]    | B17 | Demo seed, evidence export, proof endpoints                                              | P0  | B14, B16                | plan/backend/B17-demo-evidence.md    | @Aditya |
 | [x]    | B18 | Security hardening and adversarial tests                                                 | P0  | B14, B16                | plan/backend/B18-security-tests.md   | @shirsho |
-| [~]    | B19 | P1 extras (health score, briefing, collection drafts, report export)                     | P1  | B11, B15                | plan/backend/B19-p1-extras.md        | @Aditya |
+| [x]    | B19 | P1 extras (health score, briefing, collection drafts, report export)                     | P1  | B11, B15                | plan/backend/B19-p1-extras.md        | @Aditya |
 
 ## Frontend (apps/web)
 
