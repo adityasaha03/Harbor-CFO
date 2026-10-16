@@ -76,4 +76,15 @@ export const queryKeys = {
     all: ['commitments'] as const,
     list: () => [...queryKeys.commitments.all, 'list'] as const,
   },
+
+  proof: {
+    all: ['proof'] as const,
+    checks: () => [...queryKeys.proof.all, 'checks'] as const,
+  },
+
+  audit: {
+    all: ['audit'] as const,
+    list: (filters?: Record<string, unknown>) =>
+      [...queryKeys.audit.all, 'list', filters] as const,
+  },
 } as const;
