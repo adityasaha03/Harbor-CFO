@@ -25,9 +25,9 @@ Prove the security claims with tests, close gaps, and generate the artifacts the
 
 ## Tasks
 
-- [ ] Suites 1 to 7 written and passing; failures fixed at the source (not by weakening tests)
-- [ ] Suite 9 passing; suite 8 outputs saved
-- [ ] A script `pnpm --filter @harbor/api test:security` runs everything in `__security__`
-- [ ] `test-results.md` generated from the run (counts and names of tests, not hand-written)
-- [ ] Any fix to another chunk's file is noted in the Deviation Log with the owner informed
-- [ ] Master plan row B18 set to `[x]`
+- [x] Suites 1 to 7 written and passing; failures fixed at the source (not by weakening tests)
+- [x] Suite 9 passing; suite 8 outputs saved
+- [x] A script `pnpm --filter @harbor/api test:security` runs everything in `__security__`
+- [x] `test-results.md` generated from the run (counts and names of tests, not hand-written)
+- [x] Any fix to another chunk's file is noted in the Deviation Log with the owner informed
+- [x] Master plan row B18 set to `[x]`

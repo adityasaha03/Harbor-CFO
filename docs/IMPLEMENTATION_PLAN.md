@@ -44,7 +44,7 @@ Read order for any chunk: `AGENTS.md`, `docs/ARCHITECTURE.md`, `docs/DB_SCHEMA.m
 | [x]    | B15 | Agent tools and registry                                                                 | P0  | B09, B11, B12, B13, B14 | plan/backend/B15-agent-tools.md      | @Rohan  |
 | [x]    | B16 | Agent runtime (provider adapter, loop, runs, telemetry)                                  | P0  | B15                     | plan/backend/B16-agent-runtime.md    | @shirsho |
 | [~]    | B17 | Demo seed, evidence export, proof endpoints                                              | P0  | B14, B16                | plan/backend/B17-demo-evidence.md    | @Aditya |
-| [~]    | B18 | Security hardening and adversarial tests                                                 | P0  | B14, B16                | plan/backend/B18-security-tests.md   | @shirsho |
+| [x]    | B18 | Security hardening and adversarial tests                                                 | P0  | B14, B16                | plan/backend/B18-security-tests.md   | @shirsho |
 | [ ]    | B19 | P1 extras (health score, briefing, collection drafts, report export)                     | P1  | B11, B15                | plan/backend/B19-p1-extras.md        |         |
 
 ## Frontend (apps/web)
@@ -94,3 +94,4 @@ Read order for any chunk: `AGENTS.md`, `docs/ARCHITECTURE.md`, `docs/DB_SCHEMA.m
 
 - 2026-10-15 | F05 | Used fallback static stubs (anchor fixtures) in useLatestForecast and useAnalyticsSummary hooks because B09 and B11 backend endpoints are in parallel development | Authorized by human lead to unblock F05 UI development | Zero impact on backend, seamless swap when endpoints become live.
 - 2026-10-16 | S02 | Removed .attach() from unauthenticated test in imports.preview.test.ts | Node.js socket emits ECONNRESET on Windows when Supertest streams multipart data to an immediately closed 401 response | No API or contract impact, test reliably passes across all platforms.
+- 2026-10-16 | B18 | Hardened HTTP validation against NoSQL operator injection in validate.ts, configured Pino log redaction, and mapped body-parser payload limits in error-handler.ts | Eliminate adversarial injection and secret leakage across all backend routes as specified in B18 security hardening | Zero breaking API changes, strengthens validation and error handling for all endpoints.

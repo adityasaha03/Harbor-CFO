@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:security": "vitest run src/__security__",
     "db:sync-indexes": "tsx src/core/db/sync-indexes.ts",
     "auth:handshake": "tsx scripts/auth-handshake.ts"
   },
