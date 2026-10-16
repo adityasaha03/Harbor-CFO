@@ -20,7 +20,7 @@ Read order for any chunk: `AGENTS.md`, `docs/ARCHITECTURE.md`, `docs/DB_SCHEMA.m
 | ------ | --- | ------------------------------------------------------------------- | --- | -------- | --------------------------------- | ------- |
 | [x]    | S00 | Monorepo bootstrap and CI                                           | P0  | none     | plan/shared/S00-bootstrap.md      | @Mahtab |
 | [x]    | S01 | Contracts package (shared schemas, permissions, money/date helpers) | P0  | S00      | plan/shared/S01-contracts.md      | @Mahtab |
-| [~]    | S02 | Demo auth seed and auth handshake check (web <-> api)               | P0  | F02, B03 | plan/shared/S02-demo-auth-seed.md | @Aditya |
+| [x]    | S02 | Demo auth seed and auth handshake check (web <-> api)               | P0  | F02, B03 | plan/shared/S02-demo-auth-seed.md | @Aditya |
 | [ ]    | S03 | Deployment, README and release packaging                            | P0  | all P0   | plan/shared/S03-deploy-release.md |         |
 
 ## Backend (apps/api)
@@ -58,15 +58,15 @@ Read order for any chunk: `AGENTS.md`, `docs/ARCHITECTURE.md`, `docs/DB_SCHEMA.m
 | [x]    | F05 | Dashboard overview                                                 | P0  | F04, B09, B11 | plan/frontend/F05-dashboard.md              | @shirsho |
 | [x]    | F06 | Imports workspace                                                  | P0  | F04, B07      | plan/frontend/F06-imports.md                | @shirsho |
 | [x]    | F07 | Forecast page with drill-down                                      | P0  | F04, B09      | plan/frontend/F07-forecast.md               | @shirsho |
-| [ ]    | F08 | Alerts panel                                                       | P0  | F04, B10      | plan/frontend/F08-alerts.md                 |          |
-| [ ]    | F09 | Financing offers and comparison                                    | P0  | F04, B12      | plan/frontend/F09-financing.md              |          |
-| [ ]    | F10 | Scenario studio                                                    | P0  | F07, F09, B13 | plan/frontend/F10-scenarios.md              |          |
-| [ ]    | F11 | Action approval flow                                               | P0  | F10, B14      | plan/frontend/F11-actions.md                |          |
-| [ ]    | F12 | Agent chat and live activity timeline                              | P0  | F04, B16      | plan/frontend/F12-agent.md                  |          |
-| [ ]    | F13 | Proof and security page, audit viewer                              | P0  | F04, B17      | plan/frontend/F13-proof.md                  |          |
-| [x]    | F14 | Settings and team management                                       | P0  | F04, B05      | plan/frontend/F14-settings-team.md          | @Mahtab  |
-| [ ]    | F15 | UX polish (states, accessibility, responsive, demo hints)          | P1  | F05-F14       | plan/frontend/F15-polish.md                 |          |
-| [ ]    | F16 | End-to-end tests (Playwright)                                      | P0  | F11, F12, B17 | plan/frontend/F16-e2e.md                    |          |
+| [~]    | F08 | Alerts panel                                                       | P0  | F04, B10      | plan/frontend/F08-alerts.md                 | @shirsho |
+| [x]    | F09 | Financing offers and comparison                                    | P0  | F04, B12      | plan/frontend/F09-financing.md              | @Mahtab |
+| [ ]    | F10 | Scenario studio                                                    | P0  | F07, F09, B13 | plan/frontend/F10-scenarios.md              |       |
+| [ ]    | F11 | Action approval flow                                               | P0  | F10, B14      | plan/frontend/F11-actions.md                |       |
+| [ ]    | F12 | Agent chat and live activity timeline                              | P0  | F04, B16      | plan/frontend/F12-agent.md                  |       |
+| [ ]    | F13 | Proof and security page, audit viewer                              | P0  | F04, B17      | plan/frontend/F13-proof.md                  |       |
+| [x]    | F14 | Settings and team management                                       | P0  | F04, B05      | plan/frontend/F14-settings-team.md          | @Mahtab |
+| [ ]    | F15 | UX polish (states, accessibility, responsive, demo hints)          | P1  | F05-F14       | plan/frontend/F15-polish.md                 |       |
+| [ ]    | F16 | End-to-end tests (Playwright)                                      | P0  | F11, F12, B17 | plan/frontend/F16-e2e.md                    |       |
 
 ## Suggested lanes (adjust to your team)
 
@@ -93,3 +93,4 @@ Read order for any chunk: `AGENTS.md`, `docs/ARCHITECTURE.md`, `docs/DB_SCHEMA.m
 ## Deviation Log (append only: date, chunk, what, why, impact)
 
 - 2026-10-15 | F05 | Used fallback static stubs (anchor fixtures) in useLatestForecast and useAnalyticsSummary hooks because B09 and B11 backend endpoints are in parallel development | Authorized by human lead to unblock F05 UI development | Zero impact on backend, seamless swap when endpoints become live.
+- 2026-10-16 | S02 | Removed .attach() from unauthenticated test in imports.preview.test.ts | Node.js socket emits ECONNRESET on Windows when Supertest streams multipart data to an immediately closed 401 response | No API or contract impact, test reliably passes across all platforms.

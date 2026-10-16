@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "db:sync-indexes": "tsx src/core/db/sync-indexes.ts"
+    "db:sync-indexes": "tsx src/core/db/sync-indexes.ts",
+    "auth:handshake": "tsx scripts/auth-handshake.ts"
   },
   "dependencies": {
     "@harbor/contracts": "workspace:*",

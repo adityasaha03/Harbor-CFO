@@ -1,18 +1,21 @@
+import type { Metadata } from 'next';
 import { PageHeader } from '@/components/layout/page-header';
-import { Card, CardContent } from '@/components/ui/card';
+import { FinancingWorkspace } from '@/features/financing';
+
+export const metadata: Metadata = {
+  title: 'Financing Options | HarborCFO',
+  description:
+    'Simulate, evaluate, and rank working capital financing facilities against live cash forecasts.',
+};
 
 export default function FinancingPage() {
   return (
     <div className="space-y-6">
       <PageHeader
         title="Financing Options"
-        description="Ranked simulated financing offers, total borrowing costs, and eligibility."
+        description="Ranked simulated financing offers, total borrowing costs, and explainable eligibility."
       />
-      <Card>
-        <CardContent className="flex min-h-[200px] items-center justify-center p-6 text-sm text-muted-foreground">
-          Financing comparison catalog will be initialized in chunk F09.
-        </CardContent>
-      </Card>
+      <FinancingWorkspace />
     </div>
   );
 }
