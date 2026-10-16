@@ -22,8 +22,8 @@ Make security visible: judges can see the permission tiers, run live denial chec
 
 ## Tasks
 
-- [ ] Matrix, current-role card, limitations
-- [ ] Live checks with before/after state view
-- [ ] Audit table and evidence download behind the Owner permission
-- [ ] RTL tests: Owner vs Employee rendering, failed-check display
-- [ ] Master plan row F13 set to `[x]`
+- [x] Matrix, current-role card, limitations
+- [x] Live checks with before/after state view
+- [x] Audit table and evidence download behind the Owner permission
+- [x] RTL tests: Owner vs Employee rendering, failed-check display
+- [x] Master plan row F13 set to `[x]`
