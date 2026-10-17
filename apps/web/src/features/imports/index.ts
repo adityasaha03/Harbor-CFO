@@ -5,6 +5,7 @@ export * from './components/preview-table';
 export * from './components/error-list';
 export * from './components/commit-bar';
 export * from './components/import-history-table';
+export * from './components/import-details-dialog';
 
 export * from './api/use-preview-import';
 export * from './api/use-commit-import';

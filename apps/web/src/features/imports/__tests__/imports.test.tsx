@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
 import * as React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import * as authFeature from '@/features/auth';
@@ -12,6 +12,7 @@ import { PreviewTable } from '../components/preview-table';
 import { ErrorList } from '../components/error-list';
 import { CommitBar } from '../components/commit-bar';
 import { TemplateLinks } from '../components/template-links';
+import { ImportHistoryTable } from '../components/import-history-table';
 import type { ImportPreviewResponse, ImportDto } from '@harbor/contracts';
 
 const mockPreviewSuccess: ImportPreviewResponse = {
@@ -238,5 +239,75 @@ describe('F06 Imports Workspace and Components', () => {
     renderWithClient(<TemplateLinks />);
     expect(screen.getByTestId('download-transactions-template')).toBeInTheDocument();
     expect(screen.getByTestId('download-invoices-template')).toBeInTheDocument();
+  });
+
+  it('opens import details dialog when clicking a history row or details button', async () => {
+    renderWithClient(<ImportHistoryTable />);
+
+    // Row is rendered
+    expect(screen.getByTestId('import-history-row-imp_hist_1')).toBeInTheDocument();
+
+    // Click the row to open details
+    fireEvent.click(screen.getByTestId('import-history-row-imp_hist_1'));
+
+    const dialog = screen.getByTestId('import-details-dialog');
+    expect(dialog).toBeInTheDocument();
+    expect(within(dialog).getByText('prior_tx.csv')).toBeInTheDocument();
+    expect(within(dialog).getByText('imp_hist_1')).toBeInTheDocument();
+    expect(within(dialog).getByText('Ledger Synchronized')).toBeInTheDocument();
+
+    // Close the dialog
+    fireEvent.click(screen.getByTestId('close-import-details-btn'));
+    await waitFor(() => {
+      expect(screen.queryByTestId('import-details-dialog')).not.toBeInTheDocument();
+    });
+
+    // Clicking the Details button also opens the dialog
+    fireEvent.click(screen.getByTestId('view-details-imp_hist_1'));
+    expect(screen.getByTestId('import-details-dialog')).toBeInTheDocument();
+  });
+
+  it('displays validation errors and export button in details dialog for rejected import', () => {
+    const rejectedImport: ImportDto = {
+      id: 'imp_hist_rej',
+      tenantId: 'tenant_1',
+      kind: 'invoices',
+      fileName: 'bad_invoices.csv',
+      checksum: 'hash_bad_456',
+      mappingVersion: 1,
+      status: 'rejected',
+      rowCount: 10,
+      acceptedRows: 0,
+      rejectedRows: 10,
+      errors: [
+        { row: 3, field: 'total', message: 'Total must be positive' },
+        { row: 5, field: 'dueDate', message: 'Invalid due date format' },
+      ],
+      actorId: 'usr_lead',
+      expiresAt: '2026-10-17T00:00:00Z',
+      createdAt: '2026-10-16T09:50:00Z',
+      updatedAt: '2026-10-16T10:00:00Z',
+    };
+
+    vi.spyOn(importsListModule, 'useImports').mockReturnValue({
+      data: [rejectedImport],
+      isLoading: false,
+      isError: false,
+      error: null,
+      refetch: vi.fn(),
+      isRefetching: false,
+    } as never);
+
+    renderWithClient(<ImportHistoryTable />);
+
+    fireEvent.click(screen.getByTestId('import-history-row-imp_hist_rej'));
+
+    const dialog = screen.getByTestId('import-details-dialog');
+    expect(dialog).toBeInTheDocument();
+    expect(within(dialog).getByText('bad_invoices.csv')).toBeInTheDocument();
+    expect(within(dialog).getByText(/Atomic Rejection Guaranteed/i)).toBeInTheDocument();
+    expect(within(dialog).getByText('Total must be positive')).toBeInTheDocument();
+    expect(within(dialog).getByText('Invalid due date format')).toBeInTheDocument();
+    expect(within(dialog).getByRole('button', { name: /export errors/i })).toBeInTheDocument();
   });
 });
