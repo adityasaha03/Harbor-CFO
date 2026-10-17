@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
-import { headers } from 'next/headers';
 import { getServerSession } from '@/features/auth/server/session';
-import { auth } from '@/features/auth/server/auth';
 import { mongoDb } from '@/features/auth/server/mongo';
+import { hashPassword } from 'better-auth/crypto';
+import { randomUUID } from 'crypto';
 import type { Role } from '@harbor/contracts';
 
 interface AddMemberBody {
@@ -10,12 +10,50 @@ interface AddMemberBody {
   email: string;
   role: Role;
   password?: string;
+  organizationId?: string;
 }
 
 interface UpdateMemberBody {
   memberId: string;
   name?: string;
   role?: Role;
+  organizationId?: string;
+}
+
+async function verifyOwnerAccess(userId: string, requestedOrgId?: string) {
+  let orgId = requestedOrgId;
+
+  // 1. If orgId is known, check if user is owner of that org in member collection
+  if (orgId) {
+    const directMember = await mongoDb.collection('member').findOne({
+      userId,
+      organizationId: orgId,
+    });
+    if (directMember && directMember.role === 'owner') {
+      return { isOwner: true, orgId };
+    }
+  }
+
+  // 2. Check if user is an owner of ANY organization
+  const anyOwnerMember = await mongoDb.collection('member').findOne({
+    userId,
+    role: 'owner',
+  });
+  if (anyOwnerMember && anyOwnerMember.organizationId) {
+    return { isOwner: true, orgId: orgId || String(anyOwnerMember.organizationId) };
+  }
+
+  // 3. Check organization collection in case user is the creator
+  if (orgId) {
+    const orgDoc = await mongoDb.collection('organization').findOne({
+      $or: [{ id: orgId }, { _id: orgId as unknown as undefined }],
+    } as Record<string, unknown>);
+    if (orgDoc && (orgDoc.userId === userId || orgDoc.ownerId === userId)) {
+      return { isOwner: true, orgId };
+    }
+  }
+
+  return { isOwner: false, orgId: orgId || '' };
 }
 
 export async function POST(req: Request) {
@@ -25,72 +63,75 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    const orgId = session.session?.activeOrganizationId;
-    if (!orgId) {
-      return NextResponse.json({ message: 'Active organization required' }, { status: 400 });
-    }
+    const body = (await req.json()) as AddMemberBody;
+    const requestedOrgId = body.organizationId || session.session?.activeOrganizationId || undefined;
 
-    const callerMember = await mongoDb.collection('member').findOne({
-      userId: session.user.id,
-      organizationId: orgId,
-    });
-    if (!callerMember || callerMember.role !== 'owner') {
+    const { isOwner, orgId } = await verifyOwnerAccess(session.user.id, requestedOrgId);
+    if (!isOwner || !orgId) {
       return NextResponse.json({ message: 'Only company owners can add members' }, { status: 403 });
     }
 
-    const body = (await req.json()) as AddMemberBody;
     const cleanEmail = (body.email || '').trim().toLowerCase();
-    const cleanName: string = (body.name || '').trim() || cleanEmail.split('@')[0] || 'Member';
+    const cleanName = (body.name || '').trim() || cleanEmail.split('@')[0] || 'Member';
     const role: Role = ['owner', 'employee', 'reviewer'].includes(body.role) ? body.role : 'employee';
 
     if (!cleanEmail || !cleanEmail.includes('@')) {
       return NextResponse.json({ message: 'Valid email is required' }, { status: 400 });
     }
 
-    const reqHeaders = await headers();
     const existingUser = await mongoDb.collection('user').findOne({ email: cleanEmail });
-    let userId: string;
+    let newUserId: string;
 
     if (!existingUser) {
       const passwordToUse = body.password?.trim() || 'Password123!';
-      const created = await auth.api.signUpEmail({
-        headers: reqHeaders,
-        body: {
-          email: cleanEmail,
-          password: passwordToUse,
-          name: cleanName,
-        },
-      });
-      userId = created.user.id;
+      const hashedPassword = await hashPassword(passwordToUse);
+      newUserId = randomUUID();
+
+      await mongoDb.collection('user').insertOne({
+        _id: newUserId as unknown as undefined,
+        id: newUserId,
+        name: cleanName,
+        email: cleanEmail,
+        emailVerified: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      } as Record<string, unknown>);
+
+      await mongoDb.collection('account').insertOne({
+        _id: randomUUID() as unknown as undefined,
+        userId: newUserId,
+        accountId: newUserId,
+        providerId: 'credential',
+        password: hashedPassword,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      } as Record<string, unknown>);
     } else {
-      userId = existingUser.id ? String(existingUser.id) : String(existingUser._id);
+      newUserId = String(existingUser.id || existingUser._id);
     }
 
     const existingMember = await mongoDb.collection('member').findOne({
       $or: [
-        { userId, organizationId: orgId },
-        { 'userId.id': userId, organizationId: orgId },
+        { userId: newUserId, organizationId: orgId },
+        { 'userId.id': newUserId, organizationId: orgId },
       ],
     });
 
     if (existingMember) {
-      await auth.api.updateMemberRole({
-        headers: reqHeaders,
-        body: {
-          memberId: String(existingMember.id || existingMember._id),
-          role,
-          organizationId: orgId,
-        },
-      });
+      await mongoDb.collection('member').updateOne(
+        { _id: existingMember._id },
+        { $set: { role, updatedAt: new Date() } },
+      );
     } else {
-      await auth.api.addMember({
-        headers: reqHeaders,
-        body: {
-          userId,
-          organizationId: orgId,
-          role,
-        },
-      });
+      const memberId = randomUUID();
+      await mongoDb.collection('member').insertOne({
+        _id: memberId as unknown as undefined,
+        id: memberId,
+        organizationId: orgId,
+        userId: newUserId,
+        role,
+        createdAt: new Date(),
+      } as Record<string, unknown>);
     }
 
     return NextResponse.json({ success: true, message: 'Member added successfully' });
@@ -107,36 +148,24 @@ export async function PATCH(req: Request) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    const orgId = session.session?.activeOrganizationId;
-    if (!orgId) {
-      return NextResponse.json({ message: 'Active organization required' }, { status: 400 });
-    }
+    const body = (await req.json()) as UpdateMemberBody;
+    const requestedOrgId = body.organizationId || session.session?.activeOrganizationId || undefined;
 
-    const callerMember = await mongoDb.collection('member').findOne({
-      userId: session.user.id,
-      organizationId: orgId,
-    });
-    if (!callerMember || callerMember.role !== 'owner') {
+    const { isOwner, orgId } = await verifyOwnerAccess(session.user.id, requestedOrgId);
+    if (!isOwner || !orgId) {
       return NextResponse.json({ message: 'Only company owners can update members' }, { status: 403 });
     }
 
-    const body = (await req.json()) as UpdateMemberBody;
     const { memberId, name, role } = body;
     if (!memberId) {
       return NextResponse.json({ message: 'Member ID is required' }, { status: 400 });
     }
 
-    const reqHeaders = await headers();
-
     if (role && ['owner', 'employee', 'reviewer'].includes(role)) {
-      await auth.api.updateMemberRole({
-        headers: reqHeaders,
-        body: {
-          memberId,
-          role,
-          organizationId: orgId,
-        },
-      });
+      await mongoDb.collection('member').updateOne(
+        { $or: [{ id: memberId }, { _id: memberId as unknown as undefined }] } as Record<string, unknown>,
+        { $set: { role, updatedAt: new Date() } },
+      );
     }
 
     if (name?.trim()) {
@@ -145,7 +174,7 @@ export async function PATCH(req: Request) {
       } as Record<string, unknown>);
       if (memberDoc?.userId) {
         await mongoDb.collection('user').updateOne(
-          { $or: [{ id: memberDoc.userId }, { _id: memberDoc.userId }] } as Record<string, unknown>,
+          { $or: [{ id: memberDoc.userId }, { _id: memberDoc.userId as unknown as undefined }] } as Record<string, unknown>,
           { $set: { name: name.trim(), updatedAt: new Date() } },
         );
       }
