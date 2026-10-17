@@ -41,7 +41,7 @@ export const tenantsRepository = {
           concentrationThresholdPct: 40,
           staleDataDays: 14,
           profile: {},
-          isDemo: false,
+          isDemo: true,
         },
       },
       { upsert: true, new: true, session },
