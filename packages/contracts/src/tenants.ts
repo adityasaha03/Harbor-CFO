@@ -37,5 +37,6 @@ export const updateTenantSettingsSchema = z.object({
   concentrationThresholdPct: z.number().int().min(1).max(100).optional(),
   staleDataDays: z.number().int().positive().max(365).optional(),
   profile: tenantProfileSchema.optional(),
+  isDemo: z.boolean().optional(),
 });
 export type UpdateTenantSettingsInput = z.input<typeof updateTenantSettingsSchema>;

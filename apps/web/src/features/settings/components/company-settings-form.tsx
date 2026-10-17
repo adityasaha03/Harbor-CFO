@@ -20,21 +20,10 @@ const companySettingsSchema = z.object({
     .string()
     .min(1, 'Liquidity floor is required')
     .regex(/^\d+(\.\d{1,2})?$/, 'Enter a valid amount (e.g. 30000 or 30000.00)'),
-  overdueAlertDays: z.coerce
-    .number({ invalid_type_error: 'Must be a number' })
-    .int('Must be a whole number of days')
-    .positive('Must be greater than 0')
-    .max(365, 'Cannot exceed 365 days'),
-  concentrationThresholdPct: z.coerce
-    .number({ invalid_type_error: 'Must be a number' })
-    .int('Must be a whole percentage')
-    .min(1, 'Minimum is 1%')
-    .max(100, 'Maximum is 100%'),
-  staleDataDays: z.coerce
-    .number({ invalid_type_error: 'Must be a number' })
-    .int('Must be a whole number of days')
-    .positive('Must be greater than 0')
-    .max(365, 'Cannot exceed 365 days'),
+  overdueAlertDays: z.coerce.number().int().positive('Must be > 0').max(365, 'Max 365 days'),
+  concentrationThresholdPct: z.coerce.number().int().min(1, 'Min 1%').max(100, 'Max 100%'),
+  staleDataDays: z.coerce.number().int().positive('Must be > 0').max(365, 'Max 365 days'),
+  isDemo: z.boolean().default(true),
 });
 
 type CompanySettingsValues = z.infer<typeof companySettingsSchema>;
@@ -59,6 +48,7 @@ export function CompanySettingsForm({ settings, isReadOnly = false }: CompanySet
       overdueAlertDays: settings.overdueAlertDays ?? 7,
       concentrationThresholdPct: settings.concentrationThresholdPct ?? 40,
       staleDataDays: settings.staleDataDays ?? 14,
+      isDemo: Boolean(settings.isDemo),
     },
   });
 
@@ -69,6 +59,7 @@ export function CompanySettingsForm({ settings, isReadOnly = false }: CompanySet
       overdueAlertDays: settings.overdueAlertDays ?? 7,
       concentrationThresholdPct: settings.concentrationThresholdPct ?? 40,
       staleDataDays: settings.staleDataDays ?? 14,
+      isDemo: Boolean(settings.isDemo),
     });
   }, [settings, reset]);
 
@@ -80,6 +71,7 @@ export function CompanySettingsForm({ settings, isReadOnly = false }: CompanySet
         overdueAlertDays: values.overdueAlertDays,
         concentrationThresholdPct: values.concentrationThresholdPct,
         staleDataDays: values.staleDataDays,
+        isDemo: values.isDemo,
       });
       toast.success('Company settings updated');
     } catch (err) {
@@ -169,6 +161,26 @@ export function CompanySettingsForm({ settings, isReadOnly = false }: CompanySet
               {errors.staleDataDays && (
                 <p className="text-xs text-destructive">{errors.staleDataDays.message}</p>
               )}
+            </div>
+
+            <div className="space-y-2 sm:col-span-2 rounded-lg border p-3.5 bg-muted/20">
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label htmlFor="isDemo" className="font-semibold text-xs cursor-pointer">
+                    Demo Sandbox & Proof Verification Mode
+                  </Label>
+                  <p className="text-[11px] text-muted-foreground mt-0.5">
+                    Unlocks live adversarial invariant checks (Proof & Audit page) and evaluation tooling.
+                  </p>
+                </div>
+                <input
+                  id="isDemo"
+                  type="checkbox"
+                  disabled={isReadOnly || isSubmitting}
+                  className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
+                  {...register('isDemo')}
+                />
+              </div>
             </div>
           </div>
         </CardContent>
