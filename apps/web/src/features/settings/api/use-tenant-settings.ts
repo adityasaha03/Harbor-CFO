@@ -12,6 +12,5 @@ export function useTenantSettings(): UseQueryResult<TenantSettingsDto, Error> {
   return useQuery({
     queryKey: queryKeys.settings.tenant(),
     queryFn: () => apiFetch<TenantSettingsDto>('/tenant-settings'),
-    staleTime: 60 * 1000,
   });
 }

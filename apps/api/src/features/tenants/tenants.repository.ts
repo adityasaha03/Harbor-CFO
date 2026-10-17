@@ -55,9 +55,15 @@ export const tenantsRepository = {
     patch: UpdateTenantSettingsInput,
     session?: ClientSession,
   ): Promise<TenantSettingsDto> {
+    const existing = await TenantSettingsModel.findOne({ tenantId }).session(session ?? null).lean();
+    const updateObj: Record<string, unknown> = { ...patch };
+    if (patch.profile && existing?.profile) {
+      updateObj.profile = { ...existing.profile, ...patch.profile };
+    }
+
     const doc = await TenantSettingsModel.findOneAndUpdate(
       { tenantId },
-      { $set: patch },
+      { $set: updateObj },
       { new: true, upsert: true, session },
     ).lean();
 

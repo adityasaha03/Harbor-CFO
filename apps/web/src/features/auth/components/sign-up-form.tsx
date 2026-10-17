@@ -64,6 +64,38 @@ export function SignUpForm() {
 
       if (error || !data) {
         const errorMsg = error?.message || 'Unable to create account. Please try again.';
+        if (
+          errorMsg.toLowerCase().includes('already exists') ||
+          errorMsg.toLowerCase().includes('user exists') ||
+          error?.status === 400 ||
+          error?.status === 422
+        ) {
+          try {
+            const claimRes = await fetch('/api/team/claim-account', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                name: values.name,
+                email: values.email,
+                password: values.password,
+              }),
+            });
+            if (claimRes.ok) {
+              const signInRes = await authClient.signIn.email({
+                email: values.email,
+                password: values.password,
+              });
+              if (!signInRes.error) {
+                toast.success('Welcome! Your employee account has been activated.');
+                router.push('/dashboard');
+                router.refresh();
+                return;
+              }
+            }
+          } catch {
+            // Fallback to displaying standard error
+          }
+        }
         setFormError(errorMsg);
         toast.error(errorMsg);
         setIsLoading(false);

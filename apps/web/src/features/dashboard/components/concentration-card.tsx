@@ -52,7 +52,7 @@ export function ConcentrationCard({ concentration }: ConcentrationCardProps) {
             variant={isExceeded ? 'destructive' : 'secondary'}
             className="text-[11px] font-semibold"
           >
-            {isExceeded ? 'Exceeds 40% Threshold' : 'Within Policy'}
+            {isExceeded ? `Exceeds ${(thresholdBps / 100).toString()}% Threshold` : 'Within Policy'}
           </Badge>
         </div>
 

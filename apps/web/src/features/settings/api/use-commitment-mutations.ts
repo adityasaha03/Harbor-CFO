@@ -27,6 +27,9 @@ export function useCreateCommitment() {
       queryClient.invalidateQueries({ queryKey: queryKeys.commitments.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.forecast.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.alerts.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.analytics.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.scenarios.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.financing.all });
     },
   });
 }
@@ -45,6 +48,9 @@ export function useUpdateCommitment() {
       queryClient.invalidateQueries({ queryKey: queryKeys.commitments.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.forecast.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.alerts.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.analytics.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.scenarios.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.financing.all });
     },
   });
 }
@@ -61,6 +67,9 @@ export function useDeleteCommitment() {
       queryClient.invalidateQueries({ queryKey: queryKeys.commitments.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.forecast.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.alerts.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.analytics.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.scenarios.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.financing.all });
     },
   });
 }

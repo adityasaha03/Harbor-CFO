@@ -41,7 +41,7 @@ export const METRIC_FORMULAS: Record<MetricFormulaKey, MetricFormula> = {
     formula:
       'Concentration % = (Top Counterparty Outstanding AR / Total Outstanding AR) × 100',
     explanation:
-      'The share of all outstanding accounts receivable owed by the single largest customer. Flags alert when exceeding the 40% threshold.',
+      'The share of all outstanding accounts receivable owed by the single largest customer. Flags alert when exceeding the configured policy threshold.',
     sourceDescription: 'Open accounts receivable aggregated by counterparty',
     sourceRoute: '/forecast',
   },
