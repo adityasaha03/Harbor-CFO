@@ -65,7 +65,7 @@ Read order for any chunk: `AGENTS.md`, `docs/ARCHITECTURE.md`, `docs/DB_SCHEMA.m
 | [x]    | F12 | Agent chat and live activity timeline                              | P0  | F04, B16      | plan/frontend/F12-agent.md                  | @shirsho |
 | [x]    | F13 | Proof and security page, audit viewer                              | P0  | F04, B17      | plan/frontend/F13-proof.md                  | @Aditya  |
 | [x]    | F14 | Settings and team management                                       | P0  | F04, B05      | plan/frontend/F14-settings-team.md          | @Mahtab  |
-| [ ]    | F15 | UX polish (states, accessibility, responsive, demo hints)          | P1  | F05-F14       | plan/frontend/F15-polish.md                 |          |
+| [~]    | F15 | UX polish (states, accessibility, responsive, demo hints)          | P1  | F05-F14       | plan/frontend/F15-polish.md                 | @Raiyan  |
 | [x]    | F16 | End-to-end tests (Playwright)                                      | P0  | F11, F12, B17 | plan/frontend/F16-e2e.md                    | @Mahtab  |
 
 ## Suggested lanes (adjust to your team)
