@@ -9,6 +9,9 @@ import { CompanySettingsForm } from './company-settings-form';
 import { BusinessProfileForm } from './business-profile-form';
 import { CommitmentsTable } from './commitments-table';
 import { TeamTable } from '@/features/team';
+import { ForbiddenState } from '@/features/auth';
+import { ErrorState } from '@/components/feedback/error-state';
+import { ApiError } from '@/lib/api/errors';
 import { Building2, CalendarDays, Users } from 'lucide-react';
 
 export function SettingsTabs() {
@@ -28,10 +31,27 @@ export function SettingsTabs() {
   }
 
   if (error || !settings) {
+    const isForbidden =
+      (ApiError.isApiError(error) && (error.status === 403 || error.code === 'FORBIDDEN')) ||
+      (error?.message?.toLowerCase().includes('forbidden') ||
+        error?.message?.includes('403') ||
+        error?.message?.toLowerCase().includes('insufficient permissions'));
+
+    if (isForbidden) {
+      return (
+        <ForbiddenState
+          title="Settings Restricted"
+          message={error?.message || 'Your current role does not have permission to view or manage tenant settings.'}
+        />
+      );
+    }
+
     return (
-      <div className="rounded-lg border border-destructive/20 bg-destructive/10 p-4 text-sm text-destructive">
-        Failed to load settings: {error?.message || 'Unable to retrieve workspace configuration'}
-      </div>
+      <ErrorState
+        title="Failed to load workspace settings"
+        message={error?.message || 'Unable to retrieve workspace configuration'}
+        onRetry={() => window.location.reload()}
+      />
     );
   }
 

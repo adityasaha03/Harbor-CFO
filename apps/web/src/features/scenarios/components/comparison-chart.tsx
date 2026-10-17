@@ -134,22 +134,26 @@ export function ComparisonChart({ points }: ComparisonChartProps) {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="h-[280px] w-full">
+        <div
+          className="h-[280px] w-full"
+          role="region"
+          aria-label="Baseline vs Scenario Cash Trajectory Comparison Chart"
+        >
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" className="stroke-muted/40" />
+              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.6} />
               <XAxis
                 dataKey="displayDate"
-                tick={{ fontSize: 11 }}
+                tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
                 interval={13}
                 tickLine={false}
-                stroke="#888888"
+                stroke="hsl(var(--border))"
               />
               <YAxis
-                tick={{ fontSize: 11 }}
+                tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
                 tickFormatter={(val: number) => `¥${(val / 1000).toFixed(0)}k`}
                 tickLine={false}
-                stroke="#888888"
+                stroke="hsl(var(--border))"
                 width={55}
               />
               <Tooltip content={<CustomTooltip />} />

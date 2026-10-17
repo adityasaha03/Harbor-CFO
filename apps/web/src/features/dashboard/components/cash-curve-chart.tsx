@@ -14,6 +14,7 @@ import {
 } from 'recharts';
 import { formatMinor } from '@harbor/contracts';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { AccessibleChartSummary } from '@/components/data';
 import type { LatestForecastResponse } from '@/features/forecast';
 
 export interface CashCurveChartProps {
@@ -115,7 +116,12 @@ export function CashCurveChart({ forecast }: CashCurveChartProps) {
         </div>
       </CardHeader>
       <CardContent className="pt-2">
-        <div className="h-72 w-full">
+        <div
+          className="h-72 w-full"
+          role="region"
+          aria-label="13-Week Cash Trajectory Line Chart"
+          data-testid="cash-trajectory-region"
+        >
           {isMounted ? (
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
@@ -128,25 +134,26 @@ export function CashCurveChart({ forecast }: CashCurveChartProps) {
                   }
                 }}
               >
-                <CartesianGrid strokeDasharray="3 3" opacity={0.25} vertical={false} />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.6} />
                 <XAxis
                   dataKey="displayDate"
                   tickLine={false}
-                  axisLine={{ stroke: '#94a3b8', opacity: 0.3 }}
-                  tick={{ fontSize: 11, fill: '#64748b' }}
+                  axisLine={{ stroke: 'hsl(var(--border))' }}
+                  tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
                 />
                 <YAxis
                   tickLine={false}
-                  axisLine={{ stroke: '#94a3b8', opacity: 0.3 }}
-                  tick={{ fontSize: 11, fill: '#64748b' }}
+                  axisLine={{ stroke: 'hsl(var(--border))' }}
+                  tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
                   tickFormatter={(val: number) => `¥${(val / 1000).toFixed(0)}k`}
                 />
                 <Tooltip content={<CustomTooltip />} />
                 <ReferenceLine
                   y={0}
-                  stroke="#94a3b8"
+                  stroke="hsl(var(--muted-foreground))"
                   strokeWidth={1}
-                  label={{ value: '¥0', position: 'right', fill: '#94a3b8', fontSize: 10 }}
+                  strokeOpacity={0.6}
+                  label={{ value: '¥0', position: 'right', fill: 'hsl(var(--muted-foreground))', fontSize: 10 }}
                 />
                 <ReferenceLine
                   y={floorMinor / 100}
@@ -158,10 +165,10 @@ export function CashCurveChart({ forecast }: CashCurveChartProps) {
                 <Line
                   type="monotone"
                   dataKey="closingMajor"
-                  stroke="#2563eb"
+                  stroke="hsl(var(--primary))"
                   strokeWidth={2.5}
-                  dot={{ r: 4, fill: '#2563eb', strokeWidth: 0, cursor: 'pointer' }}
-                  activeDot={{ r: 6, fill: '#1d4ed8', stroke: '#93c5fd', strokeWidth: 2, cursor: 'pointer' }}
+                  dot={{ r: 4, fill: 'hsl(var(--primary))', strokeWidth: 0, cursor: 'pointer' }}
+                  activeDot={{ r: 6, fill: 'hsl(var(--primary))', stroke: 'hsl(var(--background))', strokeWidth: 2, cursor: 'pointer' }}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -171,6 +178,13 @@ export function CashCurveChart({ forecast }: CashCurveChartProps) {
             </div>
           )}
         </div>
+
+        {/* Accessible narrative summary and weekly data table alternative */}
+        <AccessibleChartSummary
+          weeklyBuckets={weeklyBuckets}
+          floorMinor={floorMinor}
+          chartTitle="13-Week Cash Trajectory"
+        />
       </CardContent>
     </Card>
   );

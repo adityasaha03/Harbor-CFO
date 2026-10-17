@@ -39,7 +39,7 @@ export default tseslint.config(
         {
           patterns: [
             {
-              group: ['@/features/*/*'],
+              group: ['@/features/*/*', '!@/features/auth/server'],
               message:
                 'Deep imports from feature internals are forbidden. Import only from the feature index: "@/features/<feature>".',
             },
