@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useImports } from '../api/use-imports';
 import { downloadErrorReport } from '../api/download-error-report';
-import type { ImportStatus } from '@harbor/contracts';
+import type { ImportDto, ImportStatus } from '@harbor/contracts';
 import {
   Table,
   TableBody,
@@ -13,11 +13,13 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Download, FileText, RefreshCw, AlertCircle } from 'lucide-react';
+import { Download, FileText, RefreshCw, AlertCircle, Eye } from 'lucide-react';
 import { toast } from 'sonner';
+import { ImportDetailsDialog } from './import-details-dialog';
 
 export function ImportHistoryTable() {
   const { data: imports, isLoading, isError, error, refetch, isRefetching } = useImports();
+  const [selectedImport, setSelectedImport] = React.useState<ImportDto | null>(null);
 
   const handleDownloadErrors = async (id: string, fileName: string) => {
     try {
@@ -34,7 +36,7 @@ export function ImportHistoryTable() {
         <div>
           <h3 className="text-base font-semibold text-foreground">Import History</h3>
           <p className="text-xs text-muted-foreground">
-            Audit log of all uploaded files, validation results, and commits
+            Audit log of all uploaded files, validation results, and commits. Click any item to inspect details.
           </p>
         </div>
         <Button
@@ -81,18 +83,23 @@ export function ImportHistoryTable() {
                   <TableHead className="w-[140px]">Rows (Acc/Rej)</TableHead>
                   <TableHead className="w-[150px]">Date</TableHead>
                   <TableHead className="w-[100px]">Actor</TableHead>
-                  <TableHead className="text-right w-[110px]">Actions</TableHead>
+                  <TableHead className="text-right w-[150px]">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {imports.map((item) => (
-                  <TableRow key={item.id}>
+                  <TableRow
+                    key={item.id}
+                    className="cursor-pointer hover:bg-muted/50 transition-colors"
+                    onClick={() => setSelectedImport(item)}
+                    data-testid={`import-history-row-${item.id}`}
+                  >
                     <TableCell className="font-mono text-xs font-medium max-w-[200px] truncate" title={item.fileName}>
                       {item.fileName}
                     </TableCell>
                     <TableCell>
                       <Badge variant="outline" className="capitalize text-xs font-normal">
-                        {item.kind}
+                        {item.kind.replace('_', ' ')}
                       </Badge>
                     </TableCell>
                     <TableCell>
@@ -116,19 +123,33 @@ export function ImportHistoryTable() {
                     <TableCell className="font-mono text-xs text-muted-foreground max-w-[100px] truncate" title={item.actorId}>
                       {item.actorId ? item.actorId.slice(0, 8) : 'system'}
                     </TableCell>
-                    <TableCell className="text-right">
-                      {item.rejectedRows > 0 && (
+                    <TableCell className="text-right whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+                      <div className="flex items-center justify-end gap-1">
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-7 px-2 text-xs text-destructive hover:text-destructive"
-                          onClick={() => handleDownloadErrors(item.id, item.fileName)}
-                          title="Download error CSV"
+                          className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
+                          onClick={() => setSelectedImport(item)}
+                          title="View import details"
+                          data-testid={`view-details-${item.id}`}
                         >
-                          <Download className="h-3 w-3 mr-1" />
-                          Errors
+                          <Eye className="h-3 w-3 mr-1" />
+                          Details
                         </Button>
-                      )}
+                        {item.rejectedRows > 0 && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 px-2 text-xs text-destructive hover:text-destructive"
+                            onClick={() => handleDownloadErrors(item.id, item.fileName)}
+                            title="Download error CSV"
+                            data-testid={`download-errors-${item.id}`}
+                          >
+                            <Download className="h-3 w-3 mr-1" />
+                            Errors
+                          </Button>
+                        )}
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -137,6 +158,14 @@ export function ImportHistoryTable() {
           </div>
         )}
       </div>
+
+      <ImportDetailsDialog
+        importItem={selectedImport}
+        open={Boolean(selectedImport)}
+        onOpenChange={(open) => {
+          if (!open) setSelectedImport(null);
+        }}
+      />
     </div>
   );
 }
