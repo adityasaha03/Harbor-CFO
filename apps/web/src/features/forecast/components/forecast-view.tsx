@@ -4,6 +4,8 @@ import * as React from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ErrorState } from '@/components/feedback/error-state';
+import { ForbiddenState } from '@/features/auth';
+import { ApiError } from '@/lib/api/errors';
 import { Badge } from '@/components/ui/badge';
 import { useLatestForecast } from '../api/use-latest-forecast';
 import { ForecastChart } from './forecast-chart';
@@ -63,6 +65,30 @@ export function ForecastView() {
   }
 
   if (forecastQuery.isError || !forecastQuery.data) {
+    const error = forecastQuery.error;
+    const isForbidden =
+      (ApiError.isApiError(error) && (error.status === 403 || error.code === 'FORBIDDEN')) ||
+      (typeof error === 'object' &&
+        error !== null &&
+        'status' in error &&
+        (error as { status?: number }).status === 403) ||
+      (error instanceof Error &&
+        (error.message.toLowerCase().includes('forbidden') ||
+          error.message.includes('403') ||
+          error.message.toLowerCase().includes('insufficient permissions')));
+
+    if (isForbidden) {
+      return (
+        <ForbiddenState
+          message={
+            error instanceof Error
+              ? error.message
+              : 'Your current role does not have permission to view forecast data.'
+          }
+        />
+      );
+    }
+
     return (
       <ErrorState
         title="Failed to load cash forecast"

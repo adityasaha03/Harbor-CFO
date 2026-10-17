@@ -2,6 +2,8 @@ import * as React from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState } from './empty-state';
 import { ErrorState } from './error-state';
+import { ForbiddenState } from '@/features/auth';
+import { ApiError } from '@/lib/api/errors';
 
 export interface QueryLikeResult<TData = unknown> {
   isLoading?: boolean;
@@ -19,6 +21,7 @@ export interface QueryBoundaryProps<TData> {
   emptyFallback?: React.ReactNode;
   emptyTitle?: string;
   emptyDescription?: string;
+  forbiddenFallback?: React.ReactNode;
   isEmpty?: (data: TData) => boolean;
 }
 
@@ -29,6 +32,7 @@ export function QueryBoundary<TData>({
   emptyFallback,
   emptyTitle,
   emptyDescription,
+  forbiddenFallback,
   isEmpty,
 }: QueryBoundaryProps<TData>) {
   const isLoading = query.isLoading ?? query.isPending;
@@ -47,6 +51,34 @@ export function QueryBoundary<TData>({
   }
 
   if (query.isError) {
+    const error = query.error;
+    const isForbidden =
+      (ApiError.isApiError(error) && (error.status === 403 || error.code === 'FORBIDDEN')) ||
+      (typeof error === 'object' &&
+        error !== null &&
+        'status' in error &&
+        (error as { status?: number }).status === 403) ||
+      (error instanceof Error &&
+        (error.message.toLowerCase().includes('forbidden') ||
+          error.message.includes('403') ||
+          error.message.toLowerCase().includes('unauthorized') ||
+          error.message.toLowerCase().includes('insufficient permissions')));
+
+    if (isForbidden) {
+      if (forbiddenFallback) {
+        return <>{forbiddenFallback}</>;
+      }
+      return (
+        <ForbiddenState
+          message={
+            error instanceof Error
+              ? error.message
+              : 'Your current role does not have permission to view this financial resource.'
+          }
+        />
+      );
+    }
+
     const message =
       query.error instanceof Error
         ? query.error.message

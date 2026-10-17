@@ -5,6 +5,8 @@ import { Wallet, Shield, TrendingDown, AlertCircle, CheckCircle2 } from 'lucide-
 import type { LatestForecastResponse } from '@/features/forecast';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Money } from '@/components/data/money';
+import { JargonTooltip } from '@/components/data/jargon-tooltip';
+import { usePlainLanguage } from './plain-language-context';
 import { SourceChip } from './source-chip';
 
 export interface CashSummaryCardsProps {
@@ -12,6 +14,7 @@ export interface CashSummaryCardsProps {
 }
 
 export function CashSummaryCards({ forecast }: CashSummaryCardsProps) {
+  const { translate } = usePlainLanguage();
   const { openingCashMinor, floorMinor, summary, asOfDate } = forecast;
   const isBreached = summary.liquidityGapMinor > 0 || summary.minCashMinor < floorMinor;
 
@@ -47,7 +50,9 @@ export function CashSummaryCards({ forecast }: CashSummaryCardsProps) {
       <Card className="relative overflow-hidden border-border/80 shadow-xs">
         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
           <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-            Liquidity Floor
+            <JargonTooltip term="liquidity-floor">
+              {translate('liquidity_floor', 'Liquidity Floor')}
+            </JargonTooltip>
           </CardTitle>
           <div className="p-1.5 rounded-md bg-blue-500/10 text-blue-600 dark:text-blue-400">
             <Shield className="h-4 w-4" />
@@ -107,7 +112,9 @@ export function CashSummaryCards({ forecast }: CashSummaryCardsProps) {
       >
         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
           <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-            Gap to Floor
+            <JargonTooltip term="liquidity-floor">
+              {translate('liquidity_gap', 'Gap to Floor')}
+            </JargonTooltip>
           </CardTitle>
           <div className="flex items-center gap-1.5">
             <SourceChip formulaKey="floorGap" />

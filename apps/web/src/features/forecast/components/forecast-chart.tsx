@@ -15,6 +15,7 @@ import {
 import { formatMinor } from '@harbor/contracts';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { ViewToggle, type ForecastGranularity } from './view-toggle';
+import { AccessibleChartSummary } from '@/components/data';
 import type { LatestForecastResponse } from '../api/use-latest-forecast';
 
 export interface ForecastChartProps {
@@ -160,7 +161,12 @@ export function ForecastChart({ forecast, onSelectDate, selectedDate }: Forecast
         <ViewToggle value={granularity} onChange={setGranularity} />
       </CardHeader>
       <CardContent className="pt-2">
-        <div className="h-[340px] w-full min-w-0" data-testid="forecast-recharts-container">
+        <div
+          className="h-[340px] w-full min-w-0"
+          data-testid="forecast-recharts-container"
+          role="region"
+          aria-label="91-Day Cash Forecast Trajectory Chart"
+        >
           {isMounted ? (
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
@@ -291,6 +297,12 @@ export function ForecastChart({ forecast, onSelectDate, selectedDate }: Forecast
             <div className="h-full w-full bg-muted/10 rounded-md animate-pulse" />
           )}
         </div>
+
+        <AccessibleChartSummary
+          weeklyBuckets={weeklyBuckets}
+          floorMinor={floorMinor}
+          chartTitle="91-Day Cash Forecast"
+        />
       </CardContent>
     </Card>
   );

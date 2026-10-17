@@ -8,3 +8,6 @@ export * from './components/data-freshness-card';
 export * from './components/insights-list';
 export * from './components/health-score-card';
 export * from './components/dashboard-view';
+export * from './components/demo-guide';
+export * from './components/plain-language-context';
+export * from './components/plain-language-toggle';

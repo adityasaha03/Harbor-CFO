@@ -5,6 +5,8 @@ import type { AgingBucket, AnalyticsSummary } from '@harbor/contracts';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Money } from '@/components/data/money';
+import { JargonTooltip } from '@/components/data/jargon-tooltip';
+import { usePlainLanguage } from './plain-language-context';
 import { SourceChip } from './source-chip';
 
 export interface AgingCardProps {
@@ -61,13 +63,18 @@ function BucketTable({ bucket, title }: { bucket: AgingBucket; title: string }) 
 }
 
 export function AgingCard({ analytics }: AgingCardProps) {
+  const { translate } = usePlainLanguage();
   const { arAging, apAging } = analytics;
 
   return (
     <Card className="border-border/80 shadow-xs" data-testid="aging-card">
       <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
         <div>
-          <CardTitle className="text-sm font-semibold">Invoice Aging Schedule</CardTitle>
+          <CardTitle className="text-sm font-semibold">
+            <JargonTooltip term="ar-aging">
+              {translate('ar_aging', 'Invoice Aging Schedule')}
+            </JargonTooltip>
+          </CardTitle>
           <CardDescription className="text-xs">
             Outstanding balances partitioned into 30-day buckets
           </CardDescription>

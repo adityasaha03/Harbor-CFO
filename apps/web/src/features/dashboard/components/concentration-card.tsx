@@ -5,6 +5,8 @@ import type { CustomerConcentration } from '@harbor/contracts';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Money } from '@/components/data/money';
+import { JargonTooltip } from '@/components/data/jargon-tooltip';
+import { usePlainLanguage } from './plain-language-context';
 import { SourceChip } from './source-chip';
 
 export interface ConcentrationCardProps {
@@ -12,6 +14,7 @@ export interface ConcentrationCardProps {
 }
 
 export function ConcentrationCard({ concentration }: ConcentrationCardProps) {
+  const { translate } = usePlainLanguage();
   const {
     topCustomerName,
     topCustomerArMinor,
@@ -28,7 +31,11 @@ export function ConcentrationCard({ concentration }: ConcentrationCardProps) {
     <Card className="border-border/80 shadow-xs" data-testid="concentration-card">
       <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
         <div>
-          <CardTitle className="text-sm font-semibold">Customer Concentration</CardTitle>
+          <CardTitle className="text-sm font-semibold">
+            <JargonTooltip term="customer-concentration">
+              {translate('concentration', 'Customer Concentration')}
+            </JargonTooltip>
+          </CardTitle>
           <CardDescription className="text-xs">
             Credit risk exposure to top counterparty
           </CardDescription>
