@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from '@/features/auth/server/session';
-import { auth } from '@/features/auth/server/auth';
 import { mongoDb } from '@/features/auth/server/mongo';
+import { hashPassword } from 'better-auth/crypto';
 import { ObjectId } from 'mongodb';
 import type { Role } from '@harbor/contracts';
 
@@ -23,36 +23,25 @@ interface UpdateMemberBody {
 function toIdQuery(id: string | undefined | null) {
   if (!id) return id;
   const str = String(id);
-  if (ObjectId.isValid(str) && str.length === 24) {
-    return { $in: [str, new ObjectId(str)] };
-  }
-  return str;
+  return ObjectId.isValid(str) && str.length === 24 ? { $in: [str, new ObjectId(str)] } : str;
 }
 
 function toDbId(id: string | undefined | null) {
   if (!id) return id;
   const str = String(id);
-  if (ObjectId.isValid(str) && str.length === 24) {
-    return new ObjectId(str);
-  }
-  return str;
+  return ObjectId.isValid(str) && str.length === 24 ? new ObjectId(str) : str;
 }
 
 async function verifyOwnerAccess(userId: string, requestedOrgId?: string) {
   let orgId = requestedOrgId;
-
-  // 1. If orgId is provided, check if user is owner of that org in member collection
   if (orgId) {
     const directMember = await mongoDb.collection('member').findOne({
       userId: toIdQuery(userId),
       organizationId: toIdQuery(orgId),
     } as Record<string, unknown>);
-    if (directMember && directMember.role === 'owner') {
-      return { isOwner: true, orgId };
-    }
+    if (directMember && directMember.role === 'owner') return { isOwner: true, orgId };
   }
 
-  // 2. Check if user is an owner of ANY organization in member collection
   const anyOwnerMember = await mongoDb.collection('member').findOne({
     userId: toIdQuery(userId),
     role: 'owner',
@@ -61,14 +50,10 @@ async function verifyOwnerAccess(userId: string, requestedOrgId?: string) {
     return { isOwner: true, orgId: orgId || String(anyOwnerMember.organizationId) };
   }
 
-  // 3. Check organization collection in case user is the creator
   if (orgId) {
     const orgDoc = await mongoDb.collection('organization').findOne({
-      $or: [
-        { _id: toIdQuery(orgId) },
-        { id: orgId },
-      ] as Record<string, unknown>[],
-    });
+      $or: [{ _id: toIdQuery(orgId) }, { id: orgId }],
+    } as Record<string, unknown>);
     if (orgDoc && (String(orgDoc.userId) === userId || String(orgDoc.ownerId) === userId)) {
       return { isOwner: true, orgId };
     }
@@ -80,9 +65,7 @@ async function verifyOwnerAccess(userId: string, requestedOrgId?: string) {
 export async function POST(req: Request) {
   try {
     const session = await getServerSession();
-    if (!session?.user) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
+    if (!session?.user) return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
 
     const body = (await req.json()) as AddMemberBody;
     const requestedOrgId = body.organizationId || session.session?.activeOrganizationId || undefined;
@@ -100,45 +83,33 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: 'Valid email is required' }, { status: 400 });
     }
 
-    let existingUser = await mongoDb.collection('user').findOne({ email: cleanEmail });
+    const existingUser = await mongoDb.collection('user').findOne({ email: cleanEmail });
     let newUserId: string;
 
     if (!existingUser) {
       const passwordToUse = body.password?.trim() || 'Password123!';
-      try {
-        const created = await auth.api.signUpEmail({
-          body: {
-            email: cleanEmail,
-            password: passwordToUse,
-            name: cleanName,
-          },
-        });
-        newUserId = created.user.id;
-      } catch {
-        const { hashPassword } = await import('better-auth/crypto');
-        const hashedPassword = await hashPassword(passwordToUse);
-        const newObjId = new ObjectId();
-        newUserId = newObjId.toString();
+      const hashedPassword = await hashPassword(passwordToUse);
+      const newObjId = new ObjectId();
+      newUserId = newObjId.toString();
 
-        await mongoDb.collection('user').insertOne({
-          _id: newObjId,
-          name: cleanName,
-          email: cleanEmail,
-          emailVerified: false,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        } as Record<string, unknown>);
+      await mongoDb.collection('user').insertOne({
+        _id: newObjId,
+        name: cleanName,
+        email: cleanEmail,
+        emailVerified: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      } as Record<string, unknown>);
 
-        await mongoDb.collection('account').insertOne({
-          _id: new ObjectId(),
-          userId: newObjId,
-          accountId: cleanEmail,
-          providerId: 'credential',
-          password: hashedPassword,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        } as Record<string, unknown>);
-      }
+      await mongoDb.collection('account').insertOne({
+        _id: new ObjectId(),
+        userId: newObjId,
+        accountId: newUserId,
+        providerId: 'credential',
+        password: hashedPassword,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      } as Record<string, unknown>);
     } else {
       newUserId = String(existingUser.id || existingUser._id);
     }
@@ -154,9 +125,8 @@ export async function POST(req: Request) {
         { $set: { role, updatedAt: new Date() } },
       );
     } else {
-      const memberId = new ObjectId();
       await mongoDb.collection('member').insertOne({
-        _id: memberId,
+        _id: new ObjectId(),
         organizationId: toDbId(orgId),
         userId: toDbId(newUserId),
         role,
@@ -174,9 +144,7 @@ export async function POST(req: Request) {
 export async function PATCH(req: Request) {
   try {
     const session = await getServerSession();
-    if (!session?.user) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
+    if (!session?.user) return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
 
     const body = (await req.json()) as UpdateMemberBody;
     const requestedOrgId = body.organizationId || session.session?.activeOrganizationId || undefined;
@@ -187,9 +155,7 @@ export async function PATCH(req: Request) {
     }
 
     const { memberId, name, role } = body;
-    if (!memberId) {
-      return NextResponse.json({ message: 'Member ID is required' }, { status: 400 });
-    }
+    if (!memberId) return NextResponse.json({ message: 'Member ID is required' }, { status: 400 });
 
     if (role && ['owner', 'employee', 'reviewer'].includes(role)) {
       await mongoDb.collection('member').updateOne(
