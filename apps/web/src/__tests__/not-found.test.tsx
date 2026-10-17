@@ -12,3 +12,4 @@ describe('NotFound component', () => {
     expect(screen.getByRole('link', { name: /go to dashboard/i })).toHaveAttribute('href', '/dashboard');
   });
 });
+

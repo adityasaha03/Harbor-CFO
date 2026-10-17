@@ -30,3 +30,4 @@ export function isValidProtectedRoute(path: string | null | undefined): boolean 
     (route) => cleanPath === route || cleanPath.startsWith(`${route}/`),
   );
 }
+
