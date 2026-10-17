@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Compass, Loader2 } from 'lucide-react';
 import { authClient } from '../lib/auth-client';
@@ -14,6 +14,7 @@ import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
+import { isValidProtectedRoute } from '../lib/protected-routes';
 
 const signUpSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -25,8 +26,17 @@ export type SignUpValues = z.infer<typeof signUpSchema>;
 
 export function SignUpForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const rawCallbackUrl = searchParams.get('callbackUrl');
+
   const [formError, setFormError] = React.useState<string | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
+
+  React.useEffect(() => {
+    if (rawCallbackUrl && isValidProtectedRoute(rawCallbackUrl)) {
+      toast.error('You need to sign up to visit the page', { id: 'auth-required' });
+    }
+  }, [rawCallbackUrl]);
 
   const {
     register,
@@ -146,7 +156,10 @@ export function SignUpForm() {
       <CardFooter className="flex justify-center border-t border-border/60 p-4">
         <p className="text-xs text-muted-foreground">
           Already have an account?{' '}
-          <Link href="/sign-in" className="font-semibold text-primary hover:underline">
+          <Link
+            href={rawCallbackUrl ? `/sign-in?callbackUrl=${encodeURIComponent(rawCallbackUrl)}` : '/sign-in'}
+            className="font-semibold text-primary hover:underline"
+          >
             Sign in
           </Link>
         </p>

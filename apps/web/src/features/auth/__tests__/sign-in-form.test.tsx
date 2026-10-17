@@ -4,8 +4,11 @@ import userEvent from '@testing-library/user-event';
 import { SignInForm } from '../components/sign-in-form';
 import { authClient } from '../lib/auth-client';
 
+import { toast } from 'sonner';
+
 const mockPush = vi.fn();
 const mockRefresh = vi.fn();
+const mockGetSearchParams = vi.fn();
 
 vi.mock('next/navigation', () => ({
   useRouter: () => ({
@@ -13,8 +16,15 @@ vi.mock('next/navigation', () => ({
     refresh: mockRefresh,
   }),
   useSearchParams: () => ({
-    get: vi.fn().mockReturnValue(null),
+    get: mockGetSearchParams,
   }),
+}));
+
+vi.mock('sonner', () => ({
+  toast: {
+    error: vi.fn(),
+    success: vi.fn(),
+  },
 }));
 
 vi.mock('../lib/auth-client', () => ({
@@ -29,15 +39,31 @@ vi.mock('../lib/auth-client', () => ({
 describe('SignInForm', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockGetSearchParams.mockReturnValue(null);
   });
 
   it('renders email, password inputs, submit button, and signup link', () => {
+    mockGetSearchParams.mockReturnValue(null);
     render(<SignInForm />);
 
     expect(screen.getByLabelText(/email address/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/^password/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /sign in/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /sign up/i })).toHaveAttribute('href', '/sign-up');
+  });
+
+  it('shows auth-required toast when redirected with a valid protected callbackUrl', () => {
+    mockGetSearchParams.mockImplementation((key: string) => (key === 'callbackUrl' ? '/dashboard' : null));
+    render(<SignInForm />);
+
+    expect(toast.error).toHaveBeenCalledWith('You need to sign up to visit the page', { id: 'auth-required' });
+  });
+
+  it('does not show auth-required toast when callbackUrl is absent or not a protected route', () => {
+    mockGetSearchParams.mockImplementation((key: string) => (key === 'callbackUrl' ? '/some-random-route' : null));
+    render(<SignInForm />);
+
+    expect(toast.error).not.toHaveBeenCalled();
   });
 
   it('shows validation errors when fields are empty', async () => {

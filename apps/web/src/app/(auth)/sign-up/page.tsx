@@ -1,3 +1,4 @@
+import * as React from 'react';
 import type { Metadata } from 'next';
 import { SignUpForm } from '@/features/auth';
 
@@ -7,5 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default function SignUpPage() {
-  return <SignUpForm />;
+  return (
+    <React.Suspense fallback={<div className="w-full max-w-md h-96 animate-pulse bg-muted/20 rounded-xl" />}>
+      <SignUpForm />
+    </React.Suspense>
+  );
 }

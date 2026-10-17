@@ -4,14 +4,27 @@ import userEvent from '@testing-library/user-event';
 import { SignUpForm } from '../components/sign-up-form';
 import { authClient } from '../lib/auth-client';
 
+import { toast } from 'sonner';
+
 const mockPush = vi.fn();
 const mockRefresh = vi.fn();
+const mockGetSearchParams = vi.fn();
 
 vi.mock('next/navigation', () => ({
   useRouter: () => ({
     push: mockPush,
     refresh: mockRefresh,
   }),
+  useSearchParams: () => ({
+    get: mockGetSearchParams,
+  }),
+}));
+
+vi.mock('sonner', () => ({
+  toast: {
+    error: vi.fn(),
+    success: vi.fn(),
+  },
 }));
 
 vi.mock('../lib/auth-client', () => ({
@@ -25,6 +38,7 @@ vi.mock('../lib/auth-client', () => ({
 describe('SignUpForm', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockGetSearchParams.mockReturnValue(null);
   });
 
   it('renders name, email, password fields and submit button', () => {
@@ -35,6 +49,20 @@ describe('SignUpForm', () => {
     expect(screen.getByLabelText(/^password/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /create account/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /sign in/i })).toHaveAttribute('href', '/sign-in');
+  });
+
+  it('shows auth-required toast when visited with a valid protected callbackUrl', () => {
+    mockGetSearchParams.mockImplementation((key: string) => (key === 'callbackUrl' ? '/dashboard' : null));
+    render(<SignUpForm />);
+
+    expect(toast.error).toHaveBeenCalledWith('You need to sign up to visit the page', { id: 'auth-required' });
+  });
+
+  it('does not show auth-required toast when callbackUrl is missing or invalid', () => {
+    mockGetSearchParams.mockImplementation((key: string) => (key === 'callbackUrl' ? '/invalid-path' : null));
+    render(<SignUpForm />);
+
+    expect(toast.error).not.toHaveBeenCalled();
   });
 
   it('validates empty inputs and password length under 8 characters', async () => {
