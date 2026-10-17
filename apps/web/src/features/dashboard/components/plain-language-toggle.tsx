@@ -5,16 +5,26 @@ import { Type } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { usePlainLanguage } from './plain-language-context';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
 
 export function PlainLanguageToggle() {
   const { isPlainLanguage, togglePlainLanguage } = usePlainLanguage();
+
+  const handleToggle = () => {
+    togglePlainLanguage();
+    if (!isPlainLanguage) {
+      toast.info('Plain Language Mode ON: Jargon translated to intuitive SME terms');
+    } else {
+      toast.info('Technical Mode ON: Showing standard financial accounting terminology');
+    }
+  };
 
   return (
     <Button
       type="button"
       variant="outline"
       size="sm"
-      onClick={togglePlainLanguage}
+      onClick={handleToggle}
       className={cn(
         'h-7 px-2.5 text-xs font-medium transition-all gap-1.5',
         isPlainLanguage

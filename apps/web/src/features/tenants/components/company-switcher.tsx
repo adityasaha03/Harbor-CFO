@@ -16,6 +16,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { toast } from 'sonner';
 
 export function CompanySwitcher() {
   const router = useRouter();
@@ -26,8 +27,12 @@ export function CompanySwitcher() {
     if (activeCompany?.id === companyId) return;
     setSwitching(true);
     try {
+      const targetCompany = companies.find((c) => c.id === companyId);
       await setActiveCompany(companyId);
+      toast.success(`Switched active workspace to "${targetCompany?.name || 'company'}"`);
       router.refresh();
+    } catch {
+      toast.error('Failed to switch workspace. Please try again.');
     } finally {
       setSwitching(false);
     }

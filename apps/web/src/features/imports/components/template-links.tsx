@@ -5,10 +5,12 @@ import { Button } from '@/components/ui/button';
 import { Download, FileSpreadsheet } from 'lucide-react';
 import { downloadCsvTemplate } from '../lib/templates';
 import type { ImportKind } from '@harbor/contracts';
+import { toast } from 'sonner';
 
 export function TemplateLinks() {
   const handleDownload = (kind: ImportKind) => {
     downloadCsvTemplate(kind);
+    toast.success(`Downloaded sample ${kind === 'transactions' ? 'Transactions' : 'Invoices'} CSV template`);
   };
 
   return (

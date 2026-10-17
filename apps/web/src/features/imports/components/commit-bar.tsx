@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dialog';
 import { AlertCircle, CheckCircle, RefreshCw } from 'lucide-react';
 import type { ApiError } from '@/lib/api/errors';
+import { toast } from 'sonner';
 
 export interface CommitBarProps {
   preview: ImportPreviewResponse;
@@ -38,6 +39,7 @@ export function CommitBar({ preview, onCommitted, onReset }: CommitBarProps) {
     try {
       const result = await commitMutation.mutateAsync(preview.importId);
       setIsConfirmOpen(false);
+      toast.success(`Successfully committed import! Staged ${result.acceptedRows} records to ledger.`);
       onCommitted(result);
     } catch (err) {
       setIsConfirmOpen(false);
@@ -60,11 +62,15 @@ export function CommitBar({ preview, onCommitted, onReset }: CommitBarProps) {
         }
         setDuplicateImportId(existingId);
         setErrorMessage(msg);
+        toast.error(`Import conflict: ${msg}`);
       } else if (status === 410 || msg.toLowerCase().includes('expired')) {
         setIsExpired(true);
-        setErrorMessage('This import preview has expired. Please re-upload the file.');
+        const expiredMsg = 'This import preview has expired. Please re-upload the file.';
+        setErrorMessage(expiredMsg);
+        toast.error(expiredMsg);
       } else {
         setErrorMessage(msg);
+        toast.error(msg);
       }
     }
   };

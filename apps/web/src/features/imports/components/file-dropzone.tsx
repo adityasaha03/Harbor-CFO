@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { IMPORT_LIMITS, type ImportKind, type ImportPreviewResponse } from '@harbor/contracts';
 import { usePreviewImport } from '../api/use-preview-import';
+import { toast } from 'sonner';
 
 export interface FileDropzoneProps {
   onPreviewSuccess?: (preview: ImportPreviewResponse) => void;
@@ -28,12 +29,16 @@ export function FileDropzone({ onPreviewSuccess, onFileSelect, isLoading }: File
     setClientError(null);
 
     if (!file.name.toLowerCase().endsWith('.csv')) {
-      setClientError('Invalid file type: Only .csv files are supported.');
+      const msg = 'Invalid file type: Only .csv files are supported.';
+      setClientError(msg);
+      toast.error(msg);
       return;
     }
 
     if (file.size > IMPORT_LIMITS.MAX_FILE_BYTES) {
-      setClientError('File exceeds 5 MB maximum limit.');
+      const msg = 'File exceeds 5 MB maximum limit.';
+      setClientError(msg);
+      toast.error(msg);
       return;
     }
 
@@ -43,10 +48,12 @@ export function FileDropzone({ onPreviewSuccess, onFileSelect, isLoading }: File
     if (onPreviewSuccess) {
       try {
         const preview = await previewMutation.mutateAsync({ file, kind });
+        toast.success(`Parsed "${file.name}": ${preview.rowCount} records staged for preview.`);
         onPreviewSuccess(preview);
       } catch (err) {
         const msg = err instanceof Error ? err.message : 'Failed to preview file';
         setClientError(msg);
+        toast.error(msg);
       }
     }
   };

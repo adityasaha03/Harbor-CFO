@@ -8,6 +8,7 @@ import { CheckResult } from './check-result';
 import { useRunProofCheck } from '../api/use-run-proof-check';
 import { useMe } from '@/features/auth';
 import type { ProofCheckItem, ProofCheckRunResult } from '@harbor/contracts';
+import { toast } from 'sonner';
 
 const CHECK_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   'employee-execute': Users,
@@ -31,9 +32,18 @@ export function CheckCard({ check }: CheckCardProps): React.JSX.Element {
   const Icon = CHECK_ICONS[check.id] || ShieldAlert;
 
   const handleRun = (): void => {
+    toast.info(`Executing adversarial check: "${check.title}"...`);
     runCheck(check.id, {
       onSuccess: (res) => {
         setLocalResult(res);
+        if (res.passed) {
+          toast.success(`Check "${check.title}" passed: Invariant held!`);
+        } else {
+          toast.error(`Check "${check.title}" failed!`);
+        }
+      },
+      onError: (err) => {
+        toast.error(err instanceof Error ? err.message : 'Failed to execute check');
       },
     });
   };

@@ -17,6 +17,7 @@ import { StaleBanner } from './stale-banner';
 import { RepaymentWarning } from './repayment-warning';
 import { ComparisonChart } from './comparison-chart';
 import { ComparisonMetrics } from './comparison-metrics';
+import { toast } from 'sonner';
 
 export function ScenarioStudio() {
   const router = useRouter();
@@ -56,32 +57,41 @@ export function ScenarioStudio() {
     setChanges(preset.buildChanges({}));
     setName(preset.label);
     setErrorMessage(null);
+    toast.info(`Loaded scenario preset: "${preset.label}"`);
   };
 
   const handleAddChange = (newChange: ScenarioChange) => {
     setChanges((prev) => [...prev, newChange]);
     setErrorMessage(null);
+    toast.success('Added modification to scenario builder');
   };
 
   const handleRemoveChange = (index: number) => {
     setChanges((prev) => prev.filter((_, i) => i !== index));
+    toast.info('Removed modification from scenario');
   };
 
   const handleRunScenario = async () => {
     if (changes.length === 0) {
-      setErrorMessage('Please add at least one change before simulating.');
+      const msg = 'Please add at least one change before simulating.';
+      setErrorMessage(msg);
+      toast.error(msg);
       return;
     }
     setErrorMessage(null);
 
     try {
+      const scenarioName = name.trim() || 'Custom Scenario';
       const response = await createScenarioMutation.mutateAsync({
-        name: name.trim() || 'Custom Scenario',
+        name: scenarioName,
         changes,
       });
       setActiveScenario(response);
+      toast.success(`Simulation completed: "${scenarioName}"!`);
     } catch (err) {
-      setErrorMessage(err instanceof Error ? err.message : 'Failed to create scenario.');
+      const msg = err instanceof Error ? err.message : 'Failed to create scenario.';
+      setErrorMessage(msg);
+      toast.error(msg);
     }
   };
 
@@ -102,6 +112,7 @@ export function ScenarioStudio() {
             onClick={() => {
               setChanges([]);
               setActiveScenario(null);
+              toast.info('Scenario modifications cleared');
             }}
             data-testid="clear-scenario-btn"
           >
@@ -226,7 +237,10 @@ export function ScenarioStudio() {
                     <Button
                       size="sm"
                       className="bg-emerald-600 hover:bg-emerald-700 text-white shrink-0 gap-1.5"
-                      onClick={() => router.push(`/actions?scenarioId=${activeScenario.scenarioId}`)}
+                      onClick={() => {
+                        toast.info('Initiating formal Action Proposal from simulated scenario');
+                        router.push(`/actions?scenarioId=${activeScenario.scenarioId}`);
+                      }}
                       data-testid="create-action-proposal-btn"
                     >
                       Create Action Proposal

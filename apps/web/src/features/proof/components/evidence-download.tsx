@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { downloadEvidenceBundle } from '../api/download-evidence';
 import { usePermission } from '@/features/auth';
+import { toast } from 'sonner';
 
 export function EvidenceDownload(): React.JSX.Element {
   const hasAuditExport = usePermission('audit:export');
@@ -20,8 +21,11 @@ export function EvidenceDownload(): React.JSX.Element {
       setDownloadError(null);
       await downloadEvidenceBundle();
       setLastDownloadedAt(new Date().toLocaleTimeString());
+      toast.success('Downloaded 9-artifact SHA-256 evidence package');
     } catch (err) {
-      setDownloadError(err instanceof Error ? err.message : 'Failed to download evidence bundle');
+      const msg = err instanceof Error ? err.message : 'Failed to download evidence bundle';
+      setDownloadError(msg);
+      toast.error(msg);
     } finally {
       setIsDownloading(false);
     }

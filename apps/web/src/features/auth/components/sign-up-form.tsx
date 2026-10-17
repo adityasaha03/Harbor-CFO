@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { toast } from 'sonner';
 
 const signUpSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -52,16 +53,20 @@ export function SignUpForm() {
       });
 
       if (error || !data) {
-        setFormError(error?.message || 'Unable to create account. Please try again.');
+        const errorMsg = error?.message || 'Unable to create account. Please try again.';
+        setFormError(errorMsg);
+        toast.error(errorMsg);
         setIsLoading(false);
         return;
       }
 
+      toast.success('Account created successfully! Welcome to HarborCFO.');
       // New users are directed to create or join a company
       router.push('/company');
       router.refresh();
     } catch {
       setFormError('An unexpected error occurred during account creation.');
+      toast.error('An unexpected error occurred during account creation.');
       setIsLoading(false);
     }
   };

@@ -4,6 +4,7 @@ import * as React from 'react';
 import { DEMO_EMAILS } from '@harbor/contracts';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { toast } from 'sonner';
 
 export interface DemoAccountPickerProps {
   onSelectEmail: (email: string) => void;
@@ -44,7 +45,10 @@ export function DemoAccountPicker({ onSelectEmail }: DemoAccountPickerProps) {
             variant="outline"
             size="sm"
             className="flex items-center justify-between text-xs font-medium h-auto py-1.5 px-2.5 bg-background hover:bg-accent"
-            onClick={() => onSelectEmail(preset.email)}
+            onClick={() => {
+              onSelectEmail(preset.email);
+              toast.info(`Selected ${preset.label} (${preset.email})`);
+            }}
           >
             <span className="truncate">{preset.label}</span>
             <span className="text-[10px] text-muted-foreground uppercase ml-1">

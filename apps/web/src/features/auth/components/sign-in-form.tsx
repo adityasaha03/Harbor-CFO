@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { toast } from 'sonner';
 
 const signInSchema = z.object({
   email: z.string().min(1, 'Email is required').email('Please enter a valid email address'),
@@ -55,9 +56,12 @@ export function SignInForm() {
 
       if (error || !data) {
         setFormError('Invalid email or password. Please try again.');
+        toast.error('Invalid email or password. Please try again.');
         setIsLoading(false);
         return;
       }
+
+      toast.success('Signed in successfully! Welcome back.');
 
       // Check whether an active company is assigned to the session
       const sessionRes = await authClient.getSession();
@@ -73,6 +77,7 @@ export function SignInForm() {
       router.refresh();
     } catch {
       setFormError('An unexpected error occurred during sign in. Please try again.');
+      toast.error('An unexpected error occurred during sign in. Please try again.');
       setIsLoading(false);
     }
   };

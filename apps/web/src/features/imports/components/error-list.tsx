@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { downloadErrorReport } from '../api/download-error-report';
+import { toast } from 'sonner';
 import type { ImportErrorItem, ImportWarning } from '@harbor/contracts';
 
 export interface ErrorListProps {
@@ -24,8 +25,9 @@ export function ErrorList({ importId, fileName, errors, warnings = [], onReset }
     try {
       setIsDownloading(true);
       await downloadErrorReport(importId, fileName);
-    } catch {
-      // Handled silently
+      toast.success('Downloaded import error report CSV');
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Failed to download error report');
     } finally {
       setIsDownloading(false);
     }
