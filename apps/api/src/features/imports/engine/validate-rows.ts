@@ -28,7 +28,23 @@ export function validateAndMapRows(
   kind: ImportKind,
 ): ImportResult<NormalizedTransactionRow | NormalizedInvoiceRow> {
   const headers = kind === 'transactions' ? TRANSACTION_CSV_HEADERS : INVOICE_CSV_HEADERS;
-  const numberedRows = parseCsv(buffer, headers);
+  let numberedRows: ReturnType<typeof parseCsv>;
+  try {
+    numberedRows = parseCsv(buffer, headers);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Invalid CSV file format';
+    return {
+      ok: false,
+      errors: [
+        {
+          row: 1,
+          field: 'header',
+          message,
+        },
+      ],
+      truncated: false,
+    };
+  }
 
   const allErrors: ImportErrorItem[] = [];
   const allWarnings: ImportWarning[] = [];

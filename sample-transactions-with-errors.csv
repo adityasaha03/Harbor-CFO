@@ -1,0 +1,6 @@
+externalId,date,accountId,amount,currency,category,description
+TX-VALID-01,2026-10-15,OPERATING,15000.00,CNY,customer_receipt,Valid customer receipt
+TX-BAD-DATE,invalid-date,OPERATING,2000.00,CNY,overhead,Invalid date format test
+TX-ZERO-AMT,2026-10-18,OPERATING,0.00,CNY,overhead,Zero amount should be rejected
+TX-BAD-CURR,2026-10-20,OPERATING,5000.00,USD,overhead,Currency must be CNY
+TX-BAD-CAT,2026-10-22,OPERATING,-3000.00,CNY,unsupported_category,Unsupported category test
