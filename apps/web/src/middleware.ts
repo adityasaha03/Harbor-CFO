@@ -5,10 +5,16 @@ const AUTH_ROUTES = ['/sign-in', '/sign-up'];
 const PROTECTED_PREFIXES = [
   '/dashboard',
   '/forecast',
-  '/alerts',
+  '/imports',
+  '/financing',
   '/facilities',
-  '/company',
+  '/scenarios',
+  '/actions',
+  '/agent',
+  '/proof',
+  '/alerts',
   '/settings',
+  '/company',
 ];
 
 export function middleware(request: NextRequest) {
@@ -34,9 +40,7 @@ export function middleware(request: NextRequest) {
 
   if (isProtected && !sessionCookie) {
     const signInUrl = new URL('/sign-in', request.url);
-    if (pathname !== '/dashboard') {
-      signInUrl.searchParams.set('callbackUrl', pathname);
-    }
+    signInUrl.searchParams.set('callbackUrl', pathname);
     return NextResponse.redirect(signInUrl);
   }
 

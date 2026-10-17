@@ -13,6 +13,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { toast } from 'sonner';
 
 const DEMO_ACCOUNTS = [
   {
@@ -107,6 +108,7 @@ export function DemoGuide() {
   const handleCopy = (email: string) => {
     void navigator.clipboard.writeText(email);
     setCopiedEmail(email);
+    toast.success(`Copied "${email}" to clipboard!`);
     setTimeout(() => setCopiedEmail(null), 2000);
   };
 

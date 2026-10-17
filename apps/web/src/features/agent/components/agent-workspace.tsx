@@ -12,6 +12,7 @@ import { SuggestedPrompts } from './suggested-prompts';
 import { ActivityTimeline } from './activity-timeline';
 import { PastRunsSidebar } from './past-runs-sidebar';
 import type { AgentStyle } from '@harbor/contracts';
+import { toast } from 'sonner';
 
 /**
  * Main Harbor Copilot Workspace container.
@@ -40,6 +41,7 @@ export function AgentWorkspace() {
     setErrorMessage(null);
     setActivePrompt(prompt);
     clearEvents();
+    toast.info('Query dispatched to Harbor Copilot. Streaming reasoning events...');
 
     startRunMutation.mutate(
       { prompt, style: selectedStyle },
@@ -51,11 +53,12 @@ export function AgentWorkspace() {
           const message =
             err instanceof Error ? err.message : 'Failed to start agent run';
           if (message.includes('429') || message.toLowerCase().includes('rate limit')) {
-            setErrorMessage(
-              'Rate limit exceeded (10 runs/min). Please wait a moment before sending another question.',
-            );
+            const limitMsg = 'Rate limit exceeded (10 runs/min). Please wait a moment before sending another question.';
+            setErrorMessage(limitMsg);
+            toast.error(limitMsg);
           } else {
             setErrorMessage(message);
+            toast.error(message);
           }
         },
       },
@@ -67,6 +70,7 @@ export function AgentWorkspace() {
     setActiveRunId(runId);
     setActivePrompt(null);
     clearEvents();
+    toast.info('Loaded past copilot conversation run');
   };
 
   const handleNewChat = () => {
@@ -74,6 +78,7 @@ export function AgentWorkspace() {
     setActiveRunId(null);
     setActivePrompt(null);
     clearEvents();
+    toast.info('Started new copilot conversation');
   };
 
   const pastRuns = runsQuery.data || [];

@@ -14,6 +14,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Download, FileText, RefreshCw, AlertCircle } from 'lucide-react';
+import { toast } from 'sonner';
 
 export function ImportHistoryTable() {
   const { data: imports, isLoading, isError, error, refetch, isRefetching } = useImports();
@@ -21,8 +22,9 @@ export function ImportHistoryTable() {
   const handleDownloadErrors = async (id: string, fileName: string) => {
     try {
       await downloadErrorReport(id, fileName);
-    } catch {
-      // Handled silently
+      toast.success(`Downloaded error report for "${fileName}"`);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Failed to download error report');
     }
   };
 
@@ -37,9 +39,10 @@ export function ImportHistoryTable() {
         </div>
         <Button
           variant="ghost"
-          size="sm"
-          onClick={() => refetch()}
-          disabled={isLoading || isRefetching}
+          onClick={async () => {
+            await refetch();
+            toast.info('Refreshed import history');
+          }}
           className="h-8 px-2 text-xs"
         >
           <RefreshCw className={`h-3.5 w-3.5 mr-1.5 ${isRefetching ? 'animate-spin' : ''}`} />

@@ -18,6 +18,7 @@ import { useExecuteProposal } from '../api/use-execute-proposal';
 import { useRejectProposal } from '../api/use-reject-proposal';
 import { useCreateProposal } from '../api/use-create-proposal';
 import { ProposalStatusBadge } from './proposal-status-badge';
+import { toast } from 'sonner';
 import { PayloadDetails } from './payload-details';
 import { ForecastImpact } from './forecast-impact';
 import { ExecutionResult } from './execution-result';
@@ -70,9 +71,11 @@ export function ApprovalDialog({
         proposalId: proposal.id,
         input: { payloadHash: proposal.payloadHash },
       });
+      toast.success('Action proposal approved with dual-key cryptographic signature!');
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Approval failed.';
       setErrorMessage(msg);
+      toast.error(msg);
       if (msg.includes('409') || msg.toLowerCase().includes('stale') || msg.toLowerCase().includes('conflict')) {
         setIsConflictOrStale(true);
       }
@@ -87,9 +90,11 @@ export function ApprovalDialog({
         idempotencyKey,
       });
       setExecutionResult(res);
+      toast.success('Action executed successfully! Ledger entries committed and balances updated.');
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Execution failed.';
       setErrorMessage(msg);
+      toast.error(msg);
       if (msg.includes('409') || msg.toLowerCase().includes('stale') || msg.toLowerCase().includes('conflict')) {
         setIsConflictOrStale(true);
       }
@@ -100,9 +105,12 @@ export function ApprovalDialog({
     setErrorMessage(null);
     try {
       await rejectMutation.mutateAsync({ proposalId: proposal.id });
+      toast.info('Action proposal rejected.');
       onOpenChange(false);
     } catch (err: unknown) {
-      setErrorMessage(err instanceof Error ? err.message : 'Rejection failed.');
+      const msg = err instanceof Error ? err.message : 'Rejection failed.';
+      setErrorMessage(msg);
+      toast.error(msg);
     }
   };
 
@@ -116,9 +124,12 @@ export function ApprovalDialog({
         scenarioId: proposal.scenarioId ?? undefined,
       });
       setIsConflictOrStale(false);
+      toast.success('Fresh action proposal generated.');
       onProposalRegenerated?.(newProposal);
-    } catch (err: unknown) {
-      setErrorMessage(err instanceof Error ? err.message : 'Failed to regenerate proposal.');
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Failed to regenerate proposal.';
+      setErrorMessage(msg);
+      toast.error(msg);
     }
   };
 

@@ -20,7 +20,16 @@ describe('middleware', () => {
     const res = middleware(req);
 
     expect(res.status).toBe(307);
-    expect(res.headers.get('location')).toBe('http://localhost:3000/sign-in');
+    expect(res.headers.get('location')).toBe(
+      'http://localhost:3000/sign-in?callbackUrl=%2Fdashboard'
+    );
+  });
+
+  it('allows unauthenticated requests on unmatched/invalid routes to pass through to 404', () => {
+    const req = createRequest('/sadsd');
+    const res = middleware(req);
+
+    expect(res.status).toBe(200);
   });
 
   it('redirects unauthenticated users on protected sub-route with callbackUrl', () => {

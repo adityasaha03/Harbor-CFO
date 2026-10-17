@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { toast } from 'sonner';
 
 const createCompanySchema = z.object({
   name: z.string().min(2, 'Company name must be at least 2 characters'),
@@ -65,10 +66,14 @@ export function CreateCompanyForm() {
       });
 
       if (error || !data) {
-        setFormError(error?.message || 'Failed to create company. Please try another slug.');
+        const errorMsg = error?.message || 'Failed to create company. Please try another slug.';
+        setFormError(errorMsg);
+        toast.error(errorMsg);
         setIsLoading(false);
         return;
       }
+
+      toast.success(`Company "${values.name}" created successfully!`);
 
       // Automatically set the new company as active
       await authClient.organization.setActive({
@@ -79,6 +84,7 @@ export function CreateCompanyForm() {
       router.refresh();
     } catch {
       setFormError('An unexpected error occurred while creating your company workspace.');
+      toast.error('An unexpected error occurred while creating your company workspace.');
       setIsLoading(false);
     }
   };

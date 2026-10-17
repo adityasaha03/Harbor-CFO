@@ -26,3 +26,7 @@ export { usePermission } from './hooks/use-permission';
 export { useMe, type MeResponse } from './hooks/use-me';
 export { Can, type CanProps } from './components/can';
 export { ForbiddenState, type ForbiddenStateProps } from './components/forbidden-state';
+export {
+  PROTECTED_ROUTES,
+  isValidProtectedRoute,
+} from './lib/protected-routes';

@@ -6,6 +6,7 @@ import { LogOut, Loader2 } from 'lucide-react';
 import { authClient } from '../lib/auth-client';
 import { clearApiToken } from '../lib/api-token';
 import { Button, type ButtonProps } from '@/components/ui/button';
+import { toast } from 'sonner';
 
 export interface SignOutButtonProps extends ButtonProps {
   showIcon?: boolean;
@@ -26,6 +27,7 @@ export function SignOutButton({
     try {
       await authClient.signOut();
       clearApiToken();
+      toast.success('Signed out successfully.');
       router.push('/sign-in');
       router.refresh();
     } catch {

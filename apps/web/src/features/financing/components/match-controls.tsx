@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { toMinor, type FinancingPurpose, type FinancingMatchInput } from '@harbor/contracts';
+import { toast } from 'sonner';
 
 interface MatchControlsProps {
   value: FinancingMatchInput;
@@ -29,6 +30,7 @@ export function MatchControls({ value, onChange, isLoading }: MatchControlsProps
   const handlePurposeChange = (purposeStr: string) => {
     const purpose = purposeStr as FinancingPurpose;
     onChange({ ...value, purpose });
+    toast.info(`Updated financing purpose to ${purpose.replace('_', ' ')}`);
   };
 
   const handleAmountBlur = () => {
@@ -49,6 +51,7 @@ export function MatchControls({ value, onChange, isLoading }: MatchControlsProps
       }
       setInputError(null);
       onChange({ ...value, desiredAmountMinor: minor });
+      toast.info(`Updated requested facility amount to ¥${trimmed}`);
     } catch {
       setInputError('Enter a valid amount (e.g. 60000.00)');
     }
@@ -61,6 +64,7 @@ export function MatchControls({ value, onChange, isLoading }: MatchControlsProps
       purpose: 'working_capital',
       desiredAmountMinor: undefined,
     });
+    toast.info('Financing match filters reset to defaults');
   };
 
   return (

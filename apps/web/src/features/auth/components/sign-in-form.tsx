@@ -14,6 +14,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { toast } from 'sonner';
+import { isValidProtectedRoute } from '../lib/protected-routes';
 
 const signInSchema = z.object({
   email: z.string().min(1, 'Email is required').email('Please enter a valid email address'),
@@ -25,10 +27,17 @@ export type SignInValues = z.infer<typeof signInSchema>;
 export function SignInForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
+  const rawCallbackUrl = searchParams.get('callbackUrl');
+  const callbackUrl = rawCallbackUrl || '/dashboard';
 
   const [formError, setFormError] = React.useState<string | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
+
+  React.useEffect(() => {
+    if (rawCallbackUrl && isValidProtectedRoute(rawCallbackUrl)) {
+      toast.error('You need to sign up to visit the page', { id: 'auth-required' });
+    }
+  }, [rawCallbackUrl]);
 
   const {
     register,
@@ -55,9 +64,12 @@ export function SignInForm() {
 
       if (error || !data) {
         setFormError('Invalid email or password. Please try again.');
+        toast.error('Invalid email or password. Please try again.');
         setIsLoading(false);
         return;
       }
+
+      toast.success('Signed in successfully! Welcome back.');
 
       // Check whether an active company is assigned to the session
       const sessionRes = await authClient.getSession();
@@ -73,6 +85,7 @@ export function SignInForm() {
       router.refresh();
     } catch {
       setFormError('An unexpected error occurred during sign in. Please try again.');
+      toast.error('An unexpected error occurred during sign in. Please try again.');
       setIsLoading(false);
     }
   };
@@ -141,7 +154,10 @@ export function SignInForm() {
       <CardFooter className="flex justify-center border-t border-border/60 p-4">
         <p className="text-xs text-muted-foreground">
           Don&apos;t have an account?{' '}
-          <Link href="/sign-up" className="font-semibold text-primary hover:underline">
+          <Link
+            href={rawCallbackUrl ? `/sign-up?callbackUrl=${encodeURIComponent(rawCallbackUrl)}` : '/sign-up'}
+            className="font-semibold text-primary hover:underline"
+          >
             Sign up
           </Link>
         </p>
