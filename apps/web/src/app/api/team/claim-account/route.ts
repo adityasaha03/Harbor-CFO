@@ -1,10 +1,20 @@
 import { NextResponse } from 'next/server';
 import { mongoDb } from '@/features/auth/server/mongo';
+import { ObjectId } from 'mongodb';
 
 interface ClaimAccountBody {
   name?: string;
   email: string;
   password: string;
+}
+
+function toIdQuery(id: string | undefined | null) {
+  if (!id) return id;
+  const str = String(id);
+  if (ObjectId.isValid(str) && str.length === 24) {
+    return { $in: [str, new ObjectId(str)] };
+  }
+  return str;
 }
 
 export async function POST(req: Request) {
@@ -26,8 +36,8 @@ export async function POST(req: Request) {
 
     // Verify user is a member of an organization
     const member = await mongoDb.collection('member').findOne({
-      $or: [{ userId }, { 'userId.id': userId }],
-    });
+      userId: toIdQuery(userId),
+    } as Record<string, unknown>);
     if (!member) {
       return NextResponse.json({ message: 'User is not associated with any organization' }, { status: 403 });
     }
@@ -37,13 +47,13 @@ export async function POST(req: Request) {
     const hashedPassword = await hashPassword(cleanPassword);
 
     await mongoDb.collection('account').updateOne(
-      { $or: [{ userId }, { 'userId.id': userId }], providerId: 'credential' },
+      { userId: toIdQuery(userId), providerId: 'credential' } as Record<string, unknown>,
       { $set: { password: hashedPassword, updatedAt: new Date() } },
     );
 
     if (body.name?.trim()) {
       await mongoDb.collection('user').updateOne(
-        { $or: [{ id: userId }, { _id: user._id }] },
+        { _id: user._id },
         { $set: { name: body.name.trim(), updatedAt: new Date() } },
       );
     }
@@ -54,4 +64,3 @@ export async function POST(req: Request) {
     return NextResponse.json({ message }, { status: 500 });
   }
 }
-
