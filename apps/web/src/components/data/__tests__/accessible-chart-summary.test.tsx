@@ -82,3 +82,4 @@ describe('AccessibleChartSummary', () => {
     expect(screen.queryByRole('table')).not.toBeInTheDocument();
   });
 });
+
