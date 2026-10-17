@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useActiveCompany } from '@/features/tenants';
 import { usePermission } from '@/features/auth';
@@ -15,6 +16,13 @@ import { ApiError } from '@/lib/api/errors';
 import { Building2, CalendarDays, Users } from 'lucide-react';
 
 export function SettingsTabs() {
+  const searchParams = useSearchParams();
+  const requestedTab = searchParams?.get('tab');
+  const initialTab =
+    requestedTab && ['company', 'commitments', 'team'].includes(requestedTab)
+      ? requestedTab
+      : 'company';
+
   const { role, isLoading: isRoleLoading } = useActiveCompany();
   const canManageSettings = usePermission('settings:manage');
   const { data: settings, isLoading: isSettingsLoading, error } = useTenantSettings();
@@ -56,7 +64,7 @@ export function SettingsTabs() {
   }
 
   return (
-    <Tabs defaultValue="company" className="space-y-6">
+    <Tabs defaultValue={initialTab} className="space-y-6">
       <TabsList className="grid w-full grid-cols-3 max-w-[500px]">
         <TabsTrigger value="company" className="gap-2">
           <Building2 className="h-4 w-4" />

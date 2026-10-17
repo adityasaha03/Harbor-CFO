@@ -23,6 +23,10 @@ import {
 } from 'lucide-react';
 import { useForecastDay } from '../api/use-forecast-day';
 import type { FlowSource } from '@harbor/contracts';
+import {
+  InvoiceDetailsDialog,
+  type InvoiceDetailsData,
+} from './invoice-details-dialog';
 
 export interface DayDrilldownDrawerProps {
   date: string | null;
@@ -33,6 +37,30 @@ export interface DayDrilldownDrawerProps {
 export function DayDrilldownDrawer({ date, isOpen, onClose }: DayDrilldownDrawerProps) {
   const query = useForecastDay(isOpen ? date : null);
   const data = query.data;
+  const [selectedInvoice, setSelectedInvoice] = React.useState<InvoiceDetailsData | null>(null);
+
+  const handleSelectInvoice = (source: FlowSource) => {
+    const matchingInvoice = (
+      data?.invoices as Record<string, unknown>[] | undefined
+    )?.find((inv) => inv.externalId === source.id || inv.id === source.id);
+
+    setSelectedInvoice({
+      id: source.id,
+      externalId: (matchingInvoice?.externalId as string) || source.id,
+      label: source.label,
+      amountMinor: Math.abs(source.amountMinor),
+      direction: source.amountMinor > 0 ? 'AR' : 'AP',
+      status:
+        (matchingInvoice?.status as string) ||
+        (source.label.toLowerCase().includes('overdue') ? 'overdue' : 'open'),
+      counterpartyExternalId:
+        (matchingInvoice?.counterpartyExternalId as string) || undefined,
+      dueOn: (matchingInvoice?.dueOn as string) || undefined,
+      expectedSettlementOn:
+        (matchingInvoice?.expectedSettlementOn as string) || date || undefined,
+      description: (matchingInvoice?.description as string) || source.label,
+    });
+  };
 
   // Group flows into Receipts, Payments, and Financing
   const receipts = React.useMemo(() => {
@@ -111,7 +139,12 @@ export function DayDrilldownDrawer({ date, isOpen, onClose }: DayDrilldownDrawer
               ) : (
                 <div className="space-y-2">
                   {receipts.map((source) => (
-                    <SourceItem key={`${source.type}-${source.id}`} source={source} isReceipt />
+                    <SourceItem
+                      key={`${source.type}-${source.id}`}
+                      source={source}
+                      isReceipt
+                      onSelectInvoice={handleSelectInvoice}
+                    />
                   ))}
                 </div>
               )}
@@ -132,7 +165,12 @@ export function DayDrilldownDrawer({ date, isOpen, onClose }: DayDrilldownDrawer
               ) : (
                 <div className="space-y-2">
                   {payments.map((source) => (
-                    <SourceItem key={`${source.type}-${source.id}`} source={source} isReceipt={false} />
+                    <SourceItem
+                      key={`${source.type}-${source.id}`}
+                      source={source}
+                      isReceipt={false}
+                      onSelectInvoice={handleSelectInvoice}
+                    />
                   ))}
                 </div>
               )}
@@ -154,6 +192,7 @@ export function DayDrilldownDrawer({ date, isOpen, onClose }: DayDrilldownDrawer
                       key={`${source.type}-${source.id}`}
                       source={source}
                       isReceipt={source.amountMinor > 0}
+                      onSelectInvoice={handleSelectInvoice}
                     />
                   ))}
                 </div>
@@ -162,19 +201,27 @@ export function DayDrilldownDrawer({ date, isOpen, onClose }: DayDrilldownDrawer
           </div>
         ) : null}
       </SheetContent>
+
+      <InvoiceDetailsDialog
+        invoice={selectedInvoice}
+        open={Boolean(selectedInvoice)}
+        onOpenChange={(open) => {
+          if (!open) setSelectedInvoice(null);
+        }}
+      />
     </Sheet>
   );
 }
 
-function SourceItem({ source, isReceipt }: { source: FlowSource; isReceipt: boolean }) {
+interface SourceItemProps {
+  source: FlowSource;
+  isReceipt: boolean;
+  onSelectInvoice: (source: FlowSource) => void;
+}
+
+function SourceItem({ source, isReceipt, onSelectInvoice }: SourceItemProps) {
   const isInvoice = source.type === 'invoice';
   const isCommitment = source.type === 'commitment';
-
-  const href = isInvoice
-    ? `/invoices?search=${encodeURIComponent(source.id)}`
-    : isCommitment
-      ? `/settings?tab=commitments#${encodeURIComponent(source.id)}`
-      : '#';
 
   const Icon = isInvoice ? Receipt : isCommitment ? FileText : Layers;
 
@@ -204,15 +251,26 @@ function SourceItem({ source, isReceipt }: { source: FlowSource; isReceipt: bool
             isReceipt ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'
           }`}
         />
-        {href !== '#' && (
+        {isInvoice ? (
+          <button
+            type="button"
+            onClick={() => onSelectInvoice(source)}
+            className="text-muted-foreground hover:text-primary transition-colors p-1 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            title="View invoice details"
+            data-testid={`view-invoice-details-${source.id}`}
+          >
+            <ExternalLink className="h-3.5 w-3.5" />
+          </button>
+        ) : isCommitment ? (
           <Link
-            href={href}
-            className="text-muted-foreground hover:text-primary transition-colors p-1"
-            title={`View ${source.type} details`}
+            href={`/settings?tab=commitments#${encodeURIComponent(source.id)}`}
+            className="text-muted-foreground hover:text-primary transition-colors p-1 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            title="View commitment details"
+            data-testid={`view-commitment-details-${source.id}`}
           >
             <ExternalLink className="h-3.5 w-3.5" />
           </Link>
-        )}
+        ) : null}
       </div>
     </div>
   );

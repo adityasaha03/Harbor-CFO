@@ -12,6 +12,7 @@ export { BreachSummary, type BreachSummaryProps } from './components/breach-summ
 export { AssumptionsPanel, type AssumptionsPanelProps } from './components/assumptions-panel';
 export { WeeklyTable, type WeeklyTableProps } from './components/weekly-table';
 export { DayDrilldownDrawer, type DayDrilldownDrawerProps } from './components/day-drilldown-drawer';
+export { InvoiceDetailsDialog, type InvoiceDetailsDialogProps } from './components/invoice-details-dialog';
 export { ViewToggle, type ViewToggleProps, type ForecastGranularity } from './components/view-toggle';
 
 export {
