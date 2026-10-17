@@ -53,7 +53,7 @@ export function parseCsv(
 
   // csv-parse in strict (non-relax) mode
   const records: Record<string, string>[] = parse(text, {
-    columns: true,
+    columns: (headers: string[]) => headers.map((h) => h.trim()),
     skip_empty_lines: true,
     trim: true,
     relax_column_count: false,

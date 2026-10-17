@@ -17,8 +17,8 @@ export function usePreviewImport(): UseMutationResult<
   return useMutation<ImportPreviewResponse, Error, PreviewImportParams>({
     mutationFn: async ({ file, kind }) => {
       const formData = new FormData();
-      formData.append('file', file);
       formData.append('kind', kind);
+      formData.append('file', file);
 
       return apiFetch<ImportPreviewResponse>('/imports/preview', {
         method: 'POST',

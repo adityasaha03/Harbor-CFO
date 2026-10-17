@@ -10,9 +10,9 @@ import {
 export function getTransactionCsvTemplate(): string {
   const header = TRANSACTION_CSV_HEADERS.join(',');
   const sampleRows = [
-    'TXN-1001,2026-10-20,1001,15000.00,CNY,customer_receipt,Sample customer invoice payment',
-    'TXN-1002,2026-10-21,1001,-3500.00,CNY,overhead,Office supplies expense',
-    'TXN-1003,2026-10-22,1001,-12000.00,CNY,rent,Monthly office lease payment',
+    'TXN-1001,2026-10-20,OPERATING,15000.00,CNY,customer_receipt,Sample customer invoice payment',
+    'TXN-1002,2026-10-21,OPERATING,-3500.00,CNY,overhead,Office supplies expense',
+    'TXN-1003,2026-10-22,OPERATING,-12000.00,CNY,rent,Monthly office lease payment',
   ];
   return [header, ...sampleRows].join('\n');
 }

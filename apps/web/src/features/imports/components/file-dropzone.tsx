@@ -42,13 +42,37 @@ export function FileDropzone({ onPreviewSuccess, onFileSelect, isLoading }: File
       return;
     }
 
+    let activeKind = kind;
+    try {
+      const chunk = await file.slice(0, 1024).text();
+      const firstLine = chunk.split(/\r?\n/)[0]?.toLowerCase() ?? '';
+      const hasInvoiceFields = firstLine.includes('invoiceid') || firstLine.includes('counterpartyid');
+      const hasTxFields = firstLine.includes('accountid') || firstLine.includes('category');
+
+      if (hasInvoiceFields && activeKind !== 'invoices') {
+        activeKind = 'invoices';
+        setKind('invoices');
+        toast.info('Auto-detected Invoice CSV headers; switched mode to Invoices');
+      } else if (hasTxFields && activeKind !== 'transactions') {
+        activeKind = 'transactions';
+        setKind('transactions');
+        toast.info('Auto-detected Transaction CSV headers; switched mode to Bank Transactions');
+      }
+    } catch {
+      // Non-blocking fallback
+    }
+
     setSelectedFile(file);
-    onFileSelect?.(file, kind);
+    onFileSelect?.(file, activeKind);
 
     if (onPreviewSuccess) {
       try {
-        const preview = await previewMutation.mutateAsync({ file, kind });
-        toast.success(`Parsed "${file.name}": ${preview.rowCount} records staged for preview.`);
+        const preview = await previewMutation.mutateAsync({ file, kind: activeKind });
+        if (preview.status === 'rejected') {
+          toast.error(`File rejected: ${preview.errors[0]?.message ?? 'CSV validation issues found'}`);
+        } else {
+          toast.success(`Parsed "${file.name}": ${preview.rowCount} records staged for preview.`);
+        }
         onPreviewSuccess(preview);
       } catch (err) {
         const msg = err instanceof Error ? err.message : 'Failed to preview file';

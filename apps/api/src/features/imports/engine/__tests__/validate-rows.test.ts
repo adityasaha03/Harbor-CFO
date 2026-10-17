@@ -132,6 +132,32 @@ describe('validateAndMapRows', () => {
       if (result.ok) return;
       expect(result.errors.length).toBeGreaterThan(0);
     });
+
+    it('returns structured row-1 header error on column mismatch without throwing', () => {
+      const wrongCsv = 'wrongColA,wrongColB\n1,2';
+      const result = validateAndMapRows(Buffer.from(wrongCsv, 'utf-8'), 'invoices');
+
+      expect(result.ok).toBe(false);
+      if (result.ok) return;
+      expect(result.errors).toHaveLength(1);
+      expect(result.errors[0]).toMatchObject({
+        row: 1,
+        field: 'header',
+      });
+      expect(result.errors[0]?.message).toContain('Missing required columns');
+    });
+
+    it('returns structured row-1 header error on empty file without throwing', () => {
+      const result = validateAndMapRows(Buffer.alloc(0), 'transactions');
+
+      expect(result.ok).toBe(false);
+      if (result.ok) return;
+      expect(result.errors[0]).toMatchObject({
+        row: 1,
+        field: 'header',
+        message: 'File is empty',
+      });
+    });
   });
 });
 
