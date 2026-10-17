@@ -25,7 +25,21 @@ export const tenantsService = {
     session?: ClientSession,
   ): Promise<TenantSettingsDto> {
     const validated = updateTenantSettingsSchema.parse(patch);
-    return tenantsRepository.update(tenantId, validated, session);
+    const updated = await tenantsRepository.update(tenantId, validated, session);
+    await tenantsRepository.bumpDatasetVersion(tenantId, session);
+    try {
+      const { forecastService } = await import('../forecast/forecast.service');
+      await forecastService.getBaseline(tenantId, session);
+    } catch {
+      // Non-blocking if forecast engine fails on partial data
+    }
+    try {
+      const { alertsService } = await import('../alerts/alerts.service');
+      await alertsService.evaluateAndSync(tenantId, session);
+    } catch {
+      // Non-blocking if alerts sync fails
+    }
+    return updated;
   },
 
   async bumpDatasetVersion(tenantId: string, session?: ClientSession): Promise<number> {

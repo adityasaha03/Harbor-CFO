@@ -30,6 +30,11 @@ export function useUpdateSettings(): UseMutationResult<
       queryClient.invalidateQueries({ queryKey: queryKeys.settings.tenant() });
       queryClient.invalidateQueries({ queryKey: queryKeys.forecast.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.alerts.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.analytics.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.scenarios.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.financing.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.proof.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.invoices.all });
     },
   });
 }

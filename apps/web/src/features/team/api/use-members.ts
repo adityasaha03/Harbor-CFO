@@ -37,33 +37,23 @@ export function useMembers() {
     queryFn: async () => {
       if (!organizationId) return [];
 
-      // Better Auth getFullOrganization returns the active org with members populated
       const res = await authClient.organization.getFullOrganization({
-        query: {
-          organizationId,
-        },
+        query: { organizationId },
       });
 
       if (res.error) {
         throw new Error(res.error.message || 'Failed to fetch team members');
       }
 
-      if (!res.data?.members) return [];
-
       interface MemberItem {
         id: string;
         userId: string;
         role: string;
         createdAt: string | Date;
-        user?: {
-          id?: string;
-          name?: string;
-          email?: string;
-          image?: string | null;
-        };
+        user?: { id?: string; name?: string; email?: string; image?: string | null };
       }
 
-      const rawMembers = res.data.members as unknown as MemberItem[];
+      const rawMembers = (res.data?.members || []) as unknown as MemberItem[];
       return rawMembers.map((m) => ({
         id: m.id,
         userId: m.userId,
@@ -112,6 +102,42 @@ export function useMembers() {
     },
   });
 
+  const addMemberMutation = useMutation({
+    mutationFn: async (data: { name: string; email: string; role: Role; password?: string }) => {
+      const res = await fetch('/api/team/members', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) {
+        const body = (await res.json().catch(() => ({}))) as { message?: string };
+        throw new Error(body.message || 'Failed to add team member');
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey });
+    },
+  });
+
+  const editMemberMutation = useMutation({
+    mutationFn: async (data: { memberId: string; name?: string; role?: Role }) => {
+      const res = await fetch('/api/team/members', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) {
+        const body = (await res.json().catch(() => ({}))) as { message?: string };
+        throw new Error(body.message || 'Failed to update team member');
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey });
+    },
+  });
+
   const ownerCount = React.useMemo(() => {
     return members.filter((m) => m.role === 'owner').length;
   }, [members]);
@@ -132,6 +158,10 @@ export function useMembers() {
     isUpdatingRole: updateRoleMutation.isPending,
     removeMember: removeMemberMutation.mutateAsync,
     isRemovingMember: removeMemberMutation.isPending,
+    addMember: addMemberMutation.mutateAsync,
+    isAddingMember: addMemberMutation.isPending,
+    editMember: editMemberMutation.mutateAsync,
+    isEditingMember: editMemberMutation.isPending,
     ownerCount,
     isLastOwner,
   };

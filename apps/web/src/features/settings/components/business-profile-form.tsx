@@ -16,23 +16,11 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Info, Lock } from 'lucide-react';
 
 const businessProfileSchema = z.object({
-  yearsInOperation: z.string().optional().refine(
-    (val) => !val || (/^\d+$/.test(val) && Number(val) >= 0),
-    'Must be a non-negative integer'
-  ),
-  employeeCount: z.string().optional().refine(
-    (val) => !val || (/^\d+$/.test(val) && Number(val) >= 0),
-    'Must be a non-negative integer'
-  ),
+  yearsInOperation: z.string().optional().refine((val) => !val || (/^\d+$/.test(val) && Number(val) >= 0), 'Must be a non-negative integer'),
+  employeeCount: z.string().optional().refine((val) => !val || (/^\d+$/.test(val) && Number(val) >= 0), 'Must be a non-negative integer'),
   industry: z.string().max(100).optional(),
-  monthlyRevenueMajor: z.string().optional().refine(
-    (val) => !val || /^\d+(\.\d{1,2})?$/.test(val),
-    'Enter a valid positive amount'
-  ),
-  monthlyCardSalesMajor: z.string().optional().refine(
-    (val) => !val || /^\d+(\.\d{1,2})?$/.test(val),
-    'Enter a valid positive amount'
-  ),
+  monthlyRevenueMajor: z.string().optional().refine((val) => !val || /^\d+(\.\d{1,2})?$/.test(val), 'Enter a valid positive amount'),
+  monthlyCardSalesMajor: z.string().optional().refine((val) => !val || /^\d+(\.\d{1,2})?$/.test(val), 'Enter a valid positive amount'),
 });
 
 type BusinessProfileValues = z.infer<typeof businessProfileSchema>;
@@ -44,7 +32,7 @@ interface BusinessProfileFormProps {
 
 export function BusinessProfileForm({ settings, isReadOnly = false }: BusinessProfileFormProps) {
   const updateSettings = useUpdateSettings();
-  const profile = settings.profile ?? {};
+  const profile = React.useMemo(() => settings.profile ?? {}, [settings]);
 
   const {
     register,
@@ -82,7 +70,7 @@ export function BusinessProfileForm({ settings, isReadOnly = false }: BusinessPr
 
   const onSubmit = async (values: BusinessProfileValues) => {
     try {
-      await updateSettings.mutateAsync({
+      const updated = await updateSettings.mutateAsync({
         profile: {
           yearsInOperation: values.yearsInOperation ? parseInt(values.yearsInOperation, 10) : undefined,
           employeeCount: values.employeeCount ? parseInt(values.employeeCount, 10) : undefined,
@@ -90,6 +78,18 @@ export function BusinessProfileForm({ settings, isReadOnly = false }: BusinessPr
           monthlyRevenueMinor: values.monthlyRevenueMajor ? toMinor(values.monthlyRevenueMajor) : undefined,
           monthlyCardSalesMinor: values.monthlyCardSalesMajor ? toMinor(values.monthlyCardSalesMajor) : undefined,
         },
+      });
+      const newProfile = updated.profile ?? {};
+      reset({
+        yearsInOperation: newProfile.yearsInOperation !== undefined ? String(newProfile.yearsInOperation) : '',
+        employeeCount: newProfile.employeeCount !== undefined ? String(newProfile.employeeCount) : '',
+        industry: newProfile.industry ?? '',
+        monthlyRevenueMajor: newProfile.monthlyRevenueMinor !== undefined
+          ? (newProfile.monthlyRevenueMinor / 100).toFixed(2)
+          : '',
+        monthlyCardSalesMajor: newProfile.monthlyCardSalesMinor !== undefined
+          ? (newProfile.monthlyCardSalesMinor / 100).toFixed(2)
+          : '',
       });
       toast.success('Business profile updated');
     } catch (err) {
@@ -126,56 +126,26 @@ export function BusinessProfileForm({ settings, isReadOnly = false }: BusinessPr
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="yearsInOperation">Years in Operation</Label>
-              <Input
-                id="yearsInOperation"
-                type="number"
-                disabled={isReadOnly || isSubmitting}
-                placeholder="e.g. 5"
-                {...register('yearsInOperation')}
-              />
-              {errors.yearsInOperation && (
-                <p className="text-xs text-destructive">{errors.yearsInOperation.message}</p>
-              )}
+              <Input id="yearsInOperation" type="number" disabled={isReadOnly || isSubmitting} placeholder="e.g. 5" {...register('yearsInOperation')} />
+              {errors.yearsInOperation && <p className="text-xs text-destructive">{errors.yearsInOperation.message}</p>}
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="employeeCount">Employee Count</Label>
-              <Input
-                id="employeeCount"
-                type="number"
-                disabled={isReadOnly || isSubmitting}
-                placeholder="e.g. 24"
-                {...register('employeeCount')}
-              />
-              {errors.employeeCount && (
-                <p className="text-xs text-destructive">{errors.employeeCount.message}</p>
-              )}
+              <Input id="employeeCount" type="number" disabled={isReadOnly || isSubmitting} placeholder="e.g. 24" {...register('employeeCount')} />
+              {errors.employeeCount && <p className="text-xs text-destructive">{errors.employeeCount.message}</p>}
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="industry">Industry Sector</Label>
-              <Input
-                id="industry"
-                disabled={isReadOnly || isSubmitting}
-                placeholder="e.g. Wholesale Trading & Distribution"
-                {...register('industry')}
-              />
-              {errors.industry && (
-                <p className="text-xs text-destructive">{errors.industry.message}</p>
-              )}
+              <Input id="industry" disabled={isReadOnly || isSubmitting} placeholder="e.g. Wholesale Trading & Distribution" {...register('industry')} />
+              {errors.industry && <p className="text-xs text-destructive">{errors.industry.message}</p>}
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="monthlyRevenueMajor">Average Monthly Revenue (CNY)</Label>
-              <Input
-                id="monthlyRevenueMajor"
-                disabled={isReadOnly || isSubmitting}
-                placeholder="e.g. 250000.00"
-                {...register('monthlyRevenueMajor')}
-              />
-              {errors.monthlyRevenueMajor && (
-                <p className="text-xs text-destructive">{errors.monthlyRevenueMajor.message}</p>
-              )}
+              <Input id="monthlyRevenueMajor" disabled={isReadOnly || isSubmitting} placeholder="e.g. 250000.00" {...register('monthlyRevenueMajor')} />
+              {errors.monthlyRevenueMajor && <p className="text-xs text-destructive">{errors.monthlyRevenueMajor.message}</p>}
             </div>
 
             <div className="space-y-2 sm:col-span-2">

@@ -66,13 +66,15 @@ export function generateDeterministicInsights(
 
   // 2. Customer concentration insight
   const sharePercent = (concentration.shareBps / 100).toFixed(1);
+  const thresholdPercent = (concentration.thresholdBps ? concentration.thresholdBps / 100 : 40).toFixed(1);
+  const thresholdFormatted = (concentration.thresholdBps ? concentration.thresholdBps / 100 : 40).toString();
   let concentrationInsight: DeterministicInsight;
 
   if (concentration.isExceeded) {
     concentrationInsight = {
       id: 'insight_concentration_high',
       category: 'concentration',
-      standardText: `${concentration.topCustomerName} represents ${sharePercent}% of receivables (exceeds 40.0% threshold).`,
+      standardText: `${concentration.topCustomerName} represents ${sharePercent}% of receivables (exceeds ${thresholdPercent}% threshold).`,
       plainText: `Too much money is owed by one customer: ${concentration.topCustomerName} owes ${sharePercent}% of our unpaid invoices.`,
     };
   } else {
@@ -80,7 +82,7 @@ export function generateDeterministicInsights(
       id: 'insight_concentration_ok',
       category: 'concentration',
       standardText: `Customer concentration is healthy; largest customer accounts for ${sharePercent}% of receivables.`,
-      plainText: 'Our customers are well diversified. No single customer owes more than 40% of our invoices.',
+      plainText: `Our customers are well diversified. No single customer owes more than ${thresholdFormatted}% of our invoices.`,
     };
   }
 

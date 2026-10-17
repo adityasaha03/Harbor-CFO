@@ -29,7 +29,7 @@ export const JARGON_DICTIONARY: Record<string, { title: string; explanation: str
   'customer-concentration': {
     title: 'Customer Concentration',
     explanation:
-      'The percentage of total sales or receivables owed by your single largest customer. Over 30% indicates elevated dependency and default risk.',
+      'The percentage of total sales or receivables owed by your single largest customer. Over policy limit indicates elevated dependency and default risk.',
   },
   'cash-runway': {
     title: 'Cash Runway',

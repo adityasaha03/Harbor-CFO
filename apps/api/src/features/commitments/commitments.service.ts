@@ -24,6 +24,19 @@ function toDto(doc: CommitmentDoc): CommitmentDto {
   };
 }
 
+async function syncCommitmentChange(tenantId: string, session?: ClientSession): Promise<void> {
+  try {
+    const { tenantsRepository } = await import('../tenants/tenants.repository.js');
+    await tenantsRepository.bumpDatasetVersion(tenantId, session);
+    const { forecastService } = await import('../forecast/forecast.service.js');
+    await forecastService.getBaseline(tenantId, session);
+    const { alertsService } = await import('../alerts/alerts.service.js');
+    await alertsService.evaluateAndSync(tenantId, session);
+  } catch {
+    // Non-blocking
+  }
+}
+
 export const commitmentsService = {
   async list(tenantId: string, session?: ClientSession): Promise<CommitmentDto[]> {
     const docs = await commitmentsRepository.list(tenantId, session);
@@ -46,6 +59,7 @@ export const commitmentsService = {
     }
 
     const doc = await commitmentsRepository.create(tenantId, data, session);
+    await syncCommitmentChange(tenantId, session);
     return toDto(doc);
   },
 
@@ -67,6 +81,7 @@ export const commitmentsService = {
     if (!doc) {
       throw new NotFoundError(`Commitment with id '${id}' not found`);
     }
+    await syncCommitmentChange(tenantId, session);
     return toDto(doc);
   },
 
@@ -75,6 +90,7 @@ export const commitmentsService = {
     if (!deleted) {
       throw new NotFoundError(`Commitment with id '${id}' not found`);
     }
+    await syncCommitmentChange(tenantId, session);
   },
 };
 

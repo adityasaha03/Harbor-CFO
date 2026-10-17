@@ -16,10 +16,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Lock } from 'lucide-react';
 
 const companySettingsSchema = z.object({
-  minimumCashMajor: z
-    .string()
-    .min(1, 'Liquidity floor is required')
-    .regex(/^\d+(\.\d{1,2})?$/, 'Enter a valid amount (e.g. 30000 or 30000.00)'),
+  minimumCashMajor: z.string().min(1, 'Liquidity floor is required').regex(/^\d+(\.\d{1,2})?$/, 'Enter a valid amount (e.g. 30000 or 30000.00)'),
   overdueAlertDays: z.coerce.number().int().positive('Must be > 0').max(365, 'Max 365 days'),
   concentrationThresholdPct: z.coerce.number().int().min(1, 'Min 1%').max(100, 'Max 100%'),
   staleDataDays: z.coerce.number().int().positive('Must be > 0').max(365, 'Max 365 days'),
@@ -66,12 +63,19 @@ export function CompanySettingsForm({ settings, isReadOnly = false }: CompanySet
   const onSubmit = async (values: CompanySettingsValues) => {
     try {
       const minimumCashMinor = toMinor(values.minimumCashMajor);
-      await updateSettings.mutateAsync({
+      const updated = await updateSettings.mutateAsync({
         minimumCashMinor,
         overdueAlertDays: values.overdueAlertDays,
         concentrationThresholdPct: values.concentrationThresholdPct,
         staleDataDays: values.staleDataDays,
         isDemo: values.isDemo,
+      });
+      reset({
+        minimumCashMajor: (updated.minimumCashMinor / 100).toFixed(2),
+        overdueAlertDays: updated.overdueAlertDays ?? 7,
+        concentrationThresholdPct: updated.concentrationThresholdPct ?? 40,
+        staleDataDays: updated.staleDataDays ?? 14,
+        isDemo: Boolean(updated.isDemo),
       });
       toast.success('Company settings updated');
     } catch (err) {
@@ -107,60 +111,29 @@ export function CompanySettingsForm({ settings, isReadOnly = false }: CompanySet
                 placeholder="30000.00"
                 {...register('minimumCashMajor')}
               />
-              <p className="text-xs text-muted-foreground">
-                Minimum safe balance. Cash forecasts dipping below this trigger floor breach alerts.
-              </p>
-              {errors.minimumCashMajor && (
-                <p className="text-xs text-destructive">{errors.minimumCashMajor.message}</p>
-              )}
+              <p className="text-xs text-muted-foreground">Minimum safe balance. Cash forecasts dipping below this trigger floor breach alerts.</p>
+              {errors.minimumCashMajor && <p className="text-xs text-destructive">{errors.minimumCashMajor.message}</p>}
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="overdueAlertDays">Overdue Alert Grace Period (Days)</Label>
-              <Input
-                id="overdueAlertDays"
-                type="number"
-                disabled={isReadOnly || isSubmitting}
-                {...register('overdueAlertDays')}
-              />
-              <p className="text-xs text-muted-foreground">
-                Days past invoice due date before raising a collection alert (default 7 days).
-              </p>
-              {errors.overdueAlertDays && (
-                <p className="text-xs text-destructive">{errors.overdueAlertDays.message}</p>
-              )}
+              <Input id="overdueAlertDays" type="number" disabled={isReadOnly || isSubmitting} {...register('overdueAlertDays')} />
+              <p className="text-xs text-muted-foreground">Days past invoice due date before raising a collection alert (default 7 days).</p>
+              {errors.overdueAlertDays && <p className="text-xs text-destructive">{errors.overdueAlertDays.message}</p>}
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="concentrationThresholdPct">Customer Concentration Limit (%)</Label>
-              <Input
-                id="concentrationThresholdPct"
-                type="number"
-                disabled={isReadOnly || isSubmitting}
-                {...register('concentrationThresholdPct')}
-              />
-              <p className="text-xs text-muted-foreground">
-                Percentage of total outstanding AR held by a single customer before alert (default 40%).
-              </p>
-              {errors.concentrationThresholdPct && (
-                <p className="text-xs text-destructive">{errors.concentrationThresholdPct.message}</p>
-              )}
+              <Input id="concentrationThresholdPct" type="number" disabled={isReadOnly || isSubmitting} {...register('concentrationThresholdPct')} />
+              <p className="text-xs text-muted-foreground">Percentage of total outstanding AR held by a single customer before alert (default 40%).</p>
+              {errors.concentrationThresholdPct && <p className="text-xs text-destructive">{errors.concentrationThresholdPct.message}</p>}
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="staleDataDays">Stale Data Warning Window (Days)</Label>
-              <Input
-                id="staleDataDays"
-                type="number"
-                disabled={isReadOnly || isSubmitting}
-                {...register('staleDataDays')}
-              />
-              <p className="text-xs text-muted-foreground">
-                Days since last import before marking forecast as stale (default 14 days).
-              </p>
-              {errors.staleDataDays && (
-                <p className="text-xs text-destructive">{errors.staleDataDays.message}</p>
-              )}
+              <Input id="staleDataDays" type="number" disabled={isReadOnly || isSubmitting} {...register('staleDataDays')} />
+              <p className="text-xs text-muted-foreground">Days since last import before marking forecast as stale (default 14 days).</p>
+              {errors.staleDataDays && <p className="text-xs text-destructive">{errors.staleDataDays.message}</p>}
             </div>
 
             <div className="space-y-2 sm:col-span-2 rounded-lg border p-3.5 bg-muted/20">

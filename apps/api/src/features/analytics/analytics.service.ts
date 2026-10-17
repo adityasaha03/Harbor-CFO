@@ -103,7 +103,8 @@ export const analyticsService = {
     // 6. Compute Engine Metrics
     const arAging = computeAging(invoiceItems, asOf, 'AR');
     const apAging = computeAging(invoiceItems, asOf, 'AP');
-    const concentration = computeConcentration(invoiceItems);
+    const concentrationThresholdBps = (settings.concentrationThresholdPct ?? 40) * 100;
+    const concentration = computeConcentration(invoiceItems, concentrationThresholdBps);
     const burn = computeBurn(ledgerItems, asOf, currentCashMinor);
     const collectionQuality = computeCollectionQuality(invoiceItems, ledgerItems);
 
