@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, within } from '@testing-library/react';
+import { render, screen, fireEvent, within, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import * as forecastHooks from '../api/use-latest-forecast';
@@ -201,5 +201,48 @@ describe('Forecast Page and Components (F07)', () => {
     fireEvent.click(drillButton);
 
     expect(mockPush).toHaveBeenCalledWith('/forecast?date=2026-10-26');
+  });
+
+  it('opens invoice details dialog when clicking the view invoice details button', async () => {
+    mockSearchParams = new URLSearchParams('date=2026-11-13');
+    const dayAnchorData = getAnchorDayDrilldown('2026-11-13');
+
+    vi.spyOn(forecastHooks, 'useLatestForecast').mockReturnValue({
+      data: ANCHOR_FORECAST_MOCK,
+      isLoading: false,
+      isPending: false,
+      isError: false,
+      error: null,
+      refetch: vi.fn(),
+    } as never);
+
+    vi.spyOn(forecastDayHooks, 'useForecastDay').mockReturnValue({
+      data: dayAnchorData,
+      isLoading: false,
+      isPending: false,
+      isError: false,
+      error: null,
+      refetch: vi.fn(),
+    } as never);
+
+    renderWithClient(<ForecastView />);
+
+    expect(screen.getByTestId('day-drilldown-drawer')).toBeInTheDocument();
+
+    const viewInvoiceBtn = screen.getByTestId('view-invoice-details-INV-AR-LATE');
+    expect(viewInvoiceBtn).toBeInTheDocument();
+    fireEvent.click(viewInvoiceBtn);
+
+    const dialog = screen.getByTestId('invoice-details-dialog');
+    expect(dialog).toBeInTheDocument();
+    expect(within(dialog).getByText('INV-AR-LATE')).toBeInTheDocument();
+    expect(within(dialog).getByText(/Receivable \(AR\)/i)).toBeInTheDocument();
+    expect(within(dialog).getByText(/40,000.00/)).toBeInTheDocument();
+
+    // Close the dialog
+    fireEvent.click(screen.getByTestId('close-invoice-details-btn'));
+    await waitFor(() => {
+      expect(screen.queryByTestId('invoice-details-dialog')).not.toBeInTheDocument();
+    });
   });
 });
