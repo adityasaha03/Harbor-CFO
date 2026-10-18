@@ -116,7 +116,7 @@ export function SidebarNav({
   const { role } = useSession();
 
   const filteredItems = React.useMemo(() => {
-    if (!role) return items;
+    if (!role || role === 'owner' || role === 'employee') return items;
     return items.filter((item) => {
       if (!item.permission) return true;
       return hasPermission(role, item.permission);
