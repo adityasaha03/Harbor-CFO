@@ -89,7 +89,7 @@ export function AddMemberDialog({
         <DialogHeader>
           <DialogTitle>Add Team Member</DialogTitle>
           <DialogDescription>
-            Directly register an employee to this workspace. They can sign in immediately or register on the sign-up page.
+            Directly register an employee to this workspace. They can sign in immediately with their credentials.
           </DialogDescription>
         </DialogHeader>
 

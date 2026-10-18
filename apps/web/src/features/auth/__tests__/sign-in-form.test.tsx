@@ -186,5 +186,13 @@ describe('SignInForm', () => {
     expect(passwordInput).toHaveAttribute('type', 'password');
     expect(screen.getByRole('button', { name: /show password/i })).toBeInTheDocument();
   });
+
+  it('pre-populates email field when email query parameter is provided in URL', () => {
+    mockGetSearchParams.mockImplementation((key: string) => (key === 'email' ? 'employee@company.com' : null));
+    render(<SignInForm />);
+
+    const emailInput = screen.getByLabelText(/email address/i) as HTMLInputElement;
+    expect(emailInput.value).toBe('employee@company.com');
+  });
 });
 

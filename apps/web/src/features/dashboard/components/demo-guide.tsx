@@ -14,6 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
+import { authClient } from '@/features/auth';
 
 const DEMO_ACCOUNTS = [
   {
@@ -68,6 +69,8 @@ const STORY_STEPS = [
 const STORAGE_KEY = 'harbor_demo_guide_dismissed';
 
 export function DemoGuide() {
+  const { data: activeOrg } = authClient.useActiveOrganization?.() ?? {};
+  const companyName = activeOrg?.name || 'organization';
   const [isDismissed, setIsDismissed] = React.useState(true);
   const [copiedEmail, setCopiedEmail] = React.useState<string | null>(null);
 
@@ -137,7 +140,7 @@ export function DemoGuide() {
               </CardTitle>
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed">
-              Step-by-step walkthrough of the Harbor Wholesale cash crisis, closed-loop resolution, and test personas (Owner, Employee).
+              Step-by-step walkthrough of the {companyName} cash crisis, closed-loop resolution, and test personas (Owner, Employee).
             </p>
           </div>
           <Button

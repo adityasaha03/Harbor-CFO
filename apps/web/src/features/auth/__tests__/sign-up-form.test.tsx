@@ -127,4 +127,68 @@ describe('SignUpForm', () => {
       expect(mockRefresh).toHaveBeenCalled();
     });
   });
+
+  it('blocks sign-up if check-email endpoint detects email is already added as employee', async () => {
+    const user = userEvent.setup();
+    const mockFetch = vi.spyOn(global, 'fetch').mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ exists: true, isEmployee: true }),
+    } as Response);
+
+    render(<SignUpForm />);
+
+    await user.type(screen.getByLabelText(/full name/i), 'Employee Bob');
+    await user.type(screen.getByLabelText(/work email/i), 'bob@company.com');
+    await user.type(screen.getByLabelText(/^password/i), 'securepassword123');
+    await user.click(screen.getByRole('button', { name: /create account/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText(/registered as an employee/i)).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: /sign in with bob@company.com/i })).toHaveAttribute(
+        'href',
+        '/sign-in?email=bob%40company.com',
+      );
+    });
+
+    expect(authClient.signUp.email).not.toHaveBeenCalled();
+    mockFetch.mockRestore();
+  });
+
+  it('blocks sign-up if check-email endpoint detects email is an already registered owner', async () => {
+    const user = userEvent.setup();
+    const mockFetch = vi.spyOn(global, 'fetch').mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ exists: true, isEmployee: false }),
+    } as Response);
+
+    render(<SignUpForm />);
+
+    await user.type(screen.getByLabelText(/full name/i), 'Owner Charlie');
+    await user.type(screen.getByLabelText(/work email/i), 'charlie@company.com');
+    await user.type(screen.getByLabelText(/^password/i), 'securepassword123');
+    await user.click(screen.getByRole('button', { name: /create account/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText(/user already exists/i)).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: /sign in with charlie@company.com/i })).toHaveAttribute(
+        'href',
+        '/sign-in?email=charlie%40company.com',
+      );
+    });
+
+    expect(authClient.signUp.email).not.toHaveBeenCalled();
+    mockFetch.mockRestore();
+  });
+
+  it('renders employee informational banner when toggling to Employee account type', async () => {
+    const user = userEvent.setup();
+    render(<SignUpForm />);
+
+    await user.click(screen.getByRole('button', { name: /employee/i }));
+
+    expect(screen.getByText(/employees do not need to sign up/i)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /go to sign in/i })).toHaveAttribute('href', '/sign-in');
+    expect(screen.queryByLabelText(/work email/i)).not.toBeInTheDocument();
+  });
 });
+

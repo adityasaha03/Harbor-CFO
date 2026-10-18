@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Compass, Loader2 } from 'lucide-react';
+import { Compass, Loader2, AlertTriangle, Users, ArrowRight } from 'lucide-react';
 import { authClient } from '../lib/auth-client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -32,6 +32,8 @@ export function SignUpForm() {
 
   const [accountType, setAccountType] = React.useState<'owner' | 'employee'>('owner');
   const [formError, setFormError] = React.useState<string | null>(null);
+  const [alreadyRegisteredEmail, setAlreadyRegisteredEmail] = React.useState<string | null>(null);
+  const [isEmployeeNotice, setIsEmployeeNotice] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
 
   React.useEffect(() => {
@@ -51,37 +53,36 @@ export function SignUpForm() {
 
   const onSubmit = async (values: SignUpValues) => {
     setFormError(null);
+    setAlreadyRegisteredEmail(null);
+    setIsEmployeeNotice(false);
     setIsLoading(true);
 
+    const email = values.email.trim().toLowerCase();
+
+    // 1. Preflight check: Verify if email is already registered or invited as an employee
     try {
-      if (accountType === 'employee') {
-        const claimRes = await fetch('/api/team/claim-account', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: values.name, email: values.email, password: values.password }),
-        });
-        const claimData = (await claimRes.json().catch(() => ({}))) as { message?: string };
-        if (!claimRes.ok) {
-          const err =
-            claimData.message ||
-            'This email has not been added to any company team yet. Please ask your company owner to add you first.';
+      const checkRes = await fetch(`/api/team/check-email?email=${encodeURIComponent(email)}`);
+      if (checkRes.ok) {
+        const checkData = (await checkRes.json()) as { exists?: boolean; isEmployee?: boolean };
+        if (checkData.exists) {
+          const isEmp = !!checkData.isEmployee;
+          setIsEmployeeNotice(isEmp);
+          setAlreadyRegisteredEmail(email);
+          const err = isEmp
+            ? 'This email is already registered as an employee by your company owner. User already exists. You cannot sign up again — please sign in instead.'
+            : 'This email is already registered. User already exists. You cannot sign up again — please sign in instead.';
           setFormError(err);
-          toast.error(err);
+          toast.error('This email is already registered. You cannot sign up again. Please sign in instead.');
           setIsLoading(false);
           return;
         }
-        const signInRes = await authClient.signIn.email({ email: values.email, password: values.password });
-        if (signInRes.error) {
-          setFormError('Account activated! Please sign in with your credentials.');
-          router.push('/sign-in');
-          return;
-        }
-        toast.success('Welcome to the team! Your account is ready to go. 🎉');
-        router.push('/dashboard');
-        router.refresh();
-        return;
       }
+    } catch {
+      // Continue to BetterAuth signUp if check-email is temporarily unavailable
+    }
 
+    // 2. Attempt BetterAuth account registration
+    try {
       const { data, error } = await authClient.signUp.email({
         name: values.name,
         email: values.email,
@@ -90,31 +91,22 @@ export function SignUpForm() {
 
       if (error || !data) {
         const errorMsg = error?.message || 'Unable to create account. Please try again.';
-        if (
+        const isAlreadyExists =
           errorMsg.toLowerCase().includes('already exists') ||
           errorMsg.toLowerCase().includes('user exists') ||
           error?.status === 400 ||
-          error?.status === 422
-        ) {
-          try {
-            const claimRes = await fetch('/api/team/claim-account', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ name: values.name, email: values.email, password: values.password }),
-            });
-            if (claimRes.ok) {
-              const signInRes = await authClient.signIn.email({ email: values.email, password: values.password });
-              if (!signInRes.error) {
-                toast.success('Welcome to the team! Your account is ready to go. 🎉');
-                router.push('/dashboard');
-                router.refresh();
-                return;
-              }
-            }
-          } catch {
-            // Fallback
-          }
+          error?.status === 422;
+
+        if (isAlreadyExists) {
+          setAlreadyRegisteredEmail(email);
+          const blockMsg =
+            'This email is already registered. User already exists. You cannot sign up again — please sign in instead.';
+          setFormError(blockMsg);
+          toast.error('This email is already registered. You cannot sign up again. Please sign in instead.');
+          setIsLoading(false);
+          return;
         }
+
         setFormError(errorMsg);
         toast.error(errorMsg);
         setIsLoading(false);
@@ -131,6 +123,18 @@ export function SignUpForm() {
     }
   };
 
+  const signInUrl = React.useMemo(() => {
+    const params = new URLSearchParams();
+    if (alreadyRegisteredEmail) {
+      params.set('email', alreadyRegisteredEmail);
+    }
+    if (rawCallbackUrl) {
+      params.set('callbackUrl', rawCallbackUrl);
+    }
+    const query = params.toString();
+    return query ? `/sign-in?${query}` : '/sign-in';
+  }, [alreadyRegisteredEmail, rawCallbackUrl]);
+
   return (
     <Card className="w-full max-w-md shadow-lg border-border/80">
       <CardHeader className="space-y-1 text-center">
@@ -140,7 +144,7 @@ export function SignUpForm() {
         <CardTitle className="text-2xl font-bold tracking-tight">Start Your Journey 🚀</CardTitle>
         <CardDescription>
           {accountType === 'employee'
-            ? 'Activate your employee account. Your owner must add you to the team first.'
+            ? 'Employee accounts are set up by company owners.'
             : 'Create your free account and take control of your business finances.'}
         </CardDescription>
       </CardHeader>
@@ -148,61 +152,151 @@ export function SignUpForm() {
         <div className="grid grid-cols-2 gap-1 rounded-lg bg-muted p-1 text-xs">
           <button
             type="button"
-            onClick={() => { setAccountType('owner'); setFormError(null); }}
-            className={cn('py-1.5 px-3 rounded-md font-medium transition-colors', accountType === 'owner' ? 'bg-background shadow-xs text-foreground' : 'text-muted-foreground hover:text-foreground')}
+            onClick={() => {
+              setAccountType('owner');
+              setFormError(null);
+            }}
+            className={cn(
+              'py-1.5 px-3 rounded-md font-medium transition-colors',
+              accountType === 'owner'
+                ? 'bg-background shadow-xs text-foreground'
+                : 'text-muted-foreground hover:text-foreground',
+            )}
           >
             Company Owner
           </button>
           <button
             type="button"
-            onClick={() => { setAccountType('employee'); setFormError(null); }}
-            className={cn('py-1.5 px-3 rounded-md font-medium transition-colors', accountType === 'employee' ? 'bg-background shadow-xs text-foreground' : 'text-muted-foreground hover:text-foreground')}
+            onClick={() => {
+              setAccountType('employee');
+              setFormError(null);
+            }}
+            className={cn(
+              'py-1.5 px-3 rounded-md font-medium transition-colors',
+              accountType === 'employee'
+                ? 'bg-background shadow-xs text-foreground'
+                : 'text-muted-foreground hover:text-foreground',
+            )}
           >
             Employee
           </button>
         </div>
 
-        {accountType === 'employee' && (
-          <div className="rounded-lg border border-primary/20 bg-primary/5 p-2.5 text-xs text-muted-foreground leading-relaxed">
-            <strong className="text-foreground">Owner invitation required:</strong> Company employees can only sign in or sign up after their owner adds them in Settings &gt; Team.
+        {accountType === 'employee' ? (
+          <div className="space-y-4 py-2">
+            <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 space-y-2.5">
+              <div className="flex items-center gap-2 text-foreground font-semibold text-sm">
+                <Users className="h-4 w-4 text-primary shrink-0" />
+                Employees do not need to sign up
+              </div>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Your company owner adds your employee account directly in HarborCFO. You cannot create a separate
+                account or sign up again here.
+              </p>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Please sign in with the credentials configured by your company owner.
+              </p>
+            </div>
+
+            <Button asChild className="w-full">
+              <Link href={rawCallbackUrl ? `/sign-in?callbackUrl=${encodeURIComponent(rawCallbackUrl)}` : '/sign-in'}>
+                Go to Sign In →
+              </Link>
+            </Button>
           </div>
+        ) : (
+          <>
+            <div className="rounded-lg border border-muted bg-muted/30 p-2.5 text-xs text-muted-foreground leading-relaxed">
+              <strong className="text-foreground">Invited as an employee?</strong> You do not need to sign up. Employees must log in directly with their pre-configured credentials.
+            </div>
+
+            {alreadyRegisteredEmail && (
+              <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-3.5 space-y-2.5">
+                <div className="flex items-start gap-2">
+                  <AlertTriangle className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
+                  <div className="space-y-1 text-xs">
+                    <p className="font-semibold text-destructive">
+                      {isEmployeeNotice ? 'Employee account already registered' : 'Account already registered'}
+                    </p>
+                    <p className="text-muted-foreground">
+                      {isEmployeeNotice
+                        ? 'This email is already registered as an employee by your company owner. User already exists. You cannot sign up again. Please sign in instead.'
+                        : 'This email is already registered. User already exists. You cannot sign up again with this email. Please sign in instead.'}
+                    </p>
+                  </div>
+                </div>
+                <Button asChild size="sm" className="w-full">
+                  <Link href={signInUrl}>
+                    Sign In with {alreadyRegisteredEmail}
+                    <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                  </Link>
+                </Button>
+              </div>
+            )}
+
+            {formError && !alreadyRegisteredEmail && (
+              <Alert variant="destructive">
+                <AlertDescription>{formError}</AlertDescription>
+              </Alert>
+            )}
+
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+              <div className="space-y-2">
+                <Label htmlFor="name">Full name</Label>
+                <Input
+                  id="name"
+                  placeholder="Alice Zhang"
+                  autoComplete="name"
+                  disabled={isLoading}
+                  {...register('name')}
+                  aria-invalid={!!errors.name}
+                />
+                {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="email">Work email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="alice@company.com"
+                  autoComplete="email"
+                  disabled={isLoading}
+                  {...register('email')}
+                  aria-invalid={!!errors.email}
+                />
+                {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="At least 8 characters"
+                  autoComplete="new-password"
+                  disabled={isLoading}
+                  {...register('password')}
+                  aria-invalid={!!errors.password}
+                />
+                {errors.password && <p className="text-xs text-destructive">{errors.password.message}</p>}
+              </div>
+
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Create Account — It’s Free
+              </Button>
+            </form>
+          </>
         )}
-
-        {formError && (
-          <Alert variant="destructive">
-            <AlertDescription>{formError}</AlertDescription>
-          </Alert>
-        )}
-
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
-          <div className="space-y-2">
-            <Label htmlFor="name">Full name</Label>
-            <Input id="name" placeholder="Alice Zhang" autoComplete="name" disabled={isLoading} {...register('name')} aria-invalid={!!errors.name} />
-            {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="email">Work email</Label>
-            <Input id="email" type="email" placeholder="alice@company.com" autoComplete="email" disabled={isLoading} {...register('email')} aria-invalid={!!errors.email} />
-            {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" placeholder="At least 8 characters" autoComplete="new-password" disabled={isLoading} {...register('password')} aria-invalid={!!errors.password} />
-            {errors.password && <p className="text-xs text-destructive">{errors.password.message}</p>}
-          </div>
-
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {accountType === 'employee' ? 'Activate Employee Account →' : 'Create Account — It’s Free'}
-          </Button>
-        </form>
       </CardContent>
       <CardFooter className="flex justify-center border-t border-border/60 p-4">
         <p className="text-xs text-muted-foreground">
           Already a member?{' '}
-          <Link href={rawCallbackUrl ? `/sign-in?callbackUrl=${encodeURIComponent(rawCallbackUrl)}` : '/sign-in'} className="font-semibold text-primary hover:underline">
+          <Link
+            href={rawCallbackUrl ? `/sign-in?callbackUrl=${encodeURIComponent(rawCallbackUrl)}` : '/sign-in'}
+            className="font-semibold text-primary hover:underline"
+          >
             Sign in here
           </Link>
         </p>
