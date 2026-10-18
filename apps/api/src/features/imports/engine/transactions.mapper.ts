@@ -5,7 +5,7 @@ import {
   ledgerCategorySchema,
 } from '@harbor/contracts';
 import { toMinor } from '@harbor/contracts/common/money';
-import { isDateOnly } from '@harbor/contracts/common/dates';
+import { normalizeDateOnly } from '@harbor/contracts/common/dates';
 import { type NumberedRow } from './types';
 
 const EXTERNAL_ID_REGEX = /^[A-Za-z0-9._-]{1,64}$/;
@@ -33,12 +33,13 @@ export function mapTransactionRow(
   }
 
   // --- date -> bookedOn ---
-  const dateStr = (data['date'] ?? '').trim();
-  if (!isDateOnly(dateStr)) {
+  const rawDateStr = (data['date'] ?? '').trim();
+  const normalizedDate = normalizeDateOnly(rawDateStr);
+  if (!normalizedDate) {
     errors.push({
       row: lineNumber,
       field: 'date',
-      message: 'Must be a valid YYYY-MM-DD date',
+      message: 'Must be a valid date (YYYY-MM-DD or MM/DD/YYYY)',
     });
   }
 
@@ -111,7 +112,7 @@ export function mapTransactionRow(
     ok: true,
     row: {
       externalId,
-      bookedOn: dateStr,
+      bookedOn: normalizedDate!,
       accountCode,
       amountMinor,
       currency: 'CNY' as const,

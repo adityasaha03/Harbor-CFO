@@ -4,22 +4,89 @@ export type DateOnly = string;
 
 const DATE_ONLY_REGEX = /^\d{4}-\d{2}-\d{2}$/;
 
+function isValidYmd(y: number, m: number, d: number): boolean {
+  if (m < 1 || m > 12 || d < 1 || d > 31) {
+    return false;
+  }
+  const date = new Date(Date.UTC(y, m - 1, d));
+  return date.getUTCFullYear() === y && date.getUTCMonth() === m - 1 && date.getUTCDate() === d;
+}
+
 export function isDateOnly(val: unknown): val is DateOnly {
   if (typeof val !== 'string' || !DATE_ONLY_REGEX.test(val)) {
     return false;
   }
 
   const [yStr, mStr, dStr] = val.split('-');
-  const y = Number(yStr);
-  const m = Number(mStr);
-  const d = Number(dStr);
+  return isValidYmd(Number(yStr), Number(mStr), Number(dStr));
+}
 
-  if (m < 1 || m > 12 || d < 1 || d > 31) {
-    return false;
+/**
+ * Normalizes various user/CSV date formats into canonical YYYY-MM-DD DateOnly string.
+ * Supports:
+ * - YYYY-MM-DD (e.g. 2026-10-18)
+ * - MM/DD/YYYY or M/D/YYYY (e.g. 10/18/2026, 1/5/2026)
+ * - DD/MM/YYYY (e.g. 18/10/2026)
+ * - YYYY/MM/DD or YYYY.MM.DD (e.g. 2026/10/18, 2026.10.18)
+ * - ISO timestamp format (e.g. 2026-10-18T00:00:00Z)
+ *
+ * Returns null if the value cannot be parsed into a real calendar date.
+ */
+export function normalizeDateOnly(val: unknown): DateOnly | null {
+  if (typeof val !== 'string') return null;
+  const raw = val.trim();
+  if (!raw) return null;
+
+  // Check canonical or delimiter-separated YYYY-MM-DD / YYYY/MM/DD / YYYY.MM.DD
+  const ymdMatch = raw.match(/^(\d{4})[./-](\d{1,2})[./-](\d{1,2})$/);
+  if (ymdMatch) {
+    const y = Number(ymdMatch[1]);
+    const m = Number(ymdMatch[2]);
+    const d = Number(ymdMatch[3]);
+    if (isValidYmd(y, m, d)) {
+      return `${String(y).padStart(4, '0')}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+    }
   }
 
-  const date = new Date(Date.UTC(y, m - 1, d));
-  return date.getUTCFullYear() === y && date.getUTCMonth() === m - 1 && date.getUTCDate() === d;
+  // Check ISO timestamp format (e.g. 2026-10-18T...)
+  if (raw.length >= 10 && raw[10] === 'T') {
+    const prefix = raw.slice(0, 10);
+    const m = prefix.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (m && isValidYmd(Number(m[1]), Number(m[2]), Number(m[3]))) {
+      return prefix;
+    }
+  }
+
+  // Check MM/DD/YYYY or DD/MM/YYYY
+  const mdyMatch = raw.match(/^(\d{1,2})[./-](\d{1,2})[./-](\d{4})$/);
+  if (mdyMatch) {
+    const p1 = Number(mdyMatch[1]);
+    const p2 = Number(mdyMatch[2]);
+    const y = Number(mdyMatch[3]);
+
+    // If p1 > 12, it must be DD/MM/YYYY
+    if (p1 > 12 && p2 <= 12) {
+      if (isValidYmd(y, p2, p1)) {
+        return `${String(y).padStart(4, '0')}-${String(p2).padStart(2, '0')}-${String(p1).padStart(2, '0')}`;
+      }
+    }
+
+    // Default to MM/DD/YYYY
+    if (p1 <= 12 && p2 <= 31) {
+      if (isValidYmd(y, p1, p2)) {
+        return `${String(y).padStart(4, '0')}-${String(p1).padStart(2, '0')}-${String(p2).padStart(2, '0')}`;
+      }
+    }
+
+    // Fallback to DD/MM/YYYY
+    if (p2 <= 12 && p1 <= 31) {
+      if (isValidYmd(y, p2, p1)) {
+        return `${String(y).padStart(4, '0')}-${String(p2).padStart(2, '0')}-${String(p1).padStart(2, '0')}`;
+      }
+    }
+  }
+
+  return null;
 }
 
 export function assertDateOnly(val: unknown): asserts val is DateOnly {

@@ -73,7 +73,7 @@ export function CreateCompanyForm() {
         return;
       }
 
-      toast.success(`Company "${values.name}" created successfully!`);
+      toast.success(`Your workspace "${values.name}" is ready! Let's go! 🎉`);
 
       // Automatically set the new company as active
       await authClient.organization.setActive({
@@ -97,9 +97,9 @@ export function CreateCompanyForm() {
             <Building2 className="h-5 w-5" />
           </div>
           <div>
-            <CardTitle className="text-xl font-bold">Register Company Workspace</CardTitle>
+            <CardTitle className="text-xl font-bold">Create Your Business Space</CardTitle>
             <CardDescription>
-              Create your business entity to begin financial modeling and cash management
+              Set up your company workspace to start managing your finances smarter.
             </CardDescription>
           </div>
         </div>
@@ -140,13 +140,13 @@ export function CreateCompanyForm() {
               <p className="text-xs text-destructive">{errors.slug.message}</p>
             )}
             <p className="text-[11px] text-muted-foreground">
-              Unique URL-safe company identifier used for multi-tenant isolation.
+              This creates a unique web address for your workspace. We auto-fill it for you!
             </p>
           </div>
 
           <Button type="submit" className="w-full mt-2" disabled={isLoading}>
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Create Company Workspace
+            Create Company Workspace →
           </Button>
         </form>
       </CardContent>

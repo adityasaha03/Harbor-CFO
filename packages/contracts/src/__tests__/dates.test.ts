@@ -6,6 +6,7 @@ import {
   diffDays,
   eachDay,
   isDateOnly,
+  normalizeDateOnly,
 } from '../common/dates';
 
 describe('Date helpers (UTC DateOnly)', () => {
@@ -93,5 +94,34 @@ describe('Date helpers (UTC DateOnly)', () => {
     ]);
 
     expect(() => eachDay('2026-10-20', -1)).toThrow(/Expected a non-negative safe integer/);
+  });
+
+  it('normalizes common date formats via normalizeDateOnly', () => {
+    // Standard ISO/canonical
+    expect(normalizeDateOnly('2026-10-18')).toBe('2026-10-18');
+    expect(normalizeDateOnly('2026-10-18T14:30:00Z')).toBe('2026-10-18');
+
+    // MM/DD/YYYY and M/D/YYYY
+    expect(normalizeDateOnly('10/18/2026')).toBe('2026-10-18');
+    expect(normalizeDateOnly('1/5/2026')).toBe('2026-01-05');
+    expect(normalizeDateOnly('01/05/2026')).toBe('2026-01-05');
+
+    // YYYY/MM/DD and YYYY.MM.DD
+    expect(normalizeDateOnly('2026/10/18')).toBe('2026-10-18');
+    expect(normalizeDateOnly('2026.10.18')).toBe('2026-10-18');
+
+    // DD/MM/YYYY when day > 12
+    expect(normalizeDateOnly('25/12/2026')).toBe('2026-12-25');
+
+    // Trims whitespace
+    expect(normalizeDateOnly('  10/18/2026  ')).toBe('2026-10-18');
+
+    // Invalid dates return null
+    expect(normalizeDateOnly('')).toBeNull();
+    expect(normalizeDateOnly(null)).toBeNull();
+    expect(normalizeDateOnly(undefined)).toBeNull();
+    expect(normalizeDateOnly('not-a-date')).toBeNull();
+    expect(normalizeDateOnly('2026-13-01')).toBeNull();
+    expect(normalizeDateOnly('2026-02-30')).toBeNull();
   });
 });

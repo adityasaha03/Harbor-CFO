@@ -6,7 +6,7 @@ import {
   invoiceStatusSchema,
 } from '@harbor/contracts';
 import { toMinor } from '@harbor/contracts/common/money';
-import { isDateOnly } from '@harbor/contracts/common/dates';
+import { normalizeDateOnly } from '@harbor/contracts/common/dates';
 import { type NumberedRow } from './types';
 
 const EXTERNAL_ID_REGEX = /^[A-Za-z0-9._-]{1,64}$/;
@@ -105,22 +105,24 @@ export function mapInvoiceRow(
   }
 
   // --- dueDate -> dueOn ---
-  const dueDateStr = (data['duedate'] ?? '').trim();
-  if (!isDateOnly(dueDateStr)) {
+  const rawDueDateStr = (data['duedate'] ?? '').trim();
+  const normalizedDueDate = normalizeDateOnly(rawDueDateStr);
+  if (!normalizedDueDate) {
     errors.push({
       row: lineNumber,
       field: 'dueDate',
-      message: 'Must be a valid YYYY-MM-DD date',
+      message: 'Must be a valid date (YYYY-MM-DD or MM/DD/YYYY)',
     });
   }
 
   // --- expectedSettlementDate -> expectedSettlementOn ---
-  const expectedStr = (data['expectedsettlementdate'] ?? '').trim();
-  if (!isDateOnly(expectedStr)) {
+  const rawExpectedStr = (data['expectedsettlementdate'] ?? '').trim();
+  const normalizedExpected = normalizeDateOnly(rawExpectedStr);
+  if (!normalizedExpected) {
     errors.push({
       row: lineNumber,
       field: 'expectedSettlementDate',
-      message: 'Must be a valid YYYY-MM-DD date',
+      message: 'Must be a valid date (YYYY-MM-DD or MM/DD/YYYY)',
     });
   }
 
@@ -171,8 +173,8 @@ export function mapInvoiceRow(
       totalMinor,
       outstandingMinor,
       currency: 'CNY' as const,
-      dueOn: dueDateStr,
-      expectedSettlementOn: expectedStr,
+      dueOn: normalizedDueDate!,
+      expectedSettlementOn: normalizedExpected!,
       status: statusResult.data!,
     },
   };

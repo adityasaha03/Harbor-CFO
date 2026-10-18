@@ -32,6 +32,26 @@ describe('mapTransactionRow', () => {
       expect(result.row.description).toBe('Payment from Customer A');
     });
 
+    it('maps MM/DD/YYYY date format to canonical YYYY-MM-DD', () => {
+      const result = mapTransactionRow(
+        makeRow({
+          externalid: 'TXN-001B',
+          date: '10/18/2026',
+          accountid: 'OPERATING',
+          amount: '45000',
+          currency: 'CNY',
+          category: 'customer_receipt',
+          description: 'Castle Design - Initial deposit',
+        }),
+      );
+
+      expect(result.ok).toBe(true);
+      if (!result.ok) return;
+      expect(result.row.externalId).toBe('TXN-001B');
+      expect(result.row.bookedOn).toBe('2026-10-18');
+      expect(result.row.amountMinor).toBe(4_500_000);
+    });
+
     it('maps a negative amount correctly', () => {
       const result = mapTransactionRow(
         makeRow({

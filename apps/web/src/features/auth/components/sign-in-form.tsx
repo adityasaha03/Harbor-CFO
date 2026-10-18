@@ -69,7 +69,7 @@ export function SignInForm() {
         return;
       }
 
-      toast.success('Signed in successfully! Welcome back.');
+      toast.success('Welcome back! Let\'s check on your business. 🚀');
 
       // Check whether an active company is assigned to the session
       const sessionRes = await authClient.getSession();
@@ -96,9 +96,9 @@ export function SignInForm() {
         <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow">
           <Compass className="h-6 w-6" />
         </div>
-        <CardTitle className="text-2xl font-bold tracking-tight">Sign in to HarborCFO</CardTitle>
+        <CardTitle className="text-2xl font-bold tracking-tight">Welcome Back! 👋</CardTitle>
         <CardDescription>
-          Enter your credentials to access your finance copilot workspace
+          Sign in to check on your business finances. Your dashboard is waiting for you.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -145,7 +145,7 @@ export function SignInForm() {
 
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Sign In
+            Sign In — Let&apos;s Go →
           </Button>
         </form>
 
@@ -153,12 +153,12 @@ export function SignInForm() {
       </CardContent>
       <CardFooter className="flex justify-center border-t border-border/60 p-4">
         <p className="text-xs text-muted-foreground">
-          Don&apos;t have an account?{' '}
+          New to HarborCFO?{' '}
           <Link
             href={rawCallbackUrl ? `/sign-up?callbackUrl=${encodeURIComponent(rawCallbackUrl)}` : '/sign-up'}
             className="font-semibold text-primary hover:underline"
           >
-            Sign up
+            Sign up for your free account
           </Link>
         </p>
       </CardFooter>
