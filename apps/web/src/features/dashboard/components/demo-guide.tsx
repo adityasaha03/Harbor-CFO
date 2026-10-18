@@ -135,9 +135,6 @@ export function DemoGuide() {
               <CardTitle className="text-base font-bold text-foreground">
                 Competition Demo & Story Guide
               </CardTitle>
-              <Badge variant="outline" className="text-[10px] uppercase font-mono">
-                Topic E
-              </Badge>
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed">
               Step-by-step walkthrough of the Harbor Wholesale cash crisis, closed-loop resolution, and test personas (Owner, Employee).

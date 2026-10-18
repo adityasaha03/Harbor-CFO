@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ErrorState } from '@/components/feedback/error-state';
 import { ForbiddenState } from '@/features/auth';
@@ -109,9 +108,6 @@ export function DashboardView() {
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <PlainLanguageToggle />
-            <Badge variant="outline" className="text-[11px] font-mono text-muted-foreground">
-              Synthetic Demo Data
-            </Badge>
           </div>
         </div>
 

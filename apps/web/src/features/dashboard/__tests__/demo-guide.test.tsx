@@ -12,9 +12,9 @@ describe('DemoGuide', () => {
   it('renders closed-loop story steps and the three demo accounts', () => {
     render(<DemoGuide />);
 
-    // Renders title and competition badge
+    // Renders title
     expect(screen.getByText('Competition Demo & Story Guide')).toBeInTheDocument();
-    expect(screen.getByText('Topic E')).toBeInTheDocument();
+    expect(screen.queryByText('Topic E')).not.toBeInTheDocument();
 
     // Renders the 5 story steps
     expect(screen.getByText('1. Observe')).toBeInTheDocument();
