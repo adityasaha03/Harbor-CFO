@@ -19,9 +19,80 @@ export interface AssistantMessageProps {
   className?: string;
 }
 
+function renderInlineFormatting(text: string): React.ReactNode[] {
+  const parts = text.split(/(\*\*[^*]+?\*\*)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith('**') && part.endsWith('**') && part.length >= 4) {
+      const boldText = part.slice(2, -2);
+      return (
+        <strong key={i} className="font-semibold text-foreground">
+          {boldText}
+        </strong>
+      );
+    }
+    return <span key={i}>{part}</span>;
+  });
+}
+
+function renderFormattedBody(rawContent: string) {
+  const lines = rawContent.split('\n');
+  const elements: React.ReactNode[] = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i]!;
+    const trimmed = line.trim();
+
+    // Empty lines act as spacing
+    if (!trimmed) {
+      elements.push(<div key={`empty-${i}`} className="h-1.5" />);
+      continue;
+    }
+
+    // Horizontal rule divider
+    if (/^---+$/.test(trimmed)) {
+      elements.push(<hr key={`hr-${i}`} className="my-2 border-border/40" />);
+      continue;
+    }
+
+    // Headings (e.g., ### 1. Liquidity Gap Summary or ## Summary)
+    const headingMatch = trimmed.match(/^#{1,4}\s+(.*)$/);
+    if (headingMatch) {
+      const headingContent = headingMatch[1]!.replace(/^\*\*|\*\*$/g, '').trim();
+      elements.push(
+        <h4 key={`h-${i}`} className="font-semibold text-sm text-foreground mt-2 mb-1 tracking-tight">
+          {renderInlineFormatting(headingContent)}
+        </h4>,
+      );
+      continue;
+    }
+
+    // Bullet points (hyphen -, asterisk *, or numbered list 1.)
+    const bulletMatch = trimmed.match(/^(\s*)([-*]|\d+\.)\s+(.*)$/);
+    if (bulletMatch) {
+      const text = bulletMatch[3]!;
+      elements.push(
+        <div key={`bullet-${i}`} className="flex items-start gap-2 text-sm leading-relaxed my-0.5 ml-1">
+          <span className="text-muted-foreground select-none shrink-0">•</span>
+          <div className="flex-1">{renderInlineFormatting(text)}</div>
+        </div>,
+      );
+      continue;
+    }
+
+    // Standard paragraph line
+    elements.push(
+      <p key={`p-${i}`} className="text-sm leading-relaxed my-0.5">
+        {renderInlineFormatting(line)}
+      </p>,
+    );
+  }
+
+  return elements;
+}
+
 /**
  * Renders the Copilot assistant response.
- * Enforces plain-text rendering with preserved line breaks without raw HTML interpretation.
+ * Safely parses formatting into clean React elements without raw HTML interpretation.
  * Displays fallback alert, mode badge, evidence chips, and action proposal notices.
  */
 export function AssistantMessage({
@@ -78,13 +149,13 @@ export function AssistantMessage({
         </div>
       )}
 
-      {/* Answer Content - Strict Plain Text Escaped with Preserved Newlines */}
+      {/* Answer Content - Beautifully Structured, XSS-Safe Plain Elements */}
       {content ? (
         <div
           data-testid="assistant-answer"
-          className="whitespace-pre-wrap font-sans text-sm text-foreground leading-relaxed break-words"
+          className="font-sans text-sm text-foreground leading-relaxed break-words space-y-0.5"
         >
-          {content}
+          {renderFormattedBody(content)}
         </div>
       ) : (
         <div className="text-xs italic text-muted-foreground">

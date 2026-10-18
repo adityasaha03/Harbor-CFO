@@ -167,4 +167,24 @@ describe('SignInForm', () => {
       expect(mockPush).toHaveBeenCalledWith('/company');
     });
   });
+
+  it('toggles password visibility when the eye button is clicked', async () => {
+    const user = userEvent.setup();
+    render(<SignInForm />);
+
+    const passwordInput = screen.getByLabelText(/^password/i);
+    expect(passwordInput).toHaveAttribute('type', 'password');
+
+    const toggleButton = screen.getByRole('button', { name: /show password/i });
+    expect(toggleButton).toBeInTheDocument();
+
+    await user.click(toggleButton);
+    expect(passwordInput).toHaveAttribute('type', 'text');
+    expect(screen.getByRole('button', { name: /hide password/i })).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: /hide password/i }));
+    expect(passwordInput).toHaveAttribute('type', 'password');
+    expect(screen.getByRole('button', { name: /show password/i })).toBeInTheDocument();
+  });
 });
+

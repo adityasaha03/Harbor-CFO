@@ -1,0 +1,18 @@
+# =====================================================================
+# SHENZHEN COMMERCIAL BANKING PORTAL - STATEMENT EXPORT
+# Account: 6222-****-****-8819 (Operating RMB Account)
+# Export Generated: 2026-10-18 15:30:00 CST
+# Currency: Renminbi (CNY)
+# =====================================================================
+
+Ref_No	Post_Date	Account_Code	Money_In	Money_Out	Accounting_Tag	Notes_and_Remarks
+TXN-9021	2026-10-15	OPERATING	55,000.00		Customer Settlement	Client Huawei subcontract Phase 2 completion payment
+TXN-9022	2026-10-16	OPERATING		14,200.50	Vendor Payment	Raw electronic components purchase batch #440
+TXN-9023	2026-10-18	OPERATING		8,500.00	Premises Rent	Shenzhen Nanshan tech park office space rental Oct
+TXN-9024	2026-10-20	OPERATING		32,000.00	Staff Payroll	Core software developer team salaries Oct mid-month
+TXN-9025	2026-10-22	OPERATING	42,000.00		Client Receipt	Tencent Cloud integration milestone sign-off
+TXN-9026	2026-10-25	OPERATING		4,800.00	Office Overheads	Server cluster hosting & enterprise software licenses
+TXN-9027	2026-10-28	OPERATING		16,000.00	Tax Payment	Corporate quarterly VAT advance withholding
+
+# Total Records: 7
+# Statement Status: Verified by Auditor

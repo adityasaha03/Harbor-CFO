@@ -194,9 +194,17 @@ export async function executeAgentLoop(options: ExecuteAgentLoopOptions): Promis
 
     // If max calls reached without final answer, request a final summary
     if (!finalAnswer) {
+      const summaryMessages: LlmMessage[] = [
+        ...messages,
+        {
+          role: 'user',
+          content:
+            'All tool calls have been executed. Now provide your final, complete analysis and recommendations for the business owner based on the data above.',
+        },
+      ];
       const summaryResponse = await provider.generate({
         system: systemPrompt,
-        messages,
+        messages: summaryMessages,
       });
       finalAnswer = summaryResponse.text ?? 'Analysis completed.';
       totalInputTokens += summaryResponse.usage?.inputTokens ?? 0;

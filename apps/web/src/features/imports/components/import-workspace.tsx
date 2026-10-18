@@ -6,6 +6,7 @@ import { usePermission } from '@/features/auth';
 import type { ImportPreviewResponse, ImportDto } from '@harbor/contracts';
 import { TemplateLinks } from './template-links';
 import { FileDropzone } from './file-dropzone';
+import { SmartMapperCard } from './smart-mapper-card';
 import { PreviewTable } from './preview-table';
 import { ErrorList } from './error-list';
 import { CommitBar } from './commit-bar';
@@ -18,13 +19,16 @@ import {
   ArrowRight,
   TrendingUp,
   AlertTriangle,
+  Sparkles,
 } from 'lucide-react';
+
 
 export function ImportWorkspace() {
   const canWriteImports = usePermission('imports:write');
 
   const [preview, setPreview] = React.useState<ImportPreviewResponse | null>(null);
   const [committedResult, setCommittedResult] = React.useState<ImportDto | null>(null);
+  const [mode, setMode] = React.useState<'standard' | 'smart'>('standard');
 
   const handleReset = () => {
     setPreview(null);
@@ -40,6 +44,7 @@ export function ImportWorkspace() {
     setPreview(null);
     setCommittedResult(dto);
   };
+
 
   return (
     <div className="space-y-8" data-testid="import-workspace">
@@ -136,11 +141,50 @@ export function ImportWorkspace() {
           )}
         </div>
       ) : (
-        /* Dropzone Upload */
+        /* Intake Section: Standard CSV or Smart AI Mapper */
         <div className="space-y-4">
-          <FileDropzone onPreviewSuccess={handlePreviewSuccess} />
+          <div className="flex items-center justify-between pb-1">
+            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Intake Method
+            </span>
+            <div className="inline-flex rounded-lg border bg-muted/40 p-0.5">
+              <button
+                type="button"
+                onClick={() => setMode('standard')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                  mode === 'standard'
+                    ? 'bg-background text-foreground shadow-2xs font-semibold'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+                data-testid="standard-csv-tab"
+              >
+                <FileCheck className="h-3.5 w-3.5" />
+                Standard CSV Upload
+              </button>
+              <button
+                type="button"
+                onClick={() => setMode('smart')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                  mode === 'smart'
+                    ? 'bg-background text-foreground shadow-2xs font-semibold'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+                data-testid="smart-ai-mapper-tab"
+              >
+                <Sparkles className="h-3.5 w-3.5 text-primary" />
+                Smart AI Mapper
+              </button>
+            </div>
+          </div>
+
+          {mode === 'standard' ? (
+            <FileDropzone onPreviewSuccess={handlePreviewSuccess} />
+          ) : (
+            <SmartMapperCard onPreviewSuccess={handlePreviewSuccess} />
+          )}
         </div>
       )}
+
 
       {/* History Audit Table */}
       <div className="pt-4">

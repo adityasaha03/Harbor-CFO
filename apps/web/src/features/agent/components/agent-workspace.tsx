@@ -65,10 +65,18 @@ export function AgentWorkspace() {
     );
   };
 
+  const pastRuns = runsQuery.data || [];
+  const selectedPastRun = React.useMemo(
+    () => pastRuns.find((r) => r.id === activeRunId),
+    [pastRuns, activeRunId],
+  );
+  const currentRun = runQuery.data ?? selectedPastRun;
+
   const handleSelectRun = (runId: string) => {
     setErrorMessage(null);
     setActiveRunId(runId);
-    setActivePrompt(null);
+    const existing = pastRuns.find((r) => r.id === runId);
+    setActivePrompt(existing?.prompt ?? null);
     clearEvents();
     toast.info('Loaded past copilot conversation run');
   };
@@ -80,9 +88,6 @@ export function AgentWorkspace() {
     clearEvents();
     toast.info('Started new copilot conversation');
   };
-
-  const pastRuns = runsQuery.data || [];
-  const currentRun = runQuery.data;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">

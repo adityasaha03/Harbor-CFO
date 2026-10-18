@@ -22,6 +22,7 @@ Upload a CSV, see an exact preview or row-level errors, commit atomically, and w
 - History table: file, kind, status, accepted/rejected rows, date, actor.
 - Reviewer sees history only; the upload area is replaced by a read-only notice (UX only; the API enforces).
 - Imported text (descriptions) is rendered as plain text only.
+- Smart AI Data Mapper (extension): adds a dedicated "Smart AI Mapper" card in the Imports workspace. Users can upload messy/scattered business files (.csv, .xlsx, .tsv, .txt) without pre-formatting. The AI transforms and standardizes the columns into HarborCFO's canonical schema. Offers two actions: "Download Formatted CSV" and "1-Click Send to Preview" (which automatically pipes the generated CSV into usePreviewImport for standard atomic validation). Raw document text is treated strictly as untrusted data.
 
 ## Tasks
 

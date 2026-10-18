@@ -3,6 +3,7 @@ import {
   type ImportKind,
   type ImportsQuery,
   type ImportPreviewBody,
+  type TransformImportInput,
 } from '@harbor/contracts';
 import { ok } from '../../core/http/respond';
 import { ValidationError } from '../../core/http/app-error';
@@ -48,5 +49,11 @@ export const importsController = {
     res.setHeader('Content-Type', 'text/csv; charset=utf-8');
     res.setHeader('Content-Disposition', `attachment; filename="import-${importId}-errors.csv"`);
     res.status(200).send(csv);
+  },
+
+  async transform(req: Request, res: Response): Promise<void> {
+    const input = req.body as TransformImportInput;
+    const result = await importsService.transform(input);
+    ok(res, result);
   },
 };

@@ -232,3 +232,27 @@ export const IMPORT_LIMITS = {
   MAX_ERRORS: 200,
 } as const;
 
+// ---------------------------------------------------------------------------
+// Smart AI Data Mapper Contracts
+// ---------------------------------------------------------------------------
+
+export const transformImportInputSchema = z.object({
+  kind: importKindSchema,
+  rawContent: z.string().min(1, 'Raw content cannot be empty').max(500_000, 'Raw content too large (max 500KB)'),
+  fileName: z.string().max(255).optional(),
+});
+
+export type TransformImportInput = z.infer<typeof transformImportInputSchema>;
+
+export const transformImportResponseSchema = z.object({
+  kind: importKindSchema,
+  csvContent: z.string(),
+  rowCount: z.number().int().nonnegative(),
+  detectedColumns: z.array(z.string()),
+  warnings: z.array(z.string()),
+  sampleRows: z.array(z.record(z.unknown())),
+});
+
+export type TransformImportResponse = z.infer<typeof transformImportResponseSchema>;
+
+

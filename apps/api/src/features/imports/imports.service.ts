@@ -5,7 +5,10 @@ import {
   type ImportPreviewResponse,
   type NormalizedTransactionRow,
   type NormalizedInvoiceRow,
+  type TransformImportInput,
+  type TransformImportResponse,
 } from '@harbor/contracts';
+import { transformRawContentToCsv } from './imports.transform';
 import { withTransaction } from '../../core/db/with-transaction';
 import { NotFoundError, ConflictError } from '../../core/http/app-error';
 import type { ActorContext } from '../auth/auth.types';
@@ -228,4 +231,11 @@ export const importsService = {
     }
     return formatErrorsCsv(record.errors);
   },
+
+  async transform(
+    input: TransformImportInput,
+  ): Promise<TransformImportResponse> {
+    return transformRawContentToCsv(input);
+  },
 };
+

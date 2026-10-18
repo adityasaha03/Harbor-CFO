@@ -15,6 +15,7 @@ Headers on every request except `/health/*`: `Authorization: Bearer <jwt>`, `X-T
 | POST, PATCH /:id, DELETE /:id /commitments          | settings:manage | B05      |                                                |
 | POST /imports/preview                               | imports:write   | B07      | multipart `file`, `kind`; 5 per min per tenant |
 | POST /imports/:id/commit                            | imports:write   | B07      | atomic; 409 on duplicate                       |
+| POST /imports/transform                             | imports:write   | B07      | AI schema mapping; raw file/text -> CSV & rows |
 | GET /imports, /imports/:id, /imports/:id/errors.csv | finance:read    | B07      |                                                |
 | GET /forecasts/latest                               | finance:read    | B09      | daily points, weekly buckets, summary, isStale |
 | GET /forecasts/:id                                  | finance:read    | B09      |                                                |

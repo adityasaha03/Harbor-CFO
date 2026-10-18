@@ -4,6 +4,7 @@ import {
   importPreviewBodySchema,
   importIdParamSchema,
   importsQuerySchema,
+  transformImportInputSchema,
   IMPORT_LIMITS,
 } from '@harbor/contracts';
 import { asyncHandler } from '../../core/http/async-handler';
@@ -71,6 +72,15 @@ const previewRateLimiter = createRateLimiter({
 });
 
 export const importsRouter: Router = Router();
+
+// POST /api/v1/imports/transform (imports:write, rate limit 5/min per tenant)
+importsRouter.post(
+  '/transform',
+  protect('imports:write'),
+  previewRateLimiter,
+  validate({ body: transformImportInputSchema }),
+  asyncHandler(importsController.transform),
+);
 
 // POST /api/v1/imports/preview (imports:write, rate limit 5/min per tenant)
 importsRouter.post(

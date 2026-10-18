@@ -1,0 +1,6 @@
+BILL_ID, TYPE_DIRECTION, CLIENT_OR_SUPPLIER, GROSS_VAL, BALANCE_REMAINING, CURR, DUE_ON, ESTIMATED_PAY_DAY, STATE
+INV-SZ-2026-801, Receivable (AR), BYD Microelectronics Ltd, 68000.00, 68000.00, RMB, 2026-11-10, 2026-11-12, Pending Unpaid
+INV-SZ-2026-802, Receivable (AR), Foxconn Logistics Hub, 45000.00, 45000.00, RMB, 2026-11-18, 2026-11-20, Pending Unpaid
+INV-SZ-2026-803, Payable (AP), Nanshan Chip Packaging Co, 28500.00, 28500.00, RMB, 2026-11-08, 2026-11-08, Open
+INV-SZ-2026-804, Payable (AP), South China Freight Forwarders, 11200.00, 11200.00, RMB, 2026-11-15, 2026-11-15, Open
+INV-SZ-2026-805, Receivable (AR), Ping An Smart City Initiative, 30000.00, 0.00, RMB, 2026-10-12, 2026-10-11, Fully Settled

@@ -22,6 +22,7 @@ Upload -> preview -> commit with atomic, idempotent persistence; a committed imp
 - `GET /api/v1/imports` and `GET /api/v1/imports/:id` (`finance:read`) for history and status. `GET /api/v1/imports/:id/errors.csv` returns the error report using `escapeSpreadsheetCell`.
 - After commit, call a hook registered by the forecast/alerts features (`onDatasetChanged(tenantId)`), implemented as an in-process event on the bus. B09/B10 subscribe; B07 only publishes `import.committed`.
 - Expired previews are rejected on commit even if the TTL job has not removed them (check `expiresAt` in code).
+- `POST /api/v1/imports/transform` (`imports:write`, rate limit 5/min per tenant): AI-assisted schema mapping endpoint for the Smart AI Data Mapper. Accepts multipart file or `{ kind: 'transactions' | 'invoices', rawText?: string }`. Uses LLM extraction with strict prompt isolation to convert raw/unstructured business records into canonical CSV format. Returns `{ kind, csvContent, rowCount, warnings, sampleRows }` without directly altering the ledger.
 
 ## Tasks
 

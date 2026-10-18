@@ -16,6 +16,8 @@ export interface GeminiProviderOptions {
 
 interface GeminiContentPart {
   text?: string;
+  thoughtSignature?: string;
+  thought_signature?: string;
   functionCall?: {
     name: string;
     args: Record<string, unknown>;
@@ -127,12 +129,17 @@ export class GeminiProvider implements LlmProvider {
         }
         if (msg.toolCalls) {
           for (const tc of msg.toolCalls) {
-            parts.push({
+            const part: GeminiContentPart = {
               functionCall: {
                 name: tc.name,
                 args: tc.args,
               },
-            });
+            };
+            if (tc.thoughtSignature) {
+              part.thoughtSignature = tc.thoughtSignature;
+              part.thought_signature = tc.thoughtSignature;
+            }
+            parts.push(part);
           }
         }
         if (parts.length > 0) {
@@ -222,9 +229,15 @@ export class GeminiProvider implements LlmProvider {
         text = text ? `${text}\n${part.text}` : part.text;
       }
       if (part.functionCall) {
+        const rawPart = part as {
+          thoughtSignature?: string;
+          thought_signature?: string;
+        };
+        const signature = rawPart.thoughtSignature ?? rawPart.thought_signature;
         toolCalls.push({
           name: part.functionCall.name,
           args: part.functionCall.args ?? {},
+          thoughtSignature: signature,
         });
       }
     }
