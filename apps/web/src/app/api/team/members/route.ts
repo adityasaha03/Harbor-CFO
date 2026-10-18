@@ -33,7 +33,7 @@ function toDbId(id: string | undefined | null) {
 }
 
 async function verifyOwnerAccess(userId: string, requestedOrgId?: string) {
-  let orgId = requestedOrgId;
+  const orgId = requestedOrgId;
   if (orgId) {
     const directMember = await mongoDb.collection('member').findOne({
       userId: toIdQuery(userId),
