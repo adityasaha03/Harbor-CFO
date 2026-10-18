@@ -91,8 +91,8 @@ describe('DashboardView', () => {
     expect(screen.getByText('Apex Distribution Ltd')).toBeInTheDocument();
     expect(screen.getByText(/Exceeds 40% Threshold/i)).toBeInTheDocument();
 
-    // Check synthetic badge
-    expect(screen.getByText(/Synthetic Demo Data/i)).toBeInTheDocument();
+    // Verify synthetic badge is removed
+    expect(screen.queryByText(/Synthetic Demo Data/i)).not.toBeInTheDocument();
   });
 
   it('renders "No breach within 91 days" when in healthy condition (never "infinite runway")', () => {

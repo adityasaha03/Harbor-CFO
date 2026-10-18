@@ -44,11 +44,10 @@ describe('SidebarNav', () => {
     expect(screen.queryByText('Settings')).not.toBeInTheDocument();
   });
 
-  it('filters navigation items for employee role', () => {
+  it('shows all navigation items for employee role matching owner', () => {
     mockRole('employee');
     render(<SidebarNav />);
 
-    // Employee permitted items
     expect(screen.getByText('Dashboard')).toBeInTheDocument();
     expect(screen.getByText('Imports')).toBeInTheDocument();
     expect(screen.getByText('Forecast')).toBeInTheDocument();
@@ -57,10 +56,8 @@ describe('SidebarNav', () => {
     expect(screen.getByText('Scenarios')).toBeInTheDocument();
     expect(screen.getByText('Actions')).toBeInTheDocument();
     expect(screen.getByText('Agent')).toBeInTheDocument();
-
-    // Owner-only items hidden from employee
-    expect(screen.queryByText('Proof & Audit')).not.toBeInTheDocument();
-    expect(screen.queryByText('Settings')).not.toBeInTheDocument();
+    expect(screen.getByText('Proof & Audit')).toBeInTheDocument();
+    expect(screen.getByText('Settings')).toBeInTheDocument();
   });
 
   it('shows all navigation items for owner role', () => {
