@@ -38,6 +38,27 @@ describe('mapInvoiceRow', () => {
       });
     });
 
+    it('maps MM/DD/YYYY dates to canonical YYYY-MM-DD', () => {
+      const result = mapInvoiceRow(
+        makeRow({
+          invoiceid: 'INV-101B',
+          direction: 'AR',
+          counterpartyid: 'CUST-001',
+          total: '40000.00',
+          outstanding: '40000.00',
+          currency: 'CNY',
+          duedate: '11/10/2026',
+          expectedsettlementdate: '11/13/2026',
+          status: 'open',
+        }),
+      );
+
+      expect(result.ok).toBe(true);
+      if (!result.ok) return;
+      expect(result.row.dueOn).toBe('2026-11-10');
+      expect(result.row.expectedSettlementOn).toBe('2026-11-13');
+    });
+
     it('maps an AP partially paid invoice', () => {
       const result = mapInvoiceRow(
         makeRow({

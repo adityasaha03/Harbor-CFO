@@ -158,6 +158,21 @@ describe('validateAndMapRows', () => {
         message: 'File is empty',
       });
     });
+
+    it('successfully validates transactions CSV with MM/DD/YYYY dates', () => {
+      const csv = [
+        'externalId,date,accountId,amount,currency,category,description',
+        'CD-2001,10/18/2026,OPERATING,45000,CNY,customer_receipt,Initial deposit',
+        'CD-2002,10/19/2026,OPERATING,-18500,CNY,supplier_payment,Material procurement',
+      ].join('\n');
+      const result = validateAndMapRows(Buffer.from(csv, 'utf-8'), 'transactions');
+
+      expect(result.ok).toBe(true);
+      if (!result.ok) return;
+      expect(result.rowCount).toBe(2);
+      expect((result.rows[0] as NormalizedTransactionRow).bookedOn).toBe('2026-10-18');
+      expect((result.rows[1] as NormalizedTransactionRow).bookedOn).toBe('2026-10-19');
+    });
   });
 });
 
