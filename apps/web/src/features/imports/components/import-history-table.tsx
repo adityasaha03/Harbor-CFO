@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { useImports } from '../api/use-imports';
+import { useDeleteImport } from '../api/use-delete-import';
 import { downloadErrorReport } from '../api/download-error-report';
+import { useSession } from '@/features/auth';
 import type { ImportDto, ImportStatus } from '@harbor/contracts';
 import {
   Table,
@@ -13,13 +15,39 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Download, FileText, RefreshCw, AlertCircle, Eye } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Download, FileText, RefreshCw, AlertCircle, Eye, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { ImportDetailsDialog } from './import-details-dialog';
 
 export function ImportHistoryTable() {
   const { data: imports, isLoading, isError, error, refetch, isRefetching } = useImports();
+  const { role } = useSession();
+  const isOwner = role === 'owner';
+  const deleteImportMutation = useDeleteImport();
   const [selectedImport, setSelectedImport] = React.useState<ImportDto | null>(null);
+  const [importToDelete, setImportToDelete] = React.useState<ImportDto | null>(null);
+
+  const handleConfirmDelete = async () => {
+    if (!importToDelete) return;
+    try {
+      await deleteImportMutation.mutateAsync(importToDelete.id);
+      toast.success(`Import "${importToDelete.fileName}" deleted and financial forecasts updated.`);
+      setImportToDelete(null);
+      if (selectedImport?.id === importToDelete.id) {
+        setSelectedImport(null);
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Failed to delete import');
+    }
+  };
 
   const handleDownloadErrors = async (id: string, fileName: string) => {
     try {
@@ -149,6 +177,19 @@ export function ImportHistoryTable() {
                             Errors
                           </Button>
                         )}
+                        {isOwner && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 px-2 text-xs text-destructive hover:text-destructive hover:bg-destructive/10"
+                            onClick={() => setImportToDelete(item)}
+                            title="Delete / Undo import"
+                            data-testid={`delete-import-${item.id}`}
+                          >
+                            <Trash2 className="h-3 w-3 mr-1" />
+                            Delete
+                          </Button>
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>
@@ -165,7 +206,59 @@ export function ImportHistoryTable() {
         onOpenChange={(open) => {
           if (!open) setSelectedImport(null);
         }}
+        onDeleteRequest={(item) => setImportToDelete(item)}
       />
+
+      <Dialog
+        open={Boolean(importToDelete)}
+        onOpenChange={(open) => {
+          if (!open && !deleteImportMutation.isPending) setImportToDelete(null);
+        }}
+      >
+        <DialogContent className="sm:max-w-md" data-testid="delete-import-dialog">
+          <DialogHeader className="space-y-2">
+            <DialogTitle className="text-base font-semibold text-destructive flex items-center gap-2">
+              <Trash2 className="h-4 w-4" /> Delete Import Batch
+            </DialogTitle>
+            <DialogDescription className="text-xs text-muted-foreground leading-relaxed">
+              Are you sure you want to delete <strong className="text-foreground">{importToDelete?.fileName}</strong>?
+              {importToDelete?.status === 'committed' && (
+                <span className="block mt-2 p-2 rounded bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-300 font-medium text-xs">
+                  ⚠️ All associated transactions and invoices will be permanently removed from your records, and your cash runway and forecast will be recalculated immediately.
+                </span>
+              )}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="mt-4 flex flex-row items-center justify-end gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setImportToDelete(null)}
+              disabled={deleteImportMutation.isPending}
+              className="text-xs"
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              size="sm"
+              onClick={handleConfirmDelete}
+              disabled={deleteImportMutation.isPending}
+              className="text-xs gap-1"
+              data-testid="confirm-delete-import-btn"
+            >
+              {deleteImportMutation.isPending ? (
+                <RefreshCw className="h-3 w-3 animate-spin mr-1" />
+              ) : (
+                <Trash2 className="h-3 w-3 mr-1" />
+              )}
+              {deleteImportMutation.isPending ? 'Deleting...' : 'Delete Import'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

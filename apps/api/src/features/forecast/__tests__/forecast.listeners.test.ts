@@ -91,4 +91,26 @@ describe('Forecast Reactive Domain Event Listener', () => {
     const receivedEvent = await actionUpdatedPromise;
     expect(receivedEvent.kind).toBe('forecast.updated');
   });
+
+  it('recomputes baseline on import.deleted event', async () => {
+    const deletedUpdatedPromise = new Promise<EventDto>((resolve) => {
+      const unsubscribe = eventsBus.onTenantEvent(tenantId, (event) => {
+        if (event.kind === 'forecast.updated') {
+          unsubscribe();
+          resolve(event);
+        }
+      });
+    });
+
+    await eventsService.publish(tenantId, {
+      kind: 'import.deleted',
+      publicSummary: 'Import batch deleted and undone',
+      resourceRefs: ['import_batch_1'],
+    });
+
+    const receivedEvent = await deletedUpdatedPromise;
+    expect(receivedEvent.kind).toBe('forecast.updated');
+    expect(receivedEvent.tenantId).toBe(tenantId);
+  });
 });
+

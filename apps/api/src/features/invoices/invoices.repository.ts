@@ -99,5 +99,20 @@ export const invoicesRepository = {
       modifiedCount: result.modifiedCount,
     };
   },
+
+  async deleteByImportId(
+    tenantId: string,
+    importId: string,
+    session?: ClientSession,
+  ): Promise<number> {
+    if (!Types.ObjectId.isValid(importId)) {
+      return 0;
+    }
+    const result = await InvoiceModel.deleteMany({
+      tenantId,
+      sourceImportId: new Types.ObjectId(importId),
+    }).session(session ?? null);
+    return result.deletedCount ?? 0;
+  },
 };
 

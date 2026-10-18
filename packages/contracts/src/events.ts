@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 export const EVENT_KINDS = [
   'import.committed',
+  'import.deleted',
   'forecast.updated',
   'alert.raised',
   'alert.resolved',

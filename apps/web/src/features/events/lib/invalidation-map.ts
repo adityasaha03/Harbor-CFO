@@ -12,6 +12,14 @@ export const EVENT_QUERY_INVALIDATION_MAP: Record<EventKind, readonly (readonly 
     queryKeys.imports.all,
     queryKeys.ledger.all,
   ],
+  'import.deleted': [
+    queryKeys.forecast.all,
+    queryKeys.analytics.all,
+    queryKeys.alerts.all,
+    queryKeys.imports.all,
+    queryKeys.ledger.all,
+    queryKeys.invoices.all,
+  ],
   'forecast.updated': [
     queryKeys.forecast.all,
     queryKeys.alerts.all,

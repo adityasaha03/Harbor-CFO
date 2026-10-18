@@ -47,3 +47,4 @@ describe('AppShell', () => {
     expect(screen.getByText('Global Logistics Corp')).toBeInTheDocument();
   });
 });
+
