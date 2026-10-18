@@ -56,4 +56,10 @@ export const importsController = {
     const result = await importsService.transform(input);
     ok(res, result);
   },
+
+  async delete(req: Request, res: Response): Promise<void> {
+    const importId = req.params.id as string;
+    const result = await importsService.delete(req.actor!, importId);
+    ok(res, result);
+  },
 };

@@ -11,6 +11,7 @@ export * from './components/import-details-dialog';
 export * from './api/use-preview-import';
 export * from './api/use-transform-import';
 export * from './api/use-commit-import';
+export * from './api/use-delete-import';
 export * from './api/use-imports';
 export * from './api/download-error-report';
 

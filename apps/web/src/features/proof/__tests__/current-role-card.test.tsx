@@ -42,3 +42,4 @@ describe('CurrentRoleCard', () => {
     expect(screen.queryByText('Harbor Wholesale Ltd')).not.toBeInTheDocument();
   });
 });
+

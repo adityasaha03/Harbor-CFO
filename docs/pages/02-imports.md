@@ -195,6 +195,7 @@ ImportsPage (/imports)
   7. `Actions`:
      - `Details` button: Opens the full cryptographic audit modal.
      - `Errors` button (only visible if rejected rows > 0): One-click download of the error CSV.
+     - `Delete` button (Owner only): Allows the workspace Owner to delete/undo an import. When confirmed via the safety dialog, all ledger entries or invoices associated with that import batch are permanently purged from the database, the dataset version is incremented, and cash forecasts, runways, and risk alerts are immediately recalculated.
   - **Live Controls**: Includes a `Refresh` button with spin animation to re-fetch ledger import records.
 
 ---
@@ -214,6 +215,7 @@ ImportsPage (/imports)
     - If committed: Confirms ledger synchronization and double-entry booking.
     - If rejected: Confirms that zero rows were written in accordance with zero-fault SME integrity.
   - **Inline Error Table**: Scrollable table listing all detected errors directly in the modal, plus an `Export Errors` button.
+  - **Owner Undo / Delete Action**: Workspace Owners can initiate import deletion directly from the audit modal, closing the modal and launching the cascade deletion workflow.
 
 ---
 

@@ -4,6 +4,7 @@ import * as React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import * as authFeature from '@/features/auth';
 import * as commitModule from '../api/use-commit-import';
+import * as deleteModule from '../api/use-delete-import';
 import * as importsListModule from '../api/use-imports';
 import * as downloadErrorsModule from '../api/download-error-report';
 import { ImportWorkspace } from '../components/import-workspace';
@@ -93,6 +94,7 @@ describe('F06 Imports Workspace and Components', () => {
 
     // Default permissions: user can write imports
     vi.spyOn(authFeature, 'usePermission').mockReturnValue(true);
+    vi.spyOn(authFeature, 'useSession').mockReturnValue({ role: 'owner' } as never);
 
     // Default history query mock
     vi.spyOn(importsListModule, 'useImports').mockReturnValue({
@@ -310,4 +312,39 @@ describe('F06 Imports Workspace and Components', () => {
     expect(within(dialog).getByText('Invalid due date format')).toBeInTheDocument();
     expect(within(dialog).getByRole('button', { name: /export errors/i })).toBeInTheDocument();
   });
+
+  it('allows owner to open delete confirmation dialog and delete an import', async () => {
+    const mutateAsyncMock = vi.fn().mockResolvedValue({ deleted: true, importId: 'imp_hist_1' });
+    vi.spyOn(deleteModule, 'useDeleteImport').mockReturnValue({
+      mutateAsync: mutateAsyncMock,
+      isPending: false,
+    } as never);
+
+    renderWithClient(<ImportHistoryTable />);
+
+    const deleteBtn = screen.getByTestId('delete-import-imp_hist_1');
+    expect(deleteBtn).toBeInTheDocument();
+    fireEvent.click(deleteBtn);
+
+    const dialog = screen.getByTestId('delete-import-dialog');
+    expect(dialog).toBeInTheDocument();
+    expect(within(dialog).getByText(/Delete Import Batch/i)).toBeInTheDocument();
+    expect(within(dialog).getByText('prior_tx.csv')).toBeInTheDocument();
+
+    const confirmBtn = screen.getByTestId('confirm-delete-import-btn');
+    fireEvent.click(confirmBtn);
+
+    await waitFor(() => {
+      expect(mutateAsyncMock).toHaveBeenCalledWith('imp_hist_1');
+    });
+  });
+
+  it('hides delete buttons for employee or reviewer role', () => {
+    vi.spyOn(authFeature, 'useSession').mockReturnValue({ role: 'employee' } as never);
+
+    renderWithClient(<ImportHistoryTable />);
+
+    expect(screen.queryByTestId('delete-import-imp_hist_1')).not.toBeInTheDocument();
+  });
 });
+

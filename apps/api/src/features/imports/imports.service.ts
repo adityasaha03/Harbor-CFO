@@ -10,11 +10,13 @@ import {
 } from '@harbor/contracts';
 import { transformRawContentToCsv } from './imports.transform';
 import { withTransaction } from '../../core/db/with-transaction';
-import { NotFoundError, ConflictError } from '../../core/http/app-error';
+import { NotFoundError, ConflictError, ForbiddenError } from '../../core/http/app-error';
 import type { ActorContext } from '../auth/auth.types';
 import { auditService } from '../audit';
 import { eventsService } from '../events';
 import { tenantsRepository } from '../tenants';
+import { ledgerRepository } from '../ledger';
+import { invoicesRepository } from '../invoices';
 import { computeChecksum, validateAndMapRows } from './engine';
 import {
   IMPORT_MAPPING_VERSION,
@@ -236,6 +238,69 @@ export const importsService = {
     input: TransformImportInput,
   ): Promise<TransformImportResponse> {
     return transformRawContentToCsv(input);
+  },
+
+  async delete(
+    actor: ActorContext,
+    importId: string,
+  ): Promise<{ deleted: boolean; importId: string }> {
+    if (actor.role !== 'owner') {
+      throw new ForbiddenError('Only workspace owners can delete imports');
+    }
+
+    return withTransaction(async (session) => {
+      const record = await importsRepository.findById(actor.tenantId, importId, session);
+      if (!record) {
+        throw new NotFoundError('Import not found');
+      }
+
+      // 1. Delete associated domain data if this import was committed
+      if (record.status === 'committed') {
+        if (record.kind === 'transactions') {
+          await ledgerRepository.deleteByImportId(actor.tenantId, importId, session);
+        } else if (record.kind === 'invoices') {
+          await invoicesRepository.deleteByImportId(actor.tenantId, importId, session);
+        }
+      }
+
+      // 2. Delete the import record itself
+      await importsRepository.deleteById(actor.tenantId, importId, session);
+
+      // 3. Bump dataset version to trigger forecast cache invalidation
+      const afterVersion = await tenantsRepository.bumpDatasetVersion(
+        actor.tenantId,
+        session,
+      );
+
+      // 4. Audit trail
+      await auditService.record(
+        {
+          tenantId: actor.tenantId,
+          actorId: actor.userId,
+          actorRole: actor.role,
+          action: 'import.delete',
+          decision: 'allowed',
+          reasonCode: 'USER_DELETE',
+          resourceRefs: [`import:${importId}`, `datasetVersion:${afterVersion}`],
+          afterVersion,
+          traceId: actor.requestId,
+        },
+        session,
+      );
+
+      // 5. Publish domain event to trigger forecast baseline recomputation & SSE updates
+      await eventsService.publish(
+        actor.tenantId,
+        {
+          kind: 'import.deleted',
+          publicSummary: `Deleted import ${record.fileName} (${record.kind})`,
+          resourceRefs: [`import:${importId}`],
+        },
+        session,
+      );
+
+      return { deleted: true, importId };
+    });
   },
 };
 

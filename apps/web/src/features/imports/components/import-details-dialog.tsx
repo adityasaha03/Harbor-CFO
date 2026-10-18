@@ -31,21 +31,27 @@ import {
   Download,
   AlertTriangle,
   Layers,
+  Trash2,
 } from 'lucide-react';
 import { downloadErrorReport } from '../api/download-error-report';
+import { useSession } from '@/features/auth';
 import { toast } from 'sonner';
 
 export interface ImportDetailsDialogProps {
   importItem: ImportDto | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onDeleteRequest?: (item: ImportDto) => void;
 }
 
 export function ImportDetailsDialog({
   importItem,
   open,
   onOpenChange,
+  onDeleteRequest,
 }: ImportDetailsDialogProps) {
+  const { role } = useSession();
+  const isOwner = role === 'owner';
   const [isDownloading, setIsDownloading] = React.useState(false);
 
   if (!importItem) return null;
@@ -257,16 +263,34 @@ export function ImportDetailsDialog({
           ) : (
             <div />
           )}
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => onOpenChange(false)}
-            className="text-xs"
-            data-testid="close-import-details-btn"
-          >
-            Close
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => onOpenChange(false)}
+              className="text-xs"
+              data-testid="close-import-details-btn"
+            >
+              Close
+            </Button>
+            {isOwner && onDeleteRequest && (
+              <Button
+                type="button"
+                variant="destructive"
+                size="sm"
+                onClick={() => {
+                  onOpenChange(false);
+                  onDeleteRequest(importItem);
+                }}
+                className="text-xs gap-1"
+                data-testid="dialog-delete-import-btn"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+                Delete Import
+              </Button>
+            )}
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>

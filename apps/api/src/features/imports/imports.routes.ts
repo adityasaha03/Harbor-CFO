@@ -123,3 +123,12 @@ importsRouter.get(
   validate({ params: importIdParamSchema }),
   asyncHandler(importsController.getById),
 );
+
+// DELETE /api/v1/imports/:id (settings:manage - owner only)
+importsRouter.delete(
+  '/:id',
+  protect('settings:manage'),
+  validate({ params: importIdParamSchema }),
+  asyncHandler(importsController.delete),
+);
+

@@ -9,7 +9,11 @@ import { forecastService } from './forecast.service';
  * Recomputes baseline and emits forecast.updated.
  */
 export async function handleForecastEvent(event: EventDto): Promise<void> {
-  if (event.kind !== 'import.committed' && event.kind !== 'action.committed') {
+  if (
+    event.kind !== 'import.committed' &&
+    event.kind !== 'action.committed' &&
+    event.kind !== 'import.deleted'
+  ) {
     return;
   }
 

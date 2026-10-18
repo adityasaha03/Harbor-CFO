@@ -204,4 +204,19 @@ export const importsRepository = {
       total,
     };
   },
+
+  async deleteById(
+    tenantId: string,
+    id: string,
+    session?: ClientSession,
+  ): Promise<boolean> {
+    if (!Types.ObjectId.isValid(id)) {
+      return false;
+    }
+    const result = await ImportModel.deleteOne({
+      tenantId,
+      _id: new Types.ObjectId(id),
+    }).session(session ?? null);
+    return (result.deletedCount ?? 0) > 0;
+  },
 };

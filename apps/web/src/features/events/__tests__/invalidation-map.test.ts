@@ -12,6 +12,16 @@ describe('invalidation-map', () => {
     expect(keys).toContainEqual(queryKeys.ledger.all);
   });
 
+  it('maps import.deleted to forecast, analytics, alerts, imports, ledger, and invoices query keys', () => {
+    const keys = getQueryKeysForEvent('import.deleted');
+    expect(keys).toContainEqual(queryKeys.forecast.all);
+    expect(keys).toContainEqual(queryKeys.analytics.all);
+    expect(keys).toContainEqual(queryKeys.alerts.all);
+    expect(keys).toContainEqual(queryKeys.imports.all);
+    expect(keys).toContainEqual(queryKeys.ledger.all);
+    expect(keys).toContainEqual(queryKeys.invoices.all);
+  });
+
   it('maps forecast.updated to forecast and alerts query keys', () => {
     const keys = getQueryKeysForEvent('forecast.updated');
     expect(keys).toContainEqual(queryKeys.forecast.all);
