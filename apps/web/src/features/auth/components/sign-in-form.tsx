@@ -29,6 +29,7 @@ export function SignInForm() {
   const searchParams = useSearchParams();
   const rawCallbackUrl = searchParams.get('callbackUrl');
   const callbackUrl = rawCallbackUrl || '/dashboard';
+  const emailParam = searchParams.get('email') || '';
 
   const [formError, setFormError] = React.useState<string | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -48,10 +49,16 @@ export function SignInForm() {
   } = useForm<SignInValues>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
-      email: '',
+      email: emailParam,
       password: '',
     },
   });
+
+  React.useEffect(() => {
+    if (emailParam) {
+      setValue('email', emailParam, { shouldValidate: true });
+    }
+  }, [emailParam, setValue]);
 
   const onSubmit = async (values: SignInValues) => {
     setFormError(null);

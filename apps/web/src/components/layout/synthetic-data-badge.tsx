@@ -18,7 +18,6 @@ export function SyntheticDataBadge({
       {...props}
     >
       <Database className="h-3 w-3" />
-      <span>Synthetic demo data</span>
     </div>
   );
 }
