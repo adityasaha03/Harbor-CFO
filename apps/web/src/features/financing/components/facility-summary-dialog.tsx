@@ -12,7 +12,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { formatMinor, type RankedFinancingOffer } from '@harbor/contracts';
-import { Landmark, ArrowRight, ShieldCheck, CheckCircle2, AlertTriangle } from 'lucide-react';
+import { Landmark, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 export interface FacilitySummaryDialogProps {

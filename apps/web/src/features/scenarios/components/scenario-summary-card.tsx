@@ -2,10 +2,9 @@
 
 import * as React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { formatMinor, type CreateScenarioResponse, type ScenarioChange } from '@harbor/contracts';
-import { Sparkles, CheckCircle2, AlertTriangle, FileText, ArrowRight } from 'lucide-react';
+import { Sparkles, FileText } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
