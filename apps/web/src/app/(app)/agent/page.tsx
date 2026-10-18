@@ -1,7 +1,6 @@
 import { PageHeader } from '@/components/layout/page-header';
 import { PageIntro } from '@/components/layout/page-intro';
 import { AgentWorkspace } from '@/features/agent';
-import { Bot } from 'lucide-react';
 
 export default function AgentPage() {
   return (
@@ -12,7 +11,7 @@ export default function AgentPage() {
       />
       <PageIntro
         storageKey="harbor_intro_agent"
-        icon={Bot}
+        iconName="bot"
         title="Meet your finance assistant"
         description="Ask me anything about your business finances in plain English! I can explain your cash forecast, suggest ways to improve cash flow, help you understand alerts, and guide you through financial decisions."
         tips={[

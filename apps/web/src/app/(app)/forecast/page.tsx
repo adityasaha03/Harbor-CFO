@@ -2,7 +2,6 @@ import * as React from 'react';
 import { ForecastView } from '@/features/forecast';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PageIntro } from '@/components/layout/page-intro';
-import { TrendingUp } from 'lucide-react';
 
 export const metadata = {
   title: 'Cash Forecast | HarborCFO',
@@ -14,7 +13,7 @@ export default function ForecastPage() {
     <div className="space-y-6">
       <PageIntro
         storageKey="harbor_intro_forecast"
-        icon={TrendingUp}
+        iconName="trending-up"
         title="What is the Cash Forecast?"
         description="This page shows you exactly how much money your business will have each day for the next 3 months. It uses your real bank transactions and invoices to calculate this — no guessing involved."
         tips={[

@@ -1,21 +1,70 @@
 'use client';
 
 import * as React from 'react';
-import { Lightbulb, X, type LucideIcon } from 'lucide-react';
+import {
+  Lightbulb,
+  X,
+  TrendingUp,
+  AlertTriangle,
+  Landmark,
+  GitBranch,
+  ShieldCheck,
+  FileSpreadsheet,
+  Settings,
+  Bot,
+  FileCheck2,
+  Sparkles,
+  Info,
+  type LucideIcon,
+} from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
+export type PageIntroIconName =
+  | 'trending-up'
+  | 'alert-triangle'
+  | 'landmark'
+  | 'git-branch'
+  | 'shield-check'
+  | 'file-spreadsheet'
+  | 'settings'
+  | 'bot'
+  | 'file-check-2'
+  | 'sparkles'
+  | 'info';
+
+const ICON_MAP: Record<PageIntroIconName, LucideIcon> = {
+  'trending-up': TrendingUp,
+  'alert-triangle': AlertTriangle,
+  'landmark': Landmark,
+  'git-branch': GitBranch,
+  'shield-check': ShieldCheck,
+  'file-spreadsheet': FileSpreadsheet,
+  'settings': Settings,
+  'bot': Bot,
+  'file-check-2': FileCheck2,
+  'sparkles': Sparkles,
+  'info': Info,
+};
+
 export interface PageIntroProps {
   storageKey: string;
-  icon: LucideIcon;
+  iconName?: PageIntroIconName;
   title: string;
   description: string;
   tips?: string[];
   className?: string;
 }
 
-export function PageIntro({ storageKey, icon: Icon, title, description, tips, className }: PageIntroProps) {
+export function PageIntro({
+  storageKey,
+  iconName = 'info',
+  title,
+  description,
+  tips,
+  className,
+}: PageIntroProps) {
   const [isDismissed, setIsDismissed] = React.useState(true);
 
   React.useEffect(() => {
@@ -36,6 +85,8 @@ export function PageIntro({ storageKey, icon: Icon, title, description, tips, cl
   };
 
   if (isDismissed) return null;
+
+  const Icon = ICON_MAP[iconName] ?? Info;
 
   return (
     <Card className={cn('border-primary/20 bg-gradient-to-r from-primary/5 to-background p-4 shadow-sm', className)}>

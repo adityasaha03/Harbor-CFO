@@ -8,7 +8,6 @@ import {
   EvidenceDownload,
   KnownLimitations,
 } from '@/features/proof';
-import { FileCheck2 } from 'lucide-react';
 
 export default function ProofPage() {
   return (
@@ -19,7 +18,7 @@ export default function ProofPage() {
       />
       <PageIntro
         storageKey="harbor_intro_proof"
-        icon={FileCheck2}
+        iconName="file-check-2"
         title="What is this page for?"
         description="Every financial decision in HarborCFO is recorded with a tamper-proof audit trail. This page lets you verify that the system is working correctly and download evidence packages for compliance or review."
         tips={[

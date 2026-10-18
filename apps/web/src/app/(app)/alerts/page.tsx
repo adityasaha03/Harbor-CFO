@@ -1,7 +1,6 @@
 import { PageHeader } from '@/components/layout/page-header';
 import { PageIntro } from '@/components/layout/page-intro';
 import { AlertsPanel } from '@/features/alerts';
-import { AlertTriangle } from 'lucide-react';
 
 export default function AlertsPage() {
   return (
@@ -12,7 +11,7 @@ export default function AlertsPage() {
       />
       <PageIntro
         storageKey="harbor_intro_alerts"
-        icon={AlertTriangle}
+        iconName="alert-triangle"
         title="What are these alerts?"
         description="Alerts are automatic warnings about potential problems in your finances. We monitor your cash flow, overdue invoices, and customer concentration so you don't have to."
         tips={[

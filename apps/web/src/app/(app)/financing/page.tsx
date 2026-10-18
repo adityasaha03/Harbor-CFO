@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { PageHeader } from '@/components/layout/page-header';
 import { PageIntro } from '@/components/layout/page-intro';
 import { FinancingWorkspace } from '@/features/financing';
-import { Landmark } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Financing Options | HarborCFO',
@@ -18,7 +17,7 @@ export default function FinancingPage() {
       />
       <PageIntro
         storageKey="harbor_intro_financing"
-        icon={Landmark}
+        iconName="landmark"
         title="How does this work?"
         description="If your forecast shows a cash shortfall, this page shows you borrowing options that could help. Each option shows how much it costs, how long the loan is, and how it affects your cash flow."
         tips={[

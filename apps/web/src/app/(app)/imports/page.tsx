@@ -1,7 +1,6 @@
 import { PageHeader } from '@/components/layout/page-header';
 import { PageIntro } from '@/components/layout/page-intro';
 import { ImportWorkspace } from '@/features/imports';
-import { FileSpreadsheet } from 'lucide-react';
 
 export default function ImportsPage() {
   return (
@@ -12,7 +11,7 @@ export default function ImportsPage() {
       />
       <PageIntro
         storageKey="harbor_intro_imports"
-        icon={FileSpreadsheet}
+        iconName="file-spreadsheet"
         title="How do I upload my data?"
         description="Drag and drop your CSV files (bank transactions or invoices) into the upload area below. We'll check everything for errors before importing, and you can preview the data before confirming."
         tips={[

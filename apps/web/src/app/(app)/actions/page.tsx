@@ -2,7 +2,6 @@ import * as React from 'react';
 import { PageHeader } from '@/components/layout/page-header';
 import { PageIntro } from '@/components/layout/page-intro';
 import { ActionsWorkspace } from '@/features/actions';
-import { ShieldCheck } from 'lucide-react';
 
 export default function ActionsPage() {
   return (
@@ -13,7 +12,7 @@ export default function ActionsPage() {
       />
       <PageIntro
         storageKey="harbor_intro_actions"
-        icon={ShieldCheck}
+        iconName="shield-check"
         title="Why do I need to approve things?"
         description="For your safety, no financial action (like taking a loan) happens automatically. The system creates a proposal, shows you exactly what will happen, and waits for your explicit approval."
         tips={[

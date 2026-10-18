@@ -2,7 +2,6 @@ import * as React from 'react';
 import { PageHeader } from '@/components/layout/page-header';
 import { PageIntro } from '@/components/layout/page-intro';
 import { SettingsTabs } from '@/features/settings';
-import { Settings } from 'lucide-react';
 
 export default function SettingsPage() {
   return (
@@ -13,7 +12,7 @@ export default function SettingsPage() {
       />
       <PageIntro
         storageKey="harbor_intro_settings"
-        icon={Settings}
+        iconName="settings"
         title="What can I configure here?"
         description="This is where you set up your business rules — like how much emergency cash to keep, payment terms, and recurring expenses. Changes here automatically update your forecasts and alerts across the entire app."
         tips={[
