@@ -26,12 +26,17 @@ export function CompanyOnboarding() {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-muted/30 p-4 space-y-6">
+      <div className="text-center max-w-lg">
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">Let&apos;s Get You Set Up 🏢</h1>
+        <p className="text-muted-foreground mt-2">Choose an existing workspace or create a new one for your business.</p>
+      </div>
+
       {companies.length > 0 && (
         <Card className="w-full max-w-lg shadow-md border-border/80">
           <CardHeader className="pb-3">
-            <CardTitle className="text-lg">Select Existing Workspace</CardTitle>
+            <CardTitle className="text-lg">Welcome Back! Choose Your Company</CardTitle>
             <CardDescription>
-              You are already a member of these company workspaces
+              You belong to these business workspaces. Pick one to continue.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">

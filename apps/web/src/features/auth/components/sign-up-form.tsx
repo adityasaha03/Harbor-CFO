@@ -86,7 +86,7 @@ export function SignUpForm() {
                 password: values.password,
               });
               if (!signInRes.error) {
-                toast.success('Welcome! Your employee account has been activated.');
+                toast.success('Welcome to the team! Your account is ready to go. 🎉');
                 router.push('/dashboard');
                 router.refresh();
                 return;
@@ -102,7 +102,7 @@ export function SignUpForm() {
         return;
       }
 
-      toast.success('Account created successfully! Welcome to HarborCFO.');
+      toast.success('Welcome aboard! Let\'s set up your business workspace. 🎉');
       // New users are directed to create or join a company
       router.push('/company');
       router.refresh();
@@ -119,9 +119,9 @@ export function SignUpForm() {
         <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow">
           <Compass className="h-6 w-6" />
         </div>
-        <CardTitle className="text-2xl font-bold tracking-tight">Create your account</CardTitle>
+        <CardTitle className="text-2xl font-bold tracking-tight">Start Your Journey 🚀</CardTitle>
         <CardDescription>
-          Get started with HarborCFO for autonomous SME financial intelligence
+          Create your free account and take control of your business finances. It only takes a minute.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -181,18 +181,18 @@ export function SignUpForm() {
 
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Create Account
+            Create Account — It&apos;s Free
           </Button>
         </form>
       </CardContent>
       <CardFooter className="flex justify-center border-t border-border/60 p-4">
         <p className="text-xs text-muted-foreground">
-          Already have an account?{' '}
+          Already a member?{' '}
           <Link
             href={rawCallbackUrl ? `/sign-in?callbackUrl=${encodeURIComponent(rawCallbackUrl)}` : '/sign-in'}
             className="font-semibold text-primary hover:underline"
           >
-            Sign in
+            Sign in here
           </Link>
         </p>
       </CardFooter>

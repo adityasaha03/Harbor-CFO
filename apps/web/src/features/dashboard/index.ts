@@ -11,3 +11,4 @@ export * from './components/dashboard-view';
 export * from './components/demo-guide';
 export * from './components/plain-language-context';
 export * from './components/plain-language-toggle';
+export * from './components/welcome-banner';
