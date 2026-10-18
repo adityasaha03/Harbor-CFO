@@ -9,4 +9,5 @@ export * from './components/excluded-offers';
 export * from './components/cannot-assess-offers';
 export * from './components/financing-disclaimer';
 export * from './components/financing-workspace';
+export * from './components/facility-summary-dialog';
 export * from './lib/anchor-financing';

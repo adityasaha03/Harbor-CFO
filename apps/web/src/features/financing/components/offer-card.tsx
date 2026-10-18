@@ -2,29 +2,34 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import {
-  AlertTriangle,
-  ChevronDown,
-  ChevronUp,
-  Layers,
-  Clock,
-  Sparkles,
-  ArrowRight,
-} from 'lucide-react';
+import { AlertTriangle, ChevronDown, ChevronUp, Layers, Clock, Sparkles, ArrowRight, FileText } from 'lucide-react';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { formatMinor, type RankedFinancingOffer } from '@harbor/contracts';
 import { ScoreBreakdown } from './score-breakdown';
 import { ScheduleTable } from './schedule-table';
+import { FacilitySummaryDialog } from './facility-summary-dialog';
 
 interface OfferCardProps {
   ranked: RankedFinancingOffer;
   rankIndex: number;
+  requiredGapMinor?: number;
+  breachDate?: string | null;
+  floorMinor?: number;
+  openingCashMinor?: number;
 }
 
-export function OfferCard({ ranked, rankIndex }: OfferCardProps) {
+export function OfferCard({
+  ranked,
+  rankIndex,
+  requiredGapMinor,
+  breachDate,
+  floorMinor,
+  openingCashMinor,
+}: OfferCardProps) {
   const [showSchedule, setShowSchedule] = useState(false);
+  const [showSummary, setShowSummary] = useState(false);
   const { offer, schedule, impact, score, scoringBreakdown, warnings } = ranked;
 
   const hasNegativeCash = impact.anyNegativeCash;
@@ -86,39 +91,22 @@ export function OfferCard({ ranked, rankIndex }: OfferCardProps) {
           </div>
         )}
 
-        {/* Financial Terms Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3.5 rounded-xl bg-muted/30 border border-border/50 text-xs">
           <div>
             <span className="text-[11px] text-muted-foreground block">Principal Amount</span>
-            <span className="text-sm font-mono font-semibold text-foreground">
-              {formatMinor(schedule.principalMinor)}
-            </span>
+            <span className="text-sm font-mono font-semibold text-foreground">{formatMinor(schedule.principalMinor)}</span>
           </div>
-
           <div>
-            <span className="text-[11px] text-muted-foreground block">
-              Upfront Fee ({offer.upfrontFeeBps} bps)
-            </span>
-            <span className="text-sm font-mono font-medium text-foreground">
-              {formatMinor(schedule.upfrontFeeMinor)}
-            </span>
+            <span className="text-[11px] text-muted-foreground block">Upfront Fee ({offer.upfrontFeeBps} bps)</span>
+            <span className="text-sm font-mono font-medium text-foreground">{formatMinor(schedule.upfrontFeeMinor)}</span>
           </div>
-
           <div>
             <span className="text-[11px] text-muted-foreground block">Net Cash Proceeds</span>
-            <span className="text-sm font-mono font-semibold text-emerald-600 dark:text-emerald-400">
-              {formatMinor(schedule.netProceedsMinor)}
-            </span>
+            <span className="text-sm font-mono font-semibold text-emerald-600 dark:text-emerald-400">{formatMinor(schedule.netProceedsMinor)}</span>
           </div>
-
-          {/* Highlighted Total Cost (NEVER APR) */}
           <div className="bg-primary/5 dark:bg-primary/10 -m-1.5 p-2 rounded-lg border border-primary/20">
-            <span className="text-[11px] font-semibold text-primary block uppercase tracking-wider">
-              Total Borrowing Cost
-            </span>
-            <span className="text-sm font-mono font-bold text-primary">
-              {formatMinor(schedule.totalCostMinor)}
-            </span>
+            <span className="text-[11px] font-semibold text-primary block uppercase tracking-wider">Total Borrowing Cost</span>
+            <span className="text-sm font-mono font-bold text-primary">{formatMinor(schedule.totalCostMinor)}</span>
           </div>
         </div>
 
@@ -171,10 +159,17 @@ export function OfferCard({ ranked, rankIndex }: OfferCardProps) {
         </div>
       </CardContent>
 
-      <CardFooter className="p-5 pt-0 flex items-center justify-between border-t border-border/40 mt-2">
-        <span className="text-[11px] text-muted-foreground">
-          Simulated terms for decision support
-        </span>
+      <CardFooter className="p-5 pt-0 flex flex-wrap items-center justify-between gap-2 border-t border-border/40 mt-2">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setShowSummary(true)}
+          className="h-8 text-xs gap-1.5 text-foreground hover:bg-primary/10 hover:text-primary border-primary/30"
+          data-testid={`view-summary-btn-${offer.code}`}
+        >
+          <FileText className="h-3.5 w-3.5 text-primary" />
+          <span>View Summary</span>
+        </Button>
 
         <Button asChild size="sm" className="h-8 text-xs gap-1.5 shadow-xs">
           <Link href={`/scenarios?preset=offer:${offer.code}&amount=${schedule.principalMinor}`}>
@@ -182,6 +177,16 @@ export function OfferCard({ ranked, rankIndex }: OfferCardProps) {
             <ArrowRight className="h-3 w-3" />
           </Link>
         </Button>
+
+        <FacilitySummaryDialog
+          open={showSummary}
+          onOpenChange={setShowSummary}
+          ranked={ranked}
+          requiredGapMinor={requiredGapMinor}
+          breachDate={breachDate}
+          floorMinor={floorMinor}
+          openingCashMinor={openingCashMinor}
+        />
       </CardFooter>
     </Card>
   );

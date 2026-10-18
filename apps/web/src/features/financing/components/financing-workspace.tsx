@@ -99,6 +99,10 @@ export function FinancingWorkspace() {
                 key={ranked.offer.code}
                 ranked={ranked}
                 rankIndex={index}
+                requiredGapMinor={requiredGapMinor}
+                breachDate={breachDate}
+                floorMinor={floorMinor}
+                openingCashMinor={openingCashMinor}
               />
             ))}
           </div>
