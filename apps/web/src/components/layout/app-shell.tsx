@@ -7,7 +7,6 @@ import { useTheme } from 'next-themes';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { SidebarNav } from './sidebar-nav';
-import { SyntheticDataBadge } from './synthetic-data-badge';
 import { UserMenu } from '@/features/auth';
 import { CompanySwitcher } from '@/features/tenants';
 
@@ -107,7 +106,6 @@ export function AppShell({ children }: AppShellProps) {
           </div>
 
           <div className="flex items-center gap-3">
-            <SyntheticDataBadge />
             <UserMenu />
           </div>
         </header>
