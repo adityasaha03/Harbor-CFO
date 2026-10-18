@@ -5,6 +5,7 @@ import { ShieldCheck, UserCheck, KeyRound, AlertCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useMe, useSession } from '@/features/auth';
+import { useActiveCompany } from '@/features/tenants';
 import { ROLE_PERMISSIONS, type Role } from '@harbor/contracts';
 
 const ROLE_META: Record<
@@ -34,6 +35,7 @@ const ROLE_META: Record<
 export function CurrentRoleCard(): React.JSX.Element {
   const { data: me, isLoading } = useMe();
   const { user, activeCompanyId } = useSession();
+  const { activeCompany } = useActiveCompany();
 
   const activeRole: Role = me?.role ?? 'employee';
   const roleInfo = ROLE_META[activeRole] ?? ROLE_META.employee;
@@ -82,10 +84,10 @@ export function CurrentRoleCard(): React.JSX.Element {
             <div className="space-y-0.5">
               <p className="text-xs font-medium text-muted-foreground">Tenant Organization</p>
               <p className="text-sm font-semibold tracking-tight text-foreground truncate max-w-[180px]">
-                Harbor Wholesale Ltd
+                {activeCompany?.name || 'Organization'}
               </p>
               <p className="font-mono text-[11px] text-muted-foreground truncate max-w-[180px]">
-                {me?.tenantId || activeCompanyId || 'Active Tenant'}
+                {me?.tenantId || activeCompanyId || activeCompany?.id || 'Active Tenant'}
               </p>
             </div>
           </div>

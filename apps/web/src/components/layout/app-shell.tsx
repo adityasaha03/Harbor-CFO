@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { SidebarNav } from './sidebar-nav';
 import { UserMenu } from '@/features/auth';
-import { CompanySwitcher } from '@/features/tenants';
+import { CompanySwitcher, useActiveCompany } from '@/features/tenants';
 
 export interface AppShellProps {
   children: React.ReactNode;
@@ -17,6 +17,7 @@ export interface AppShellProps {
 export function AppShell({ children }: AppShellProps) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const { theme, setTheme } = useTheme();
+  const { activeCompany } = useActiveCompany();
 
   return (
     <div className="flex min-h-screen w-full bg-background">
@@ -44,11 +45,13 @@ export function AppShell({ children }: AppShellProps) {
 
         <div className="border-t border-sidebar-border p-4">
           <div className="flex items-center justify-between">
-            <div className="flex flex-col">
+            <div className="flex flex-col min-w-0 pr-2">
               <span className="text-xs font-semibold text-sidebar-foreground">
-                Demo Workspace
+                Workspace
               </span>
-              <span className="text-xs text-muted-foreground">Harbor Wholesale</span>
+              <span className="text-xs text-muted-foreground truncate">
+                {activeCompany?.name || 'Organization'}
+              </span>
             </div>
             <Button
               variant="ghost"

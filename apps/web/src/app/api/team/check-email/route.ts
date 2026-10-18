@@ -94,3 +94,4 @@ async function handleCheck(emailRaw: string | undefined | null) {
 
   return NextResponse.json({ exists: false });
 }
+

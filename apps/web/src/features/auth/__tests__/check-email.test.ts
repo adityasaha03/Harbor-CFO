@@ -68,3 +68,4 @@ describe('/api/team/check-email route handler', () => {
     expect(data.role).toBe('owner');
   });
 });
+

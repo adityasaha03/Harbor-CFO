@@ -116,7 +116,7 @@ export function CreateCompanyForm() {
             <Label htmlFor="company-name">Company Legal or Trade Name</Label>
             <Input
               id="company-name"
-              placeholder="e.g. Harbor Wholesale LLC"
+              placeholder="e.g. Acme Trading LLC"
               disabled={isLoading}
               {...register('name')}
               onChange={handleNameChange}
