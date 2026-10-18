@@ -60,7 +60,7 @@ describe('F13 ProofPage Integration & Role-Conditional Rendering', () => {
 
     renderWithClient(<ProofPage />);
 
-    expect(screen.getByText('Proof & Security Audit')).toBeInTheDocument();
+    expect(screen.getByText('Proof & Audit Trail')).toBeInTheDocument();
     expect(screen.getByText('Active Security Context')).toBeInTheDocument();
     expect(screen.getByText('Live Adversarial Invariant Checks')).toBeInTheDocument();
     expect(screen.getByText('Role-Based Access Control (RBAC) Matrix')).toBeInTheDocument();

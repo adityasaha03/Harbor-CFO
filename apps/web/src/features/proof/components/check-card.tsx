@@ -94,8 +94,7 @@ export function CheckCard({ check }: CheckCardProps): React.JSX.Element {
             <p>
               <span className="font-semibold">Note for Judges:</span> You are currently signed in as{' '}
               <span className="font-semibold uppercase">Owner</span> (who has execute authority). Sign in
-              as the demo <span className="font-semibold uppercase">Employee</span> or{' '}
-              <span className="font-semibold uppercase">Reviewer</span> via the user menu to test 403 denial.
+              as the demo <span className="font-semibold uppercase">Employee</span> via the user menu to test 403 denial.
             </p>
           </div>
         )}

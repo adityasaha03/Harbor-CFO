@@ -55,7 +55,7 @@ const PERMISSION_DESCRIPTIONS: Record<Permission, { label: string; detail: strin
   },
 };
 
-const ROLES: Role[] = ['owner', 'employee', 'reviewer'];
+const ROLES: Role[] = ['owner', 'employee'];
 
 export function PermissionMatrix(): React.JSX.Element {
   const { data: me } = useMe();

@@ -55,9 +55,8 @@ describe('F13 Permission Matrix Component', () => {
     expect(screen.getByLabelText('owner has actions:approve')).toBeInTheDocument();
     expect(screen.getByLabelText('owner has audit:export')).toBeInTheDocument();
 
-    // Reviewer has cross for actions:approve and imports:write
-    expect(screen.getByLabelText('reviewer lacks actions:approve')).toBeInTheDocument();
-    expect(screen.getByLabelText('reviewer lacks imports:write')).toBeInTheDocument();
+    // Reviewer column is not present
+    expect(screen.queryByText('reviewer')).not.toBeInTheDocument();
   });
 
   it('highlights Employee column when active role is employee', () => {

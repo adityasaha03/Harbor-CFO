@@ -95,7 +95,7 @@ export function EvidenceDownload(): React.JSX.Element {
                   Exported at {lastDownloadedAt}
                 </strong>
               ) : (
-                <strong className="text-foreground">Ready for Reviewers</strong>
+                <strong className="text-foreground">Ready to Export</strong>
               )}
             </span>
           </div>
