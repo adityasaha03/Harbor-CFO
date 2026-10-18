@@ -30,13 +30,6 @@ const DEMO_ACCOUNTS = [
     badgeVariant: 'secondary' as const,
     desc: 'Uploads bank/invoice CSVs, explores what-if scenarios, chats with AI copilot.',
   },
-  {
-    role: 'Reviewer',
-    email: 'reviewer@harbor.local',
-    badge: 'Auditor',
-    badgeVariant: 'outline' as const,
-    desc: 'Read-only access for competition judges, auditor review, and compliance inspection.',
-  },
 ];
 
 const STORY_STEPS = [
@@ -147,7 +140,7 @@ export function DemoGuide() {
               </Badge>
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed">
-              Step-by-step walkthrough of the Harbor Wholesale cash crisis, closed-loop resolution, and 3 test personas.
+              Step-by-step walkthrough of the Harbor Wholesale cash crisis, closed-loop resolution, and test personas (Owner, Employee).
             </p>
           </div>
           <Button
@@ -206,7 +199,7 @@ export function DemoGuide() {
             </span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             {DEMO_ACCOUNTS.map((account) => (
               <div
                 key={account.email}

@@ -79,7 +79,7 @@ export function TeamTable({ isReadOnly = false }: TeamTableProps) {
       <CardHeader className="flex flex-row items-start justify-between space-y-0">
         <div>
           <CardTitle className="text-lg">Team Members &amp; Permissions</CardTitle>
-          <CardDescription>Manage company members, assign role tiers (Owner, Employee, Reviewer), and manage workspace access.</CardDescription>
+          <CardDescription>Manage company members, assign role tiers (Owner, Employee), and manage workspace access.</CardDescription>
         </div>
         {!isReadOnly && (
           <Button onClick={() => setAddOpen(true)} size="sm" className="gap-1">
@@ -98,7 +98,7 @@ export function TeamTable({ isReadOnly = false }: TeamTableProps) {
 
         <div className="rounded-lg border bg-muted/30 p-3 text-xs text-muted-foreground flex gap-2 items-center">
           <Users className="h-4 w-4 shrink-0 text-primary" />
-          <span>Role tiers: <strong>Owner</strong> has full administration &amp; money actions; <strong>Employee</strong> can import data and propose financing; <strong>Reviewer</strong> has read-only audit visibility.</span>
+          <span>Role tiers: <strong>Owner</strong> has full administration &amp; money actions; <strong>Employee</strong> can import data and propose financing.</span>
         </div>
 
         {isLoading ? (

@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 
 export function CompanyOnboarding() {
   const router = useRouter();
-  const { companies, setActiveCompany } = useActiveCompany();
+  const { companies, setActiveCompany, role } = useActiveCompany();
   const [selecting, setSelecting] = React.useState(false);
 
   const handleSelect = async (orgId: string) => {
@@ -69,7 +69,15 @@ export function CompanyOnboarding() {
         </Card>
       )}
 
-      <CreateCompanyForm />
+      {role !== 'employee' ? (
+        <CreateCompanyForm />
+      ) : (
+        companies.length === 0 && (
+          <div className="text-center text-sm text-muted-foreground p-4 bg-muted/40 rounded-lg">
+            You are signed in as an Employee. Please ask your company owner to add you to their company workspace.
+          </div>
+        )
+      )}
     </div>
   );
 }

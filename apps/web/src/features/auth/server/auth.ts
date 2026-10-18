@@ -5,6 +5,7 @@ import { organization, jwt } from 'better-auth/plugins';
 import { nextCookies } from 'better-auth/next-js';
 import { getServerAuthEnv } from './env';
 import { mongoClient, mongoDb } from './mongo';
+import { ObjectId } from 'mongodb';
 import { ac, roles } from './access-control';
 
 const env = getServerAuthEnv();
@@ -54,9 +55,13 @@ export const auth = betterAuth({
         before: async (session) => {
           if (!session.activeOrganizationId && !isTest) {
             try {
+              const queryUserId =
+                ObjectId.isValid(session.userId) && session.userId.length === 24
+                  ? { $in: [session.userId, new ObjectId(session.userId)] }
+                  : session.userId;
               const member = await mongoDb
                 .collection('member')
-                .findOne({ userId: session.userId }, { sort: { createdAt: 1 } });
+                .findOne({ userId: queryUserId as never }, { sort: { createdAt: 1 } });
               if (member && member.organizationId) {
                 return {
                   data: {
