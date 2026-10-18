@@ -17,6 +17,7 @@ import { StaleBanner } from './stale-banner';
 import { RepaymentWarning } from './repayment-warning';
 import { ComparisonChart } from './comparison-chart';
 import { ComparisonMetrics } from './comparison-metrics';
+import { ScenarioSummaryCard } from './scenario-summary-card';
 import { toast } from 'sonner';
 
 export function ScenarioStudio() {
@@ -219,6 +220,8 @@ export function ScenarioStudio() {
               )}
 
               <ComparisonChart points={activeScenario.points} />
+
+              <ScenarioSummaryCard scenario={activeScenario} />
 
               <ComparisonMetrics comparison={activeScenario} />
 

@@ -10,6 +10,7 @@ export { ComparisonMetrics } from './components/comparison-metrics';
 export { RepaymentWarning } from './components/repayment-warning';
 export { StaleBanner } from './components/stale-banner';
 export { PresetButtons } from './components/preset-buttons';
+export { ScenarioSummaryCard } from './components/scenario-summary-card';
 
 export { useCreateScenario } from './api/use-create-scenario';
 export { useScenarios } from './api/use-scenarios';

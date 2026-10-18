@@ -13,7 +13,6 @@ export interface DemoAccountPickerProps {
 const DEMO_PRESETS = [
   { label: 'Harbor Owner', role: 'owner', email: DEMO_EMAILS.HARBOR_OWNER },
   { label: 'Harbor Employee', role: 'employee', email: DEMO_EMAILS.HARBOR_EMPLOYEE },
-  { label: 'Harbor Reviewer', role: 'reviewer', email: DEMO_EMAILS.HARBOR_REVIEWER },
   { label: 'Pearl Owner', role: 'owner', email: DEMO_EMAILS.PEARL_OWNER },
 ] as const;
 

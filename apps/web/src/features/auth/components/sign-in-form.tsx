@@ -63,8 +63,10 @@ export function SignInForm() {
       });
 
       if (error || !data) {
-        setFormError('Invalid email or password. Please try again.');
-        toast.error('Invalid email or password. Please try again.');
+        const errorMsg =
+          'Invalid email or password. Note: If you are an employee, your company owner must add you to the team before you can sign in.';
+        setFormError(errorMsg);
+        toast.error(errorMsg);
         setIsLoading(false);
         return;
       }
@@ -73,9 +75,22 @@ export function SignInForm() {
 
       // Check whether an active company is assigned to the session
       const sessionRes = await authClient.getSession();
-      const activeOrgId = (
+      let activeOrgId = (
         sessionRes?.data?.session as { activeOrganizationId?: string | null } | undefined
       )?.activeOrganizationId;
+
+      if (!activeOrgId) {
+        try {
+          const orgListRes = await authClient.organization.list();
+          const firstOrg = orgListRes?.data?.[0];
+          if (firstOrg?.id) {
+            await authClient.organization.setActive({ organizationId: firstOrg.id });
+            activeOrgId = firstOrg.id;
+          }
+        } catch {
+          // Fall through
+        }
+      }
 
       if (activeOrgId) {
         router.push(callbackUrl);
@@ -148,6 +163,10 @@ export function SignInForm() {
             Sign In — Let&apos;s Go →
           </Button>
         </form>
+
+        <div className="rounded-lg border bg-muted/40 p-2.5 text-[11px] text-muted-foreground leading-relaxed">
+          <strong className="text-foreground">Employee sign-in:</strong> Employees can only sign in after their company owner adds them in Settings &gt; Team.
+        </div>
 
         <DemoAccountPicker onSelectEmail={(email) => setValue('email', email, { shouldValidate: true })} />
       </CardContent>

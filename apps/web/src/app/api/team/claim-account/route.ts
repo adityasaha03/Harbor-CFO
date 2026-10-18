@@ -29,7 +29,7 @@ export async function POST(req: Request) {
 
     const user = await mongoDb.collection('user').findOne({ email: cleanEmail });
     if (!user) {
-      return NextResponse.json({ message: 'User not found' }, { status: 404 });
+      return NextResponse.json({ message: 'This email has not been added to any company team yet. Please ask your company owner to add you in Settings > Team before signing up.' }, { status: 404 });
     }
 
     const userId = user.id ? String(user.id) : String(user._id);
@@ -39,7 +39,7 @@ export async function POST(req: Request) {
       userId: toIdQuery(userId),
     } as Record<string, unknown>);
     if (!member) {
-      return NextResponse.json({ message: 'User is not associated with any organization' }, { status: 403 });
+      return NextResponse.json({ message: 'This email is not associated with any company team. Please ask your company owner to add you first.' }, { status: 403 });
     }
 
     // Hash the new password and update account

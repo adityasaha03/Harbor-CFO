@@ -11,7 +11,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import type { ActionProposalDto, ExecuteActionProposalResponse } from '@harbor/contracts';
+import { formatMinor, type ActionProposalDto, type ExecuteActionProposalResponse } from '@harbor/contracts';
 import { usePermission } from '@/features/auth';
 import { useApproveProposal } from '../api/use-approve-proposal';
 import { useExecuteProposal } from '../api/use-execute-proposal';
@@ -197,6 +197,20 @@ export function ApprovalDialog({
             <ExecutionResult result={executionResult} />
           ) : (
             <>
+              {/* Executive Decision Summary */}
+              <div className="rounded-xl border border-primary/20 bg-primary/5 p-3.5 space-y-1.5 text-xs">
+                <span className="font-semibold text-primary uppercase text-[10px] tracking-wider block">
+                  Executive Decision Summary
+                </span>
+                <p className="text-muted-foreground leading-relaxed">
+                  <strong>Current State:</strong> Operating cash faces a projected liquidity shortfall.
+                  <br />
+                  <strong>The Plan:</strong> Draw down <strong className="text-foreground font-mono">{formatMinor(proposal.canonicalPayload.principalMinor)}</strong> from {proposal.canonicalPayload.offerCode.replace(/[-_]/g, ' ')}, depositing net cash of <strong className="text-emerald-600 dark:text-emerald-400 font-mono">{formatMinor(proposal.canonicalPayload.principalMinor - proposal.canonicalPayload.upfrontFeeMinor)}</strong> on {proposal.canonicalPayload.fundingOn}.
+                  <br />
+                  <strong>After Execution:</strong> The liquidity floor is protected and crisis resolved, with {proposal.canonicalPayload.schedule.length} scheduled repayment installments added to financial commitments.
+                </p>
+              </div>
+
               <PayloadDetails proposal={proposal} />
               <ForecastImpact scenarioId={proposal.scenarioId} />
             </>

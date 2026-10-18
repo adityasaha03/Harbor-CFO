@@ -42,7 +42,6 @@ export function RoleSelect({
         <SelectContent>
           <SelectItem value="owner">Owner</SelectItem>
           <SelectItem value="employee">Employee</SelectItem>
-          <SelectItem value="reviewer">Reviewer</SelectItem>
         </SelectContent>
       </Select>
       {isLastOwner && (

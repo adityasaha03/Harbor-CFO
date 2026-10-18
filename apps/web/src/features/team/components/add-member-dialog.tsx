@@ -27,7 +27,7 @@ import {
 const addMemberSchema = z.object({
   name: z.string().min(1, 'Name is required').max(100),
   email: z.string().min(1, 'Email is required').email('Invalid email address'),
-  role: z.enum(['owner', 'employee', 'reviewer']),
+  role: z.enum(['owner', 'employee']),
   password: z.string().min(8, 'Password must be at least 8 chars').optional().or(z.literal('')),
 });
 
@@ -121,7 +121,7 @@ export function AddMemberDialog({
             <Label htmlFor="add-member-role">Designation / Role</Label>
             <Select
               value={selectedRole}
-              onValueChange={(val) => setValue('role', val as Role)}
+              onValueChange={(val) => setValue('role', val as 'owner' | 'employee')}
               disabled={isAdding}
             >
               <SelectTrigger id="add-member-role">
@@ -129,7 +129,6 @@ export function AddMemberDialog({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="employee">Employee (Operational & Data Import)</SelectItem>
-                <SelectItem value="reviewer">Reviewer (Read-only Financials)</SelectItem>
                 <SelectItem value="owner">Owner (Full Admin Authority)</SelectItem>
               </SelectContent>
             </Select>

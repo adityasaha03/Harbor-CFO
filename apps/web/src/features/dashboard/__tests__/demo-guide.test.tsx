@@ -23,10 +23,10 @@ describe('DemoGuide', () => {
     expect(screen.getByText('4. Approve')).toBeInTheDocument();
     expect(screen.getByText('5. Verify')).toBeInTheDocument();
 
-    // Renders the 3 demo accounts
+    // Renders the demo accounts
     expect(screen.getByText('owner@harbor.local')).toBeInTheDocument();
     expect(screen.getByText('employee@harbor.local')).toBeInTheDocument();
-    expect(screen.getByText('reviewer@harbor.local')).toBeInTheDocument();
+    expect(screen.queryByText('reviewer@harbor.local')).not.toBeInTheDocument();
   });
 
   it('can be dismissed and restored', () => {
