@@ -89,7 +89,7 @@ export class GeminiProvider implements LlmProvider {
     } else {
       this.apiKeys = getGeminiApiKeys();
     }
-    this.model = options?.model ?? env.LLM_MODEL ?? 'gemini-2.5-flash';
+    this.model = options?.model ?? env.LLM_MODEL ?? 'gemini-3.5-flash-lite';
     this.fetchFn = options?.fetchFn ?? fetch;
     this.cooldownMs = options?.cooldownMs ?? 60_000;
   }
@@ -237,18 +237,31 @@ export class GeminiProvider implements LlmProvider {
       throw new Error('Gemini API key is not configured');
     }
 
-    const maxAttempts = Math.max(this.apiKeys.length, 1);
-    const attemptedKeys = new Set<string>();
+    const fallbackModels = [
+      this.model,
+      'gemini-3.5-flash-lite',
+      'gemini-3.5-flash',
+      'gemini-3.6-flash',
+    ].filter((v, i, a) => Boolean(v) && a.indexOf(v) === i);
+    let currentModelIndex = 0;
+
+    const maxAttempts = Math.max(this.apiKeys.length * 2, fallbackModels.length, 3);
+    const attemptedKeyModelPairs = new Set<string>();
     let lastError: Error | null = null;
 
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
       const apiKey = this.getActiveKey();
-      if (!apiKey || attemptedKeys.has(apiKey)) {
+      if (!apiKey) {
         break;
       }
-      attemptedKeys.add(apiKey);
+      const currentModel = fallbackModels[currentModelIndex] || 'gemini-3.5-flash-lite';
+      const keyModelId = `${apiKey}:${currentModel}`;
+      if (attemptedKeyModelPairs.has(keyModelId) && this.apiKeys.length > 1) {
+        break;
+      }
+      attemptedKeyModelPairs.add(keyModelId);
 
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(this.model)}:generateContent?key=${encodeURIComponent(apiKey)}`;
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(currentModel)}:generateContent?key=${encodeURIComponent(apiKey)}`;
 
       const body: GeminiRequestBody = {
         contents: this.transformMessages(options.messages),
@@ -277,12 +290,14 @@ export class GeminiProvider implements LlmProvider {
         });
       } catch (networkErr) {
         lastError = networkErr instanceof Error ? networkErr : new Error(String(networkErr));
-        if (this.apiKeys.length > 1 && attempt < maxAttempts - 1) {
+        if (attempt < maxAttempts - 1) {
           logger.warn(
             { keyPrefix: apiKey.slice(0, 8), err: lastError.message },
-            'Gemini API request timed out or network error. Rotating to next key in pool.',
+            'Gemini API request timed out or network error. Retrying with next key or model.',
           );
-          this.markKeyExhausted(apiKey);
+          if (this.apiKeys.length > 1) {
+            this.markKeyExhausted(apiKey);
+          }
           continue;
         }
         throw lastError;
@@ -291,7 +306,11 @@ export class GeminiProvider implements LlmProvider {
       if (!response.ok) {
         const errText = await response.text().catch(() => '');
         let parsedMessage = `Gemini API request failed with status ${response.status}`;
-        let isRotatable = response.status === 429 || response.status === 401 || response.status === 403;
+        let isRotatable =
+          response.status === 429 ||
+          response.status === 401 ||
+          response.status === 403 ||
+          response.status === 503;
 
         try {
           const parsed = JSON.parse(errText) as GeminiResponseBody;
@@ -301,11 +320,15 @@ export class GeminiProvider implements LlmProvider {
           const lower = parsedMessage.toLowerCase();
           if (
             parsed.error?.code === 429 ||
+            parsed.error?.code === 503 ||
             parsed.error?.status === 'RESOURCE_EXHAUSTED' ||
             parsed.error?.status === 'PERMISSION_DENIED' ||
+            parsed.error?.status === 'UNAVAILABLE' ||
             lower.includes('quota') ||
             lower.includes('rate limit') ||
             lower.includes('resource_exhausted') ||
+            lower.includes('high demand') ||
+            lower.includes('spikes in demand') ||
             lower.includes('api key not valid') ||
             lower.includes('api_key_invalid') ||
             lower.includes('permission_denied')
@@ -316,18 +339,41 @@ export class GeminiProvider implements LlmProvider {
           // use default message
         }
 
-        if (isRotatable && this.apiKeys.length > 1 && attempt < maxAttempts - 1) {
+        const lowerMsg = parsedMessage.toLowerCase();
+        const isHighDemandOrNotFound =
+          response.status === 503 ||
+          response.status === 404 ||
+          lowerMsg.includes('high demand') ||
+          lowerMsg.includes('spikes in demand') ||
+          lowerMsg.includes('not found') ||
+          lowerMsg.includes('no longer available') ||
+          lowerMsg.includes('unavailable');
+
+        if (isHighDemandOrNotFound && currentModelIndex < fallbackModels.length - 1) {
+          const prevModel = currentModel;
+          currentModelIndex++;
+          const nextModel = fallbackModels[currentModelIndex];
+          logger.warn(
+            { fromModel: prevModel, toModel: nextModel, reason: parsedMessage },
+            'Gemini model high demand or unavailable. Automatically falling back to resilient model.',
+          );
+          lastError = new Error(parsedMessage);
+          continue;
+        }
+
+        if (isRotatable && attempt < maxAttempts - 1) {
           const keyPrefix = apiKey.length > 8 ? `${apiKey.slice(0, 4)}...${apiKey.slice(-4)}` : 'key';
           logger.warn(
             {
               keyPrefix,
               attempt: attempt + 1,
-              remainingKeys: maxAttempts - attemptedKeys.size,
               reason: parsedMessage,
             },
-            'Gemini API key returned an error (quota, invalid key, or permission denied). Rotating to next API key in pool.',
+            'Gemini API key returned an error (quota, invalid key, or high demand). Rotating to next API key.',
           );
-          this.markKeyExhausted(apiKey);
+          if (this.apiKeys.length > 1) {
+            this.markKeyExhausted(apiKey);
+          }
           lastError = new Error(parsedMessage);
           continue;
         }
@@ -342,14 +388,30 @@ export class GeminiProvider implements LlmProvider {
         const lowerMsg = msg.toLowerCase();
         const isRotatable =
           data.error.code === 429 ||
+          data.error.code === 503 ||
           data.error.status === 'RESOURCE_EXHAUSTED' ||
           data.error.status === 'PERMISSION_DENIED' ||
+          data.error.status === 'UNAVAILABLE' ||
           lowerMsg.includes('quota') ||
+          lowerMsg.includes('high demand') ||
           lowerMsg.includes('api key not valid') ||
           lowerMsg.includes('permission_denied');
 
-        if (isRotatable && this.apiKeys.length > 1 && attempt < maxAttempts - 1) {
-          this.markKeyExhausted(apiKey);
+        const isHighDemandOrNotFound =
+          data.error.code === 503 ||
+          lowerMsg.includes('high demand') ||
+          lowerMsg.includes('spikes in demand');
+
+        if (isHighDemandOrNotFound && currentModelIndex < fallbackModels.length - 1) {
+          currentModelIndex++;
+          lastError = new Error(`Gemini API error: ${msg}`);
+          continue;
+        }
+
+        if (isRotatable && attempt < maxAttempts - 1) {
+          if (this.apiKeys.length > 1) {
+            this.markKeyExhausted(apiKey);
+          }
           lastError = new Error(`Gemini API error: ${msg}`);
           continue;
         }
