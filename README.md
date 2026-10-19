@@ -21,7 +21,7 @@
 ## 2. Judge & Evaluator Credentials
 
 > [!IMPORTANT]
-> **No Pre-Loaded Demo Data**: When judges log into either account below, the workspace opens in a **clean-slate state with zero dummy or pre-loaded records**. Judges first import the sample CSV files provided in Section 3 to evaluate the live platform. All pages update **instantly upon import without requiring a browser refresh**.
+> **No Pre-Loaded Demo Data**: When judges log into either account below, the workspace opens in a **clean-slate state with zero dummy or pre-loaded records**. Judges first import the sample CSV files provided in Section 3 to evaluate the live platform. All pages update **instantly upon import**.
 
 ### Demo Accounts
 | Role | Name | Email | Password | Authority |
