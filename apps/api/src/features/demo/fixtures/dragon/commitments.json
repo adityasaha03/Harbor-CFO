@@ -1,0 +1,34 @@
+[
+  {
+    "label": "Warehouse rent",
+    "direction": "outflow",
+    "category": "rent",
+    "amountMinor": 2800000,
+    "frequency": "monthly",
+    "anchorOn": "2026-10-28"
+  },
+  {
+    "label": "Staff payroll",
+    "direction": "outflow",
+    "category": "payroll",
+    "amountMinor": 9500000,
+    "frequency": "monthly",
+    "anchorOn": "2026-11-05"
+  },
+  {
+    "label": "Insurance and logistics overhead",
+    "direction": "outflow",
+    "category": "overhead",
+    "amountMinor": 1500000,
+    "frequency": "monthly",
+    "anchorOn": "2026-11-10"
+  },
+  {
+    "label": "Recurring retailer payments",
+    "direction": "inflow",
+    "category": "customer_receipt",
+    "amountMinor": 3500000,
+    "frequency": "weekly",
+    "anchorOn": "2026-11-03"
+  }
+]

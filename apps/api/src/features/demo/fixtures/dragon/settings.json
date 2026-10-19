@@ -1,0 +1,17 @@
+{
+  "reportingCurrency": "CNY",
+  "minimumCashMinor": 5000000,
+  "businessTimezone": "Asia/Shanghai",
+  "forecastAsOfDate": "2026-10-20",
+  "overdueAlertDays": 7,
+  "concentrationThresholdPct": 40,
+  "staleDataDays": 14,
+  "isDemo": true,
+  "profile": {
+    "yearsInOperation": 8,
+    "employeeCount": 32,
+    "industry": "electronics_distribution",
+    "monthlyRevenueMinor": 25000000,
+    "monthlyCardSalesMinor": 8000000
+  }
+}

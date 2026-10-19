@@ -86,6 +86,15 @@ export async function seedAuth(options?: { password?: string }): Promise<SeedAut
     { email: DEMO_EMAILS.HARBOR_EMPLOYEE, name: 'Harbor Employee' },
     { email: DEMO_EMAILS.HARBOR_REVIEWER, name: 'Harbor Reviewer' },
     { email: DEMO_EMAILS.PEARL_OWNER, name: 'Pearl Owner' },
+    { email: DEMO_EMAILS.ROHAN_OWNER, name: 'Rohan (Owner)' },
+    { email: DEMO_EMAILS.DRAGON_EMPLOYEE_1, name: 'Alice Chen' },
+    { email: DEMO_EMAILS.DRAGON_EMPLOYEE_2, name: 'Bob Li' },
+    { email: DEMO_EMAILS.DRAGON_EMPLOYEE_3, name: 'Carol Wu' },
+    { email: DEMO_EMAILS.DRAGON_REVIEWER, name: 'David Zhao' },
+    { email: DEMO_EMAILS.JADE_EMPLOYEE_1, name: 'Emma Huang' },
+    { email: DEMO_EMAILS.JADE_EMPLOYEE_2, name: 'Frank Liu' },
+    { email: DEMO_EMAILS.JADE_EMPLOYEE_3, name: 'Grace Wang' },
+    { email: DEMO_EMAILS.JADE_REVIEWER, name: 'Henry Zhang' },
   ];
 
   // 1. Seed or retrieve users
@@ -121,15 +130,32 @@ export async function seedAuth(options?: { password?: string }): Promise<SeedAut
   const pearlOwner = users.find((u) => u.email === DEMO_EMAILS.PEARL_OWNER);
   const harborEmployee = users.find((u) => u.email === DEMO_EMAILS.HARBOR_EMPLOYEE);
   const harborReviewer = users.find((u) => u.email === DEMO_EMAILS.HARBOR_REVIEWER);
+  const rohanOwner = users.find((u) => u.email === DEMO_EMAILS.ROHAN_OWNER);
+  const dragonEmp1 = users.find((u) => u.email === DEMO_EMAILS.DRAGON_EMPLOYEE_1);
+  const dragonEmp2 = users.find((u) => u.email === DEMO_EMAILS.DRAGON_EMPLOYEE_2);
+  const dragonEmp3 = users.find((u) => u.email === DEMO_EMAILS.DRAGON_EMPLOYEE_3);
+  const dragonReviewer = users.find((u) => u.email === DEMO_EMAILS.DRAGON_REVIEWER);
+  const jadeEmp1 = users.find((u) => u.email === DEMO_EMAILS.JADE_EMPLOYEE_1);
+  const jadeEmp2 = users.find((u) => u.email === DEMO_EMAILS.JADE_EMPLOYEE_2);
+  const jadeEmp3 = users.find((u) => u.email === DEMO_EMAILS.JADE_EMPLOYEE_3);
+  const jadeReviewer = users.find((u) => u.email === DEMO_EMAILS.JADE_REVIEWER);
 
   if (!harborOwner || !pearlOwner || !harborEmployee || !harborReviewer) {
     throw new Error('Failed to resolve all demo users during seeding');
+  }
+  if (!rohanOwner || !dragonEmp1 || !dragonEmp2 || !dragonEmp3 || !dragonReviewer) {
+    throw new Error('Failed to resolve Dragon Electronics users during seeding');
+  }
+  if (!jadeEmp1 || !jadeEmp2 || !jadeEmp3 || !jadeReviewer) {
+    throw new Error('Failed to resolve Jade Textiles users during seeding');
   }
 
   // 2. Seed or retrieve organizations
   const orgDefs = [
     { name: 'Harbor Wholesale', slug: DEMO_TENANTS.HARBOR_WHOLESALE, ownerId: harborOwner.id },
     { name: 'Pearl Bakery', slug: DEMO_TENANTS.PEARL_BAKERY, ownerId: pearlOwner.id },
+    { name: 'Dragon Electronics', slug: DEMO_TENANTS.DRAGON_ELECTRONICS, ownerId: rohanOwner.id },
+    { name: 'Jade Textiles', slug: DEMO_TENANTS.JADE_TEXTILES, ownerId: rohanOwner.id },
   ];
 
   for (const def of orgDefs) {
@@ -166,18 +192,32 @@ export async function seedAuth(options?: { password?: string }): Promise<SeedAut
 
   const harborOrg = organizations.find((o) => o.slug === DEMO_TENANTS.HARBOR_WHOLESALE);
   const pearlOrg = organizations.find((o) => o.slug === DEMO_TENANTS.PEARL_BAKERY);
+  const dragonOrg = organizations.find((o) => o.slug === DEMO_TENANTS.DRAGON_ELECTRONICS);
+  const jadeOrg = organizations.find((o) => o.slug === DEMO_TENANTS.JADE_TEXTILES);
 
-  if (!harborOrg || !pearlOrg) {
+  if (!harborOrg || !pearlOrg || !dragonOrg || !jadeOrg) {
     throw new Error('Failed to resolve all demo organizations during seeding');
   }
 
-  // 3. Seed or verify members of Harbor Wholesale
+  // 3. Seed or verify members
   type OrgRole = 'owner' | 'employee' | 'reviewer';
   const targetMembers: { userId: string; orgId: string; role: OrgRole }[] = [
+    // Harbor Wholesale
     { userId: harborOwner.id, orgId: harborOrg.id, role: 'owner' },
     { userId: harborEmployee.id, orgId: harborOrg.id, role: 'employee' },
     { userId: harborReviewer.id, orgId: harborOrg.id, role: 'reviewer' },
+    // Pearl Bakery
     { userId: pearlOwner.id, orgId: pearlOrg.id, role: 'owner' },
+    // Dragon Electronics — rohanOwner is already owner via createOrganization
+    { userId: dragonEmp1.id, orgId: dragonOrg.id, role: 'employee' },
+    { userId: dragonEmp2.id, orgId: dragonOrg.id, role: 'employee' },
+    { userId: dragonEmp3.id, orgId: dragonOrg.id, role: 'employee' },
+    { userId: dragonReviewer.id, orgId: dragonOrg.id, role: 'reviewer' },
+    // Jade Textiles — rohanOwner is already owner via createOrganization
+    { userId: jadeEmp1.id, orgId: jadeOrg.id, role: 'employee' },
+    { userId: jadeEmp2.id, orgId: jadeOrg.id, role: 'employee' },
+    { userId: jadeEmp3.id, orgId: jadeOrg.id, role: 'employee' },
+    { userId: jadeReviewer.id, orgId: jadeOrg.id, role: 'reviewer' },
   ];
 
   for (const target of targetMembers) {

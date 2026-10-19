@@ -1,0 +1,17 @@
+externalId,date,accountId,amount,currency,category,description
+JDE-TX-202607-01,2026-07-05,OPERATING,38000.00,CNY,customer_receipt,Fashion House bulk fabric order
+JDE-TX-202607-02,2026-07-15,OPERATING,-22000.00,CNY,supplier_payment,Cotton supplier SilkRoad Mills
+JDE-TX-202607-03,2026-07-25,OPERATING,-18000.00,CNY,rent,July factory lease
+JDE-TX-202607-04,2026-07-31,OPERATING,-60000.00,CNY,payroll,July production payroll
+JDE-TX-202608-01,2026-08-08,OPERATING,45000.00,CNY,customer_receipt,Boutique Chain seasonal order
+JDE-TX-202608-02,2026-08-14,OPERATING,28000.00,CNY,customer_receipt,Fashion House follow-up order
+JDE-TX-202608-03,2026-08-20,OPERATING,-30000.00,CNY,supplier_payment,Dye chemical supplier
+JDE-TX-202608-04,2026-08-25,OPERATING,-18000.00,CNY,rent,August factory lease
+JDE-TX-202608-05,2026-08-31,OPERATING,-60000.00,CNY,payroll,August production payroll
+JDE-TX-202609-01,2026-09-05,OPERATING,52000.00,CNY,customer_receipt,Fashion House Q3 order
+JDE-TX-202609-02,2026-09-12,OPERATING,20000.00,CNY,customer_receipt,Online marketplace sales
+JDE-TX-202609-03,2026-09-18,OPERATING,-25000.00,CNY,supplier_payment,SilkRoad Mills cotton delivery
+JDE-TX-202609-04,2026-09-25,OPERATING,-18000.00,CNY,rent,September factory lease
+JDE-TX-202609-05,2026-09-30,OPERATING,-60000.00,CNY,payroll,September production payroll
+JDE-TX-202610-01,2026-10-06,OPERATING,32000.00,CNY,customer_receipt,Boutique Chain partial payment
+JDE-TX-202610-02,2026-10-14,OPERATING,-9000.00,CNY,overhead,Fabric dyeing chemicals and equipment

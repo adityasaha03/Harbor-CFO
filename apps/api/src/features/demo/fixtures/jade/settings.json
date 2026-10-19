@@ -1,0 +1,16 @@
+{
+  "reportingCurrency": "CNY",
+  "minimumCashMinor": 2000000,
+  "businessTimezone": "Asia/Shanghai",
+  "forecastAsOfDate": "2026-10-20",
+  "overdueAlertDays": 7,
+  "concentrationThresholdPct": 40,
+  "staleDataDays": 14,
+  "isDemo": true,
+  "profile": {
+    "yearsInOperation": 4,
+    "employeeCount": 18,
+    "industry": "textiles_manufacturing",
+    "monthlyRevenueMinor": 12000000
+  }
+}
