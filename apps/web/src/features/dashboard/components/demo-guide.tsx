@@ -52,16 +52,16 @@ export function DemoGuide() {
   const { data: activeOrg } = authClient.useActiveOrganization?.() ?? {};
   const companyName = activeOrg?.name || 'organization';
   const [isDismissed, setIsDismissed] = React.useState(true);
-
   React.useEffect(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      setIsDismissed(stored === 'true');
+      if (stored !== null) {
+        setIsDismissed(stored === 'true');
+      }
     } catch {
-      setIsDismissed(false);
+      // Ignored
     }
   }, []);
-
   const handleDismiss = () => {
     setIsDismissed(true);
     try {

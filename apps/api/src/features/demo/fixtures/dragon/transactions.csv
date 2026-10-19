@@ -1,0 +1,21 @@
+externalId,date,accountId,amount,currency,category,description
+DRG-TX-202606-01,2026-06-10,OPERATING,55000.00,CNY,customer_receipt,Retailer Alpha bulk order payment
+DRG-TX-202606-02,2026-06-18,OPERATING,-38000.00,CNY,supplier_payment,Component supplier Shenzhen Parts Co
+DRG-TX-202606-03,2026-06-25,OPERATING,-28000.00,CNY,rent,June warehouse rent
+DRG-TX-202606-04,2026-06-30,OPERATING,-95000.00,CNY,payroll,June staff payroll
+DRG-TX-202607-01,2026-07-08,OPERATING,72000.00,CNY,customer_receipt,Retailer Beta quarterly settlement
+DRG-TX-202607-02,2026-07-15,OPERATING,48000.00,CNY,customer_receipt,Retailer Alpha follow-up order
+DRG-TX-202607-03,2026-07-22,OPERATING,-62000.00,CNY,supplier_payment,IC chip supplier TechSource Ltd
+DRG-TX-202607-04,2026-07-28,OPERATING,-28000.00,CNY,rent,July warehouse rent
+DRG-TX-202607-05,2026-07-31,OPERATING,-95000.00,CNY,payroll,July staff payroll
+DRG-TX-202608-01,2026-08-05,OPERATING,65000.00,CNY,customer_receipt,Retailer Alpha monthly order
+DRG-TX-202608-02,2026-08-12,OPERATING,-42000.00,CNY,supplier_payment,PCB assembly vendor
+DRG-TX-202608-03,2026-08-25,OPERATING,-28000.00,CNY,rent,August warehouse rent
+DRG-TX-202608-04,2026-08-31,OPERATING,-95000.00,CNY,payroll,August staff payroll
+DRG-TX-202609-01,2026-09-03,OPERATING,80000.00,CNY,customer_receipt,Retailer Beta Q3 settlement
+DRG-TX-202609-02,2026-09-10,OPERATING,35000.00,CNY,customer_receipt,Retailer Gamma new account
+DRG-TX-202609-03,2026-09-20,OPERATING,-55000.00,CNY,supplier_payment,Shenzhen Parts Co bulk order
+DRG-TX-202609-04,2026-09-25,OPERATING,-28000.00,CNY,rent,September warehouse rent
+DRG-TX-202609-05,2026-09-30,OPERATING,-95000.00,CNY,payroll,September staff payroll
+DRG-TX-202610-01,2026-10-08,OPERATING,42000.00,CNY,customer_receipt,Retailer Alpha partial payment
+DRG-TX-202610-02,2026-10-12,OPERATING,-15000.00,CNY,overhead,Equipment maintenance and insurance

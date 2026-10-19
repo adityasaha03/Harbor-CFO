@@ -117,7 +117,13 @@ export const demoService = {
   async seedTenant(slug: string): Promise<DemoResetResponse> {
     const { tenantId, ownerUserId } = await this.resolveOrgAndOwner(slug);
     const isHarbor = slug === DEMO_TENANTS.HARBOR_WHOLESALE;
-    const fixtureSubDir = isHarbor ? 'harbor' : 'pearl';
+    const fixtureSubDirMap: Record<string, string> = {
+      [DEMO_TENANTS.HARBOR_WHOLESALE]: 'harbor',
+      [DEMO_TENANTS.PEARL_BAKERY]: 'pearl',
+      [DEMO_TENANTS.DRAGON_ELECTRONICS]: 'dragon',
+      [DEMO_TENANTS.JADE_TEXTILES]: 'jade',
+    };
+    const fixtureSubDir = fixtureSubDirMap[slug] ?? slug;
 
     // 1. Clean domain records for this tenant
     await this.cleanTenantDomainData(tenantId);
@@ -141,7 +147,13 @@ export const demoService = {
     );
 
     // 4. Operating Account
-    const openingBalanceMinor = isHarbor ? 8_000_000 : 2_000_000;
+    const openingBalanceMap: Record<string, number> = {
+      [DEMO_TENANTS.HARBOR_WHOLESALE]: 8_000_000,
+      [DEMO_TENANTS.PEARL_BAKERY]: 2_000_000,
+      [DEMO_TENANTS.DRAGON_ELECTRONICS]: 15_000_000,
+      [DEMO_TENANTS.JADE_TEXTILES]: 5_000_000,
+    };
+    const openingBalanceMinor = openingBalanceMap[slug] ?? 5_000_000;
     await AccountModel.findOneAndUpdate(
       { tenantId, code: 'OPERATING' },
       {
@@ -166,30 +178,32 @@ export const demoService = {
     }
 
     // 6. Pre-seed Named Counterparties
-    if (isHarbor) {
-      await CounterpartyModel.create([
-        {
-          tenantId,
-          externalId: 'CUSTOMER-A',
-          type: 'customer',
-          name: 'Customer A Wholesale Corp',
-          maskedName: 'Customer A',
-        },
-        {
-          tenantId,
-          externalId: 'CUSTOMER-B',
-          type: 'customer',
-          name: 'Customer B Retailers',
-          maskedName: 'Customer B',
-        },
-        {
-          tenantId,
-          externalId: 'VENDOR-X',
-          type: 'vendor',
-          name: 'Vendor X Logistics Ltd',
-          maskedName: 'Vendor X',
-        },
-      ]);
+    const counterpartiesBySlug: Record<string, { externalId: string; type: string; name: string; maskedName: string }[]> = {
+      [DEMO_TENANTS.HARBOR_WHOLESALE]: [
+        { externalId: 'CUSTOMER-A', type: 'customer', name: 'Customer A Wholesale Corp', maskedName: 'Customer A' },
+        { externalId: 'CUSTOMER-B', type: 'customer', name: 'Customer B Retailers', maskedName: 'Customer B' },
+        { externalId: 'VENDOR-X', type: 'vendor', name: 'Vendor X Logistics Ltd', maskedName: 'Vendor X' },
+      ],
+      [DEMO_TENANTS.DRAGON_ELECTRONICS]: [
+        { externalId: 'RETAILER-ALPHA', type: 'customer', name: 'Alpha Electronics Retail', maskedName: 'Retailer Alpha' },
+        { externalId: 'RETAILER-BETA', type: 'customer', name: 'Beta Tech Distributors', maskedName: 'Retailer Beta' },
+        { externalId: 'RETAILER-GAMMA', type: 'customer', name: 'Gamma Smart Devices', maskedName: 'Retailer Gamma' },
+        { externalId: 'SHENZHEN-PARTS', type: 'vendor', name: 'Shenzhen Parts Co Ltd', maskedName: 'Shenzhen Parts' },
+        { externalId: 'TECHSOURCE', type: 'vendor', name: 'TechSource IC Ltd', maskedName: 'TechSource' },
+      ],
+      [DEMO_TENANTS.JADE_TEXTILES]: [
+        { externalId: 'FASHION-HOUSE', type: 'customer', name: 'Fashion House International', maskedName: 'Fashion House' },
+        { externalId: 'BOUTIQUE-CHAIN', type: 'customer', name: 'Boutique Chain Group', maskedName: 'Boutique Chain' },
+        { externalId: 'MARKETPLACE-CO', type: 'customer', name: 'Marketplace Commerce Ltd', maskedName: 'Marketplace Co' },
+        { externalId: 'SILKROAD-MILLS', type: 'vendor', name: 'SilkRoad Mills Cotton Supplier', maskedName: 'SilkRoad Mills' },
+        { externalId: 'DYE-CHEMICALS', type: 'vendor', name: 'Premium Dye Chemicals Co', maskedName: 'Dye Chemicals' },
+      ],
+    };
+    const counterparties = counterpartiesBySlug[slug];
+    if (counterparties && counterparties.length > 0) {
+      await CounterpartyModel.create(
+        counterparties.map((cp) => ({ tenantId, ...cp }))
+      );
     }
 
     // 7. Import CSVs through real import pipeline acting as Owner
