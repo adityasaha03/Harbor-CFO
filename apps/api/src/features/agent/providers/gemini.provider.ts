@@ -291,7 +291,11 @@ export class GeminiProvider implements LlmProvider {
       if (!response.ok) {
         const errText = await response.text().catch(() => '');
         let parsedMessage = `Gemini API request failed with status ${response.status}`;
-        let isRotatable = response.status === 429 || response.status === 401 || response.status === 403;
+        let isRotatable =
+          response.status === 429 ||
+          response.status === 401 ||
+          response.status === 403 ||
+          response.status === 503;
 
         try {
           const parsed = JSON.parse(errText) as GeminiResponseBody;
@@ -301,11 +305,15 @@ export class GeminiProvider implements LlmProvider {
           const lower = parsedMessage.toLowerCase();
           if (
             parsed.error?.code === 429 ||
+            parsed.error?.code === 503 ||
             parsed.error?.status === 'RESOURCE_EXHAUSTED' ||
             parsed.error?.status === 'PERMISSION_DENIED' ||
+            parsed.error?.status === 'UNAVAILABLE' ||
             lower.includes('quota') ||
             lower.includes('rate limit') ||
             lower.includes('resource_exhausted') ||
+            lower.includes('high demand') ||
+            lower.includes('spikes in demand') ||
             lower.includes('api key not valid') ||
             lower.includes('api_key_invalid') ||
             lower.includes('permission_denied')
@@ -325,7 +333,7 @@ export class GeminiProvider implements LlmProvider {
               remainingKeys: maxAttempts - attemptedKeys.size,
               reason: parsedMessage,
             },
-            'Gemini API key returned an error (quota, invalid key, or permission denied). Rotating to next API key in pool.',
+            'Gemini API key returned an error (quota, invalid key, or high demand). Rotating to next API key in pool.',
           );
           this.markKeyExhausted(apiKey);
           lastError = new Error(parsedMessage);
@@ -342,9 +350,12 @@ export class GeminiProvider implements LlmProvider {
         const lowerMsg = msg.toLowerCase();
         const isRotatable =
           data.error.code === 429 ||
+          data.error.code === 503 ||
           data.error.status === 'RESOURCE_EXHAUSTED' ||
           data.error.status === 'PERMISSION_DENIED' ||
+          data.error.status === 'UNAVAILABLE' ||
           lowerMsg.includes('quota') ||
+          lowerMsg.includes('high demand') ||
           lowerMsg.includes('api key not valid') ||
           lowerMsg.includes('permission_denied');
 
