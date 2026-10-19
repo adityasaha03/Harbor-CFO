@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { LogOut, Loader2 } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
 import { authClient } from '../lib/auth-client';
 import { clearApiToken } from '../lib/api-token';
 import { setActiveTenantId } from '@/lib/api/client';
@@ -25,6 +26,7 @@ export function SignOutButton({
   ...props
 }: SignOutButtonProps) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = React.useState(false);
 
   const handleSignOut = async (e?: React.SyntheticEvent | Event) => {
@@ -46,6 +48,7 @@ export function SignOutButton({
     } finally {
       clearApiToken();
       setActiveTenantId(null);
+      queryClient.clear();
 
       // Explicitly expire session cookies in browser
       if (typeof document !== 'undefined') {

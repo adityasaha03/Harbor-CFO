@@ -8,6 +8,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Compass, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { authClient } from '../lib/auth-client';
+import { clearApiToken } from '../lib/api-token';
+import { setActiveTenantId } from '@/lib/api/client';
 import { DemoAccountPicker } from './demo-account-picker';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -101,8 +103,12 @@ export function SignInForm() {
       }
 
       if (activeOrgId) {
+        setActiveTenantId(activeOrgId);
+        clearApiToken();
         router.push(callbackUrl);
       } else {
+        setActiveTenantId(null);
+        clearApiToken();
         router.push('/company');
       }
       router.refresh();

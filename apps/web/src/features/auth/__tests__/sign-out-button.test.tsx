@@ -1,6 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import React from 'react';
 import { SignOutButton } from '../components/sign-out-button';
 import { authClient } from '../lib/auth-client';
 
@@ -21,15 +23,22 @@ vi.mock('../lib/auth-client', () => ({
 }));
 
 describe('SignOutButton', () => {
+  let queryClient: QueryClient;
+
   beforeEach(() => {
     vi.clearAllMocks();
+    queryClient = new QueryClient();
   });
 
   it('renders sign out button and triggers signOut on click', async () => {
     const user = userEvent.setup();
     vi.mocked(authClient.signOut).mockResolvedValueOnce({} as never);
 
-    render(<SignOutButton />);
+    render(
+      <QueryClientProvider client={queryClient}>
+        <SignOutButton />
+      </QueryClientProvider>
+    );
 
     const button = screen.getByRole('button', { name: /sign out/i });
     expect(button).toBeInTheDocument();
