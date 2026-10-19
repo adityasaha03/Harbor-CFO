@@ -4,11 +4,14 @@ import * as React from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { subscribeToEventStream } from '@/lib/api/sse';
+import { getActiveTenantId } from '@/lib/api/client';
+import { authClient } from '@/features/auth';
 import { getQueryKeysForEvent } from '../lib/invalidation-map';
 import type { DomainEvent } from '@harbor/contracts';
 
 export interface UseEventStreamOptions {
   enabled?: boolean;
+  tenantId?: string;
 }
 
 /**
@@ -18,6 +21,8 @@ export interface UseEventStreamOptions {
 export function useEventStream(options: UseEventStreamOptions = {}): void {
   const queryClient = useQueryClient();
   const enabled = options.enabled ?? true;
+  const { data: activeOrg } = authClient.useActiveOrganization?.() ?? {};
+  const activeTenantId = options.tenantId || activeOrg?.id || getActiveTenantId();
 
   React.useEffect(() => {
     if (!enabled) return;
@@ -40,6 +45,7 @@ export function useEventStream(options: UseEventStreamOptions = {}): void {
     };
 
     const unsubscribe = subscribeToEventStream({
+      tenantId: activeTenantId || undefined,
       onEvent: handleEvent,
       onError: () => {
         // Handled silently by automatic reconnection backoff
@@ -49,5 +55,5 @@ export function useEventStream(options: UseEventStreamOptions = {}): void {
     return () => {
       unsubscribe();
     };
-  }, [queryClient, enabled]);
+  }, [queryClient, enabled, activeTenantId]);
 }

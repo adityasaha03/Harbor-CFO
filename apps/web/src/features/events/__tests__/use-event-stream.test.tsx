@@ -42,6 +42,27 @@ describe('useEventStream', () => {
     expect(mockUnsubscribe).toHaveBeenCalledTimes(1);
   });
 
+  it('re-subscribes when tenantId changes', () => {
+    const { rerender } = renderHook(
+      ({ tenantId }) => useEventStream({ tenantId }),
+      {
+        wrapper,
+        initialProps: { tenantId: 'org_alpha' },
+      }
+    );
+
+    expect(sseModule.subscribeToEventStream).toHaveBeenCalledWith(
+      expect.objectContaining({ tenantId: 'org_alpha' })
+    );
+
+    rerender({ tenantId: 'org_beta' });
+
+    expect(mockUnsubscribe).toHaveBeenCalledTimes(1);
+    expect(sseModule.subscribeToEventStream).toHaveBeenCalledWith(
+      expect.objectContaining({ tenantId: 'org_beta' })
+    );
+  });
+
   it('invalidates mapped queries on import.committed event', () => {
     const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
 
