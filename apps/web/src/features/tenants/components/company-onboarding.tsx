@@ -46,12 +46,12 @@ export function CompanyOnboarding() {
                 className="flex items-center justify-between p-3 rounded-lg border border-border/60 hover:bg-accent/50 transition-colors"
               >
                 <div className="flex items-center gap-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary/10 text-primary">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
                     <Building2 className="h-4 w-4" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-sm font-semibold">{company.name}</p>
-                    <p className="text-xs text-muted-foreground font-mono">{company.slug}</p>
+                    <p className="text-xs text-muted-foreground font-mono truncate">{company.slug}</p>
                   </div>
                 </div>
                 <Button

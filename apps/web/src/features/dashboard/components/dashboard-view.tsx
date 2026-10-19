@@ -93,6 +93,13 @@ export function DashboardView() {
     return null;
   }
 
+  const hasCommittedData = Boolean(
+    analytics.lastImportAt ||
+    (analytics.dataCompleteness && (analytics.dataCompleteness.invoiceCount > 0 || analytics.dataCompleteness.ledgerCount > 0)) ||
+    (analytics.arAging && analytics.arAging.totalMinor > 0) ||
+    (analytics.apAging && analytics.apAging.totalMinor > 0)
+  );
+
   return (
     <PlainLanguageProvider>
       <div className="space-y-6" data-testid="dashboard-view">
@@ -138,7 +145,7 @@ export function DashboardView() {
               lastImportAt={analytics.lastImportAt}
               isStale={forecast.isStale}
             />
-            <HealthScoreCard />
+            <HealthScoreCard hasData={hasCommittedData} />
           </div>
         </div>
       </div>

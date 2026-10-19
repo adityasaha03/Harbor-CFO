@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Compass, Loader2, AlertTriangle, Users, ArrowRight } from 'lucide-react';
+import { Compass, Loader2, AlertTriangle, Users, ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { authClient } from '../lib/auth-client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,11 +17,17 @@ import { toast } from 'sonner';
 import { isValidProtectedRoute } from '../lib/protected-routes';
 import { cn } from '@/lib/utils';
 
-const signUpSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
-  email: z.string().min(1, 'Email is required').email('Please enter a valid email address'),
-  password: z.string().min(8, 'Password must be at least 8 characters long'),
-});
+const signUpSchema = z
+  .object({
+    name: z.string().min(2, 'Name must be at least 2 characters'),
+    email: z.string().min(1, 'Email is required').email('Please enter a valid email address'),
+    password: z.string().min(8, 'Password must be at least 8 characters long'),
+    confirmPassword: z.string().min(1, 'Please confirm your password'),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
+  });
 
 export type SignUpValues = z.infer<typeof signUpSchema>;
 
@@ -35,6 +41,8 @@ export function SignUpForm() {
   const [alreadyRegisteredEmail, setAlreadyRegisteredEmail] = React.useState<string | null>(null);
   const [isEmployeeNotice, setIsEmployeeNotice] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
 
   React.useEffect(() => {
     if (rawCallbackUrl && isValidProtectedRoute(rawCallbackUrl)) {
@@ -48,7 +56,7 @@ export function SignUpForm() {
     formState: { errors },
   } = useForm<SignUpValues>({
     resolver: zodResolver(signUpSchema),
-    defaultValues: { name: '', email: '', password: '' },
+    defaultValues: { name: '', email: '', password: '', confirmPassword: '' },
   });
 
   const onSubmit = async (values: SignUpValues) => {
@@ -270,16 +278,66 @@ export function SignUpForm() {
 
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="At least 8 characters"
-                  autoComplete="new-password"
-                  disabled={isLoading}
-                  {...register('password')}
-                  aria-invalid={!!errors.password}
-                />
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="At least 8 characters"
+                    autoComplete="new-password"
+                    disabled={isLoading}
+                    {...register('password')}
+                    aria-invalid={!!errors.password}
+                    className="pr-10"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-0 top-0 h-9 w-9 text-muted-foreground hover:text-foreground"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    disabled={isLoading}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" aria-hidden="true" />
+                    ) : (
+                      <Eye className="h-4 w-4" aria-hidden="true" />
+                    )}
+                  </Button>
+                </div>
                 {errors.password && <p className="text-xs text-destructive">{errors.password.message}</p>}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword">Confirm password</Label>
+                <div className="relative">
+                  <Input
+                    id="confirmPassword"
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    placeholder="Re-enter your password"
+                    autoComplete="new-password"
+                    disabled={isLoading}
+                    {...register('confirmPassword')}
+                    aria-invalid={!!errors.confirmPassword}
+                    className="pr-10"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-0 top-0 h-9 w-9 text-muted-foreground hover:text-foreground"
+                    onClick={() => setShowConfirmPassword((prev) => !prev)}
+                    disabled={isLoading}
+                    aria-label={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="h-4 w-4" aria-hidden="true" />
+                    ) : (
+                      <Eye className="h-4 w-4" aria-hidden="true" />
+                    )}
+                  </Button>
+                </div>
+                {errors.confirmPassword && <p className="text-xs text-destructive">{errors.confirmPassword.message}</p>}
               </div>
 
               <Button type="submit" className="w-full" disabled={isLoading}>

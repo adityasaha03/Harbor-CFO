@@ -41,14 +41,38 @@ describe('SignUpForm', () => {
     mockGetSearchParams.mockReturnValue(null);
   });
 
-  it('renders name, email, password fields and submit button', () => {
+  it('renders name, email, password, confirm password fields and submit button', () => {
     render(<SignUpForm />);
 
     expect(screen.getByLabelText(/full name/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/work email/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/^password/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/confirm password/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /create account/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /sign in/i })).toHaveAttribute('href', '/sign-in');
+  });
+
+  it('toggles password and confirm password visibility when eye button is clicked', async () => {
+    const user = userEvent.setup();
+    render(<SignUpForm />);
+
+    const passwordInput = screen.getByLabelText(/^password/i);
+    const confirmPasswordInput = screen.getByLabelText(/confirm password/i);
+
+    expect(passwordInput).toHaveAttribute('type', 'password');
+    expect(confirmPasswordInput).toHaveAttribute('type', 'password');
+
+    const togglePasswordBtn = screen.getByRole('button', { name: /show password/i });
+    const toggleConfirmPasswordBtn = screen.getByRole('button', { name: /show confirm password/i });
+
+    await user.click(togglePasswordBtn);
+    expect(passwordInput).toHaveAttribute('type', 'text');
+
+    await user.click(toggleConfirmPasswordBtn);
+    expect(confirmPasswordInput).toHaveAttribute('type', 'text');
+
+    await user.click(screen.getByRole('button', { name: /hide password/i }));
+    expect(passwordInput).toHaveAttribute('type', 'password');
   });
 
   it('shows auth-required toast when visited with a valid protected callbackUrl', () => {
@@ -82,6 +106,22 @@ describe('SignUpForm', () => {
     expect(authClient.signUp.email).not.toHaveBeenCalled();
   });
 
+  it('validates that password and confirm password match', async () => {
+    const user = userEvent.setup();
+    render(<SignUpForm />);
+
+    await user.type(screen.getByLabelText(/full name/i), 'Alice Doe');
+    await user.type(screen.getByLabelText(/work email/i), 'alice@company.com');
+    await user.type(screen.getByLabelText(/^password/i), 'securepassword123');
+    await user.type(screen.getByLabelText(/confirm password/i), 'differentpassword123');
+    await user.click(screen.getByRole('button', { name: /create account/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText(/passwords do not match/i)).toBeInTheDocument();
+    });
+    expect(authClient.signUp.email).not.toHaveBeenCalled();
+  });
+
   it('displays API error message on signup failure', async () => {
     const user = userEvent.setup();
     vi.mocked(authClient.signUp.email).mockResolvedValueOnce({
@@ -94,6 +134,7 @@ describe('SignUpForm', () => {
     await user.type(screen.getByLabelText(/full name/i), 'Alice Doe');
     await user.type(screen.getByLabelText(/work email/i), 'alice@company.com');
     await user.type(screen.getByLabelText(/^password/i), 'securepassword123');
+    await user.type(screen.getByLabelText(/confirm password/i), 'securepassword123');
     await user.click(screen.getByRole('button', { name: /create account/i }));
 
     await waitFor(() => {
@@ -115,6 +156,7 @@ describe('SignUpForm', () => {
     await user.type(screen.getByLabelText(/full name/i), 'Alice Doe');
     await user.type(screen.getByLabelText(/work email/i), 'alice@company.com');
     await user.type(screen.getByLabelText(/^password/i), 'securepassword123');
+    await user.type(screen.getByLabelText(/confirm password/i), 'securepassword123');
     await user.click(screen.getByRole('button', { name: /create account/i }));
 
     await waitFor(() => {

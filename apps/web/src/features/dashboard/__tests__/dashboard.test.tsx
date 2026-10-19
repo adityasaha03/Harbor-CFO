@@ -213,4 +213,51 @@ describe('DashboardView', () => {
     expect(screen.getByText('Network timeout')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /try again/i })).toBeInTheDocument();
   });
+
+  it('renders "Awaiting Data Import" empty state for health score when zero data is committed', () => {
+    const zeroDataAnalytics = {
+      ...analyticsFeature.ANCHOR_ANALYTICS_MOCK,
+      lastImportAt: null,
+      arAging: { currentMinor: 0, days1to30Minor: 0, days31to60Minor: 0, days61to90Minor: 0, daysOver90Minor: 0, totalMinor: 0 },
+      apAging: { currentMinor: 0, days1to30Minor: 0, days31to60Minor: 0, days61to90Minor: 0, daysOver90Minor: 0, totalMinor: 0 },
+      dataCompleteness: {
+        lastImportAt: null,
+        invoiceCount: 0,
+        ledgerCount: 0,
+        warnings: ['No invoices on file.', 'No ledger entries on file.'],
+      },
+    };
+
+    vi.spyOn(forecastFeature, 'useLatestForecast').mockReturnValue({
+      data: forecastFeature.ANCHOR_FORECAST_MOCK,
+      isLoading: false,
+      isPending: false,
+      isError: false,
+      error: null,
+      refetch: vi.fn(),
+    } as never);
+
+    vi.spyOn(analyticsFeature, 'useAnalyticsSummary').mockReturnValue({
+      data: zeroDataAnalytics,
+      isLoading: false,
+      isPending: false,
+      isError: false,
+      error: null,
+      refetch: vi.fn(),
+    } as never);
+
+    vi.spyOn(alertsFeature, 'useAlerts').mockReturnValue({
+      data: [],
+      isLoading: false,
+      isPending: false,
+      isError: false,
+      error: null,
+      refetch: vi.fn(),
+    } as never);
+
+    renderWithClient(<DashboardView />);
+
+    expect(screen.getByText('Awaiting Data Import')).toBeInTheDocument();
+    expect(screen.getByText(/Upload bank ledger transactions or invoices/i)).toBeInTheDocument();
+  });
 });

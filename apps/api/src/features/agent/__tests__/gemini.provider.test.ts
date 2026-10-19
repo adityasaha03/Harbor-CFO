@@ -177,4 +177,109 @@ describe('B16 GeminiProvider - Mocked HTTP Contract Tests', () => {
       }),
     ).rejects.toThrow('Gemini API error: Invalid argument provided');
   });
+
+  it('automatically rotates to the next API key when encountering HTTP 429 quota exhaustion', async () => {
+    const urlsCalled: string[] = [];
+    const mockFetch = vi.fn().mockImplementation(async (url: string) => {
+      urlsCalled.push(url);
+      if (url.includes('key=exhausted-key')) {
+        return {
+          ok: false,
+          status: 429,
+          text: async () =>
+            JSON.stringify({
+              error: {
+                code: 429,
+                message: 'Resource has been exhausted (e.g. check quota).',
+                status: 'RESOURCE_EXHAUSTED',
+              },
+            }),
+        };
+      }
+      return {
+        ok: true,
+        json: async () => ({
+          candidates: [
+            {
+              content: {
+                role: 'model',
+                parts: [{ text: 'Answer from healthy key!' }],
+              },
+              finishReason: 'STOP',
+            },
+          ],
+        }),
+      };
+    });
+
+    const provider = new GeminiProvider({
+      apiKeys: ['exhausted-key', 'healthy-key'],
+      fetchFn: mockFetch as unknown as typeof fetch,
+    });
+
+    const result = await provider.generate({
+      messages: [{ role: 'user', content: 'hello' }],
+    });
+
+    expect(result.text).toBe('Answer from healthy key!');
+    expect(urlsCalled).toHaveLength(2);
+    expect(urlsCalled[0]).toContain('key=exhausted-key');
+    expect(urlsCalled[1]).toContain('key=healthy-key');
+  });
+
+  it('throws an error if all keys in the pool are exhausted', async () => {
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: false,
+      status: 429,
+      text: async () =>
+        JSON.stringify({
+          error: {
+            code: 429,
+            message: 'Quota exceeded',
+            status: 'RESOURCE_EXHAUSTED',
+          },
+        }),
+    });
+
+    const provider = new GeminiProvider({
+      apiKeys: ['key-1', 'key-2'],
+      fetchFn: mockFetch as unknown as typeof fetch,
+    });
+
+    await expect(
+      provider.generate({
+        messages: [{ role: 'user', content: 'hello' }],
+      }),
+    ).rejects.toThrow(/quota/i);
+
+    expect(mockFetch).toHaveBeenCalledTimes(2);
+  });
+
+  it('distributes requests across keys in round-robin fashion', async () => {
+    const keysUsed: string[] = [];
+    const mockFetch = vi.fn().mockImplementation(async (url: string) => {
+      const match = url.match(/key=([^&]+)/);
+      if (match?.[1]) keysUsed.push(match[1]);
+      return {
+        ok: true,
+        json: async () => ({
+          candidates: [
+            {
+              content: { role: 'model', parts: [{ text: 'ok' }] },
+            },
+          ],
+        }),
+      };
+    });
+
+    const provider = new GeminiProvider({
+      apiKeys: ['key-alpha', 'key-beta'],
+      fetchFn: mockFetch as unknown as typeof fetch,
+    });
+
+    await provider.generate({ messages: [{ role: 'user', content: 'one' }] });
+    await provider.generate({ messages: [{ role: 'user', content: 'two' }] });
+
+    expect(keysUsed).toEqual(['key-alpha', 'key-beta']);
+  });
 });

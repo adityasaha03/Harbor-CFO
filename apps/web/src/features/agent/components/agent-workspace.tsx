@@ -35,7 +35,23 @@ export function AgentWorkspace() {
 
   const isRunning =
     startRunMutation.isPending ||
-    (Boolean(activeRunId) && runQuery.data?.status === 'running');
+    (Boolean(activeRunId) &&
+      runQuery.data?.status === 'running' &&
+      (!runQuery.data.createdAt ||
+        Date.now() - new Date(runQuery.data.createdAt).getTime() < 90_000));
+
+  const chatInputContainerRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    // When the agent workspace loads, smoothly scroll down so new users immediately
+    // see the conversation panel, suggested prompts, and the chat input.
+    const timer = setTimeout(() => {
+      if (typeof chatInputContainerRef.current?.scrollIntoView === 'function') {
+        chatInputContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      }
+    }, 150);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleStartRun = (prompt: string, selectedStyle: AgentStyle) => {
     setErrorMessage(null);
@@ -92,7 +108,7 @@ export function AgentWorkspace() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
       {/* Left: Past Investigations Sidebar (3 cols on lg) */}
-      <div className="lg:col-span-3 h-[720px]">
+      <div className="lg:col-span-3 h-[620px] xl:h-[700px]">
         <PastRunsSidebar
           runs={pastRuns}
           selectedRunId={activeRunId}
@@ -103,7 +119,7 @@ export function AgentWorkspace() {
       </div>
 
       {/* Middle: Conversation Panel (5 cols on lg) */}
-      <div className="lg:col-span-5 flex flex-col gap-4 h-[720px]">
+      <div className="lg:col-span-5 flex flex-col gap-4 h-[620px] xl:h-[700px]">
         <div className="flex-1 overflow-y-auto rounded-xl border bg-card/40 p-4 shadow-xs">
           {!activeRunId && !activePrompt && (
             <div className="flex flex-col gap-6 py-6">
@@ -134,18 +150,20 @@ export function AgentWorkspace() {
         </div>
 
         {/* Input box */}
-        <ChatInput
-          onSubmit={handleStartRun}
-          isLoading={isRunning}
-          canUseAgent={canUseAgent}
-          style={style}
-          onStyleChange={setStyle}
-          errorMessage={errorMessage}
-        />
+        <div ref={chatInputContainerRef}>
+          <ChatInput
+            onSubmit={handleStartRun}
+            isLoading={isRunning}
+            canUseAgent={canUseAgent}
+            style={style}
+            onStyleChange={setStyle}
+            errorMessage={errorMessage}
+          />
+        </div>
       </div>
 
       {/* Right: Live Activity Timeline (4 cols on lg) */}
-      <div className="lg:col-span-4 h-[720px]">
+      <div className="lg:col-span-4 h-[620px] xl:h-[700px]">
         <ActivityTimeline
           liveEvents={liveEvents}
           persistedToolCalls={currentRun?.toolCalls}

@@ -179,7 +179,9 @@ Credit risk is heavily influenced by counterparty dependency:
 ### 3.9 Financial Health Score (`HealthScoreCard`)
 - **Score (0 to 100)**: Composite index evaluating cash runway, customer concentration, and payment punctuality.
 - **Rating**: Qualitative rating (e.g., `82 / 100 (Healthy)` or `45 / 100 (At Risk)`).
-- **Graceful Degradation**: If backend analytics are unavailable or loading, the component hides automatically without cluttering the UI.
+- **Graceful Degradation & Zero-Data State**:
+  - **Awaiting Data Import**: When a company workspace has zero committed transactions or invoices on file (`lastImportAt = null`), the card renders an empty state (`— / Awaiting Data Import`) with an actionable prompt linking to `/imports`, avoiding premature mathematical scoring before records exist.
+  - If backend analytics are unavailable or loading, the component hides automatically without cluttering the UI.
 
 ---
 

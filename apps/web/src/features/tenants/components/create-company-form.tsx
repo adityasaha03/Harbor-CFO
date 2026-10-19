@@ -93,10 +93,10 @@ export function CreateCompanyForm() {
     <Card className="w-full max-w-lg shadow-lg border-border/80">
       <CardHeader className="space-y-1">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow">
             <Building2 className="h-5 w-5" />
           </div>
-          <div>
+          <div className="min-w-0">
             <CardTitle className="text-xl font-bold">Create Your Business Space</CardTitle>
             <CardDescription>
               Set up your company workspace to start managing your finances smarter.

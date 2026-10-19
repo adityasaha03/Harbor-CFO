@@ -9,7 +9,7 @@ A one-screen answer to "are we going to run short, why, and what should I do nex
 ## Files
 
 - `src/app/(app)/dashboard/page.tsx`
-- `src/features/dashboard/components/`: `cash-summary-cards.tsx`, `cash-curve-chart.tsx`, `top-alert-banner.tsx`, `aging-card.tsx`, `concentration-card.tsx`, `data-freshness-card.tsx`, `insights-list.tsx`, `source-chip.tsx`, `health-score-card.tsx` (P1; hidden when the endpoint returns 404)
+- `src/features/dashboard/components/`: `cash-summary-cards.tsx`, `cash-curve-chart.tsx`, `top-alert-banner.tsx`, `aging-card.tsx`, `concentration-card.tsx`, `data-freshness-card.tsx`, `insights-list.tsx`, `source-chip.tsx`, `health-score-card.tsx` (P1; hidden when endpoint returns 404; displays "Awaiting Data Import" empty state when zero transactions/invoices are on file)
 - `src/features/forecast/api/use-latest-forecast.ts`, `src/features/analytics/api/use-analytics-summary.ts`, `src/features/alerts/api/use-alerts.ts` (shared hooks used by other features; owned here, import through each feature's `index.ts`)
 - `src/lib/formulas.ts` (plain-text formula descriptions used by `source-chip`)
 

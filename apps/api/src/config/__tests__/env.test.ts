@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseEnv } from '../env';
+import { parseEnv, getGeminiApiKeys } from '../env';
 
 describe('Environment configuration (env.ts)', () => {
   it('fails fast when a required variable is missing', () => {
@@ -76,5 +76,19 @@ describe('Environment configuration (env.ts)', () => {
     expect(parsed.GEMINI_API_KEY).toBe('test-api-key');
     expect(parsed.AGENT_MAX_TOOL_CALLS).toBe(10);
     expect(parsed.AGENT_TIMEOUT_MS).toBe(60000);
+  });
+
+  it('extracts and deduplicates multi-key configurations via getGeminiApiKeys', () => {
+    expect(getGeminiApiKeys({ GEMINI_API_KEY: 'key-1' })).toEqual(['key-1']);
+    expect(getGeminiApiKeys({ GEMINI_API_KEYS: 'key-A, key-B, key-C' })).toEqual([
+      'key-A',
+      'key-B',
+      'key-C',
+    ]);
+    expect(getGeminiApiKeys({ GEMINI_API_KEY: 'key-1, key-2, key-1' })).toEqual([
+      'key-1',
+      'key-2',
+    ]);
+    expect(getGeminiApiKeys({})).toEqual([]);
   });
 });

@@ -19,6 +19,8 @@ import {
 
 export function UserMenu() {
   const { user, role, isPending } = useSession();
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [isSigningOut, setIsSigningOut] = React.useState(false);
 
   if (isPending) {
     return (
@@ -46,7 +48,14 @@ export function UserMenu() {
     : 'U';
 
   return (
-    <DropdownMenu>
+    <DropdownMenu
+      open={isOpen}
+      onOpenChange={(nextOpen) => {
+        if (!isSigningOut) {
+          setIsOpen(nextOpen);
+        }
+      }}
+    >
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
@@ -92,12 +101,20 @@ export function UserMenu() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <div className="p-1">
+        <DropdownMenuItem
+          asChild
+          onSelect={(event) => {
+            // Prevent dropdown from instantly vanishing so the user clearly sees the loader
+            event.preventDefault();
+          }}
+          disabled={isSigningOut}
+        >
           <SignOutButton
+            onSignOutStart={() => setIsSigningOut(true)}
             variant="ghost"
-            className="w-full justify-start text-xs font-normal text-destructive hover:text-destructive hover:bg-destructive/10"
+            className="w-full justify-start text-xs font-normal text-destructive hover:text-destructive hover:bg-destructive/10 cursor-pointer"
           />
-        </div>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

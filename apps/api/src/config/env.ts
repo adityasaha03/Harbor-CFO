@@ -20,6 +20,7 @@ export const envSchema = z.object({
   LLM_PROVIDER: z.enum(['gemini', 'replay']).default('replay'),
   LLM_MODEL: z.preprocess(emptyToUndefined, z.string().optional()),
   GEMINI_API_KEY: z.preprocess(emptyToUndefined, z.string().optional()),
+  GEMINI_API_KEYS: z.preprocess(emptyToUndefined, z.string().optional()),
   AGENT_MAX_TOOL_CALLS: z.coerce.number().int().positive().default(6),
   AGENT_TIMEOUT_MS: z.coerce.number().int().positive().default(45000),
   ENABLE_DEMO_RESET: z.preprocess((v) => v === 'true' || v === true, z.boolean()).default(false),
@@ -45,3 +46,21 @@ export const env: Env = (() => {
   }
   return parseEnv(raw);
 })();
+
+/**
+ * Extracts and deduplicates all configured Gemini API keys.
+ * Supports comma-separated or newline-separated values in GEMINI_API_KEYS or GEMINI_API_KEY.
+ */
+export function getGeminiApiKeys(envData?: {
+  GEMINI_API_KEY?: string;
+  GEMINI_API_KEYS?: string;
+}): string[] {
+  const current = envData ?? env;
+  const raw = current.GEMINI_API_KEYS || current.GEMINI_API_KEY || '';
+  if (!raw) return [];
+  const keys = raw
+    .split(/[,\n]/)
+    .map((k) => k.trim())
+    .filter((k) => k.length > 0);
+  return Array.from(new Set(keys));
+}

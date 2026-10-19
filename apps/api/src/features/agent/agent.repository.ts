@@ -60,6 +60,24 @@ export const agentRepository = {
   },
 
   async countRunningRuns(tenantId: string): Promise<number> {
+    // Automatically transition stale runs older than 2 minutes to 'timeout'
+    // so previous interrupted runs never block new user prompts.
+    const twoMinutesAgo = new Date(Date.now() - 120_000);
+    await AgentRunModel.updateMany(
+      {
+        tenantId,
+        status: 'running',
+        createdAt: { $lt: twoMinutesAgo },
+      },
+      {
+        $set: {
+          status: 'timeout',
+          finalAnswer: 'The reasoning request timed out. Please ask your question again.',
+          completedAt: new Date(),
+        },
+      },
+    );
+
     return AgentRunModel.countDocuments({
       tenantId,
       status: 'running',
@@ -78,6 +96,30 @@ export const agentRepository = {
       .session(session ?? null)
       .lean();
     if (!doc) return null;
+
+    // If an older run was left in 'running' status (e.g. server reload or sluggish model),
+    // cleanly mark it as timed out so the UI unblocks and displays the timeout message.
+    if (
+      doc.status === 'running' &&
+      doc.createdAt &&
+      Date.now() - new Date(doc.createdAt).getTime() > 90_000
+    ) {
+      await AgentRunModel.updateOne(
+        { _id: doc._id },
+        {
+          $set: {
+            status: 'timeout',
+            finalAnswer:
+              'The reasoning request exceeded the allowed execution window. Please try sending your question again.',
+            completedAt: new Date(),
+          },
+        },
+      );
+      doc.status = 'timeout';
+      doc.finalAnswer =
+        'The reasoning request exceeded the allowed execution window. Please try sending your question again.';
+    }
+
     return toRunDto(doc as unknown as AgentRunDoc);
   },
 
