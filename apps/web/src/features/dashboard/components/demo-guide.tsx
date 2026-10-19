@@ -4,16 +4,12 @@ import * as React from 'react';
 import Link from 'next/link';
 import {
   Compass,
-  Copy,
-  Check,
   ChevronRight,
   X,
   BookOpen,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { toast } from 'sonner';
 import { authClient } from '@/features/auth';
 
 
@@ -56,17 +52,6 @@ export function DemoGuide() {
   const { data: activeOrg } = authClient.useActiveOrganization?.() ?? {};
   const companyName = activeOrg?.name || 'organization';
   const [isDismissed, setIsDismissed] = React.useState(true);
-  const [copiedEmail, setCopiedEmail] = React.useState<string | null>(null);
-
-  React.useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      setIsDismissed(stored === 'true');
-    } catch {
-      setIsDismissed(false);
-    }
-  }, []);
-
   const handleDismiss = () => {
     setIsDismissed(true);
     try {
@@ -83,13 +68,6 @@ export function DemoGuide() {
     } catch {
       // Ignored
     }
-  };
-
-  const handleCopy = (email: string) => {
-    void navigator.clipboard.writeText(email);
-    setCopiedEmail(email);
-    toast.success(`Copied "${email}" to clipboard!`);
-    setTimeout(() => setCopiedEmail(null), 2000);
   };
 
   if (isDismissed) {

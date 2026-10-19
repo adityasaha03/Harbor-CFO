@@ -236,7 +236,6 @@ function generateDeterministicFallbackCsv(kind: ImportKind, raw: string): string
   const totalColIdx = headers.findIndex((h) => h.includes('gross') || h.includes('total') || h.includes('amount') || h.includes('val'));
   const outColIdx = headers.findIndex((h) => h.includes('balance') || h.includes('out') || h.includes('remain') || h.includes('due'));
   const dueColIdx = headers.findIndex((h) => h.includes('due') || h.includes('date'));
-  const statusColIdx = headers.findIndex((h) => h.includes('status') || h.includes('state'));
 
   const resultLines = ['invoiceId,direction,counterpartyId,total,outstanding,currency,dueDate,expectedSettlementDate,status'];
 
