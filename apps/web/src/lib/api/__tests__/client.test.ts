@@ -75,6 +75,27 @@ describe('apiFetch', () => {
     expect(capturedHeaders?.get('Idempotency-Key')).toBe('idemp-key-xyz');
   });
 
+  it('updates X-Tenant-Id when active tenant is changed', async () => {
+    let capturedHeaders: Headers | undefined;
+    global.fetch = vi.fn().mockImplementation((_url, init) => {
+      capturedHeaders = new Headers(init.headers);
+      return Promise.resolve(
+        new Response(JSON.stringify({ data: { ok: true } }), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        })
+      );
+    });
+
+    setActiveTenantId('org_workspace_A');
+    await apiFetch('/health');
+    expect(capturedHeaders?.get('X-Tenant-Id')).toBe('org_workspace_A');
+
+    setActiveTenantId('org_workspace_B');
+    await apiFetch('/health');
+    expect(capturedHeaders?.get('X-Tenant-Id')).toBe('org_workspace_B');
+  });
+
   it('sends FormData without manual Content-Type header', async () => {
     let capturedHeaders: Headers | undefined;
     global.fetch = vi.fn().mockImplementationOnce((_url, init) => {
