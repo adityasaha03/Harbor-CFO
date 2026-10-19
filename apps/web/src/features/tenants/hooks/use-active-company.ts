@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { authClient, clearApiToken } from '@/features/auth';
+import { setActiveTenantId, getActiveTenantId } from '@/lib/api/client';
 import type { Role } from '@harbor/contracts';
 
 export interface Company {
@@ -26,6 +27,18 @@ export function useActiveCompany(): UseActiveCompanyReturn {
   const { data: activeOrg, isPending: isActivePending } = authClient.useActiveOrganization();
   const { data: orgList, isPending: isListPending } = authClient.useListOrganizations();
   const { data: memberRole, isPending: isRolePending } = authClient.useActiveMemberRole();
+
+  // Keep client API tenant context and query cache strictly aligned with the active organization
+  React.useEffect(() => {
+    if (activeOrg?.id) {
+      const current = getActiveTenantId();
+      if (current !== activeOrg.id) {
+        setActiveTenantId(activeOrg.id);
+        clearApiToken();
+        queryClient.clear();
+      }
+    }
+  }, [activeOrg?.id, queryClient]);
 
   const companies: Company[] = React.useMemo(() => {
     if (!orgList || !Array.isArray(orgList)) return [];
@@ -54,6 +67,7 @@ export function useActiveCompany(): UseActiveCompanyReturn {
       await authClient.organization.setActive({
         organizationId,
       });
+      setActiveTenantId(organizationId);
       clearApiToken();
       // Clear TanStack query cache on tenant change to isolate cross-tenant data
       queryClient.clear();

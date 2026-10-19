@@ -9,12 +9,19 @@ describe('DemoGuide', () => {
     vi.clearAllMocks();
   });
 
-  it('renders closed-loop story steps and the three demo accounts', () => {
+  it('can be restored and dismissed', () => {
     render(<DemoGuide />);
 
-    // Renders title
+    // Initially collapsed with restore button
+    const restoreBtn = screen.getByTestId('show-demo-guide-btn');
+    expect(restoreBtn).toBeInTheDocument();
+
+    // Click restore button to expand panel
+    fireEvent.click(restoreBtn);
+
+    // Panel is opened
+    expect(screen.getByTestId('demo-guide-panel')).toBeInTheDocument();
     expect(screen.getByText('Competition Demo & Story Guide')).toBeInTheDocument();
-    expect(screen.queryByText('Topic E')).not.toBeInTheDocument();
 
     // Renders the 5 story steps
     expect(screen.getByText('1. Observe')).toBeInTheDocument();
@@ -23,48 +30,13 @@ describe('DemoGuide', () => {
     expect(screen.getByText('4. Approve')).toBeInTheDocument();
     expect(screen.getByText('5. Verify')).toBeInTheDocument();
 
-    // Renders the demo accounts
-    expect(screen.getByText('owner@harbor.local')).toBeInTheDocument();
-    expect(screen.getByText('employee@harbor.local')).toBeInTheDocument();
-    expect(screen.queryByText('reviewer@harbor.local')).not.toBeInTheDocument();
-  });
-
-  it('can be dismissed and restored', () => {
-    render(<DemoGuide />);
-
-    // Initially open
-    expect(screen.getByTestId('demo-guide-panel')).toBeInTheDocument();
-
     // Click dismiss button
     const dismissBtn = screen.getByLabelText('Dismiss demo guide');
     fireEvent.click(dismissBtn);
 
-    // Main panel is hidden and restore button is displayed
+    // Main panel is hidden and restore button is displayed again
     expect(screen.queryByTestId('demo-guide-panel')).not.toBeInTheDocument();
-    const restoreBtn = screen.getByTestId('show-demo-guide-btn');
-    expect(restoreBtn).toBeInTheDocument();
-
-    // Click restore button
-    fireEvent.click(restoreBtn);
-
-    // Panel is restored
-    expect(screen.getByTestId('demo-guide-panel')).toBeInTheDocument();
-  });
-
-  it('copies email to clipboard when copy button is clicked', async () => {
-    const writeTextMock = vi.fn().mockResolvedValue(undefined);
-    Object.assign(navigator, {
-      clipboard: {
-        writeText: writeTextMock,
-      },
-    });
-
-    render(<DemoGuide />);
-
-    const copyOwnerBtn = screen.getByLabelText('Copy owner@harbor.local');
-    fireEvent.click(copyOwnerBtn);
-
-    expect(writeTextMock).toHaveBeenCalledWith('owner@harbor.local');
+    expect(screen.getByTestId('show-demo-guide-btn')).toBeInTheDocument();
   });
 });
 

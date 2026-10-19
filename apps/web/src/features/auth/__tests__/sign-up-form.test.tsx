@@ -47,7 +47,7 @@ describe('SignUpForm', () => {
     expect(screen.getByLabelText(/full name/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/work email/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/^password/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/confirm password/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/^confirm password$/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /create account/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /sign in/i })).toHaveAttribute('href', '/sign-in');
   });
@@ -57,7 +57,7 @@ describe('SignUpForm', () => {
     render(<SignUpForm />);
 
     const passwordInput = screen.getByLabelText(/^password/i);
-    const confirmPasswordInput = screen.getByLabelText(/confirm password/i);
+    const confirmPasswordInput = screen.getByLabelText(/^confirm password$/i);
 
     expect(passwordInput).toHaveAttribute('type', 'password');
     expect(confirmPasswordInput).toHaveAttribute('type', 'password');
@@ -113,7 +113,7 @@ describe('SignUpForm', () => {
     await user.type(screen.getByLabelText(/full name/i), 'Alice Doe');
     await user.type(screen.getByLabelText(/work email/i), 'alice@company.com');
     await user.type(screen.getByLabelText(/^password/i), 'securepassword123');
-    await user.type(screen.getByLabelText(/confirm password/i), 'differentpassword123');
+    await user.type(screen.getByLabelText(/^confirm password$/i), 'differentpassword123');
     await user.click(screen.getByRole('button', { name: /create account/i }));
 
     await waitFor(() => {
@@ -134,7 +134,7 @@ describe('SignUpForm', () => {
     await user.type(screen.getByLabelText(/full name/i), 'Alice Doe');
     await user.type(screen.getByLabelText(/work email/i), 'alice@company.com');
     await user.type(screen.getByLabelText(/^password/i), 'securepassword123');
-    await user.type(screen.getByLabelText(/confirm password/i), 'securepassword123');
+    await user.type(screen.getByLabelText(/^confirm password$/i), 'securepassword123');
     await user.click(screen.getByRole('button', { name: /create account/i }));
 
     await waitFor(() => {
@@ -156,7 +156,7 @@ describe('SignUpForm', () => {
     await user.type(screen.getByLabelText(/full name/i), 'Alice Doe');
     await user.type(screen.getByLabelText(/work email/i), 'alice@company.com');
     await user.type(screen.getByLabelText(/^password/i), 'securepassword123');
-    await user.type(screen.getByLabelText(/confirm password/i), 'securepassword123');
+    await user.type(screen.getByLabelText(/^confirm password$/i), 'securepassword123');
     await user.click(screen.getByRole('button', { name: /create account/i }));
 
     await waitFor(() => {
@@ -182,6 +182,7 @@ describe('SignUpForm', () => {
     await user.type(screen.getByLabelText(/full name/i), 'Employee Bob');
     await user.type(screen.getByLabelText(/work email/i), 'bob@company.com');
     await user.type(screen.getByLabelText(/^password/i), 'securepassword123');
+    await user.type(screen.getByLabelText(/^confirm password$/i), 'securepassword123');
     await user.click(screen.getByRole('button', { name: /create account/i }));
 
     await waitFor(() => {
@@ -208,6 +209,7 @@ describe('SignUpForm', () => {
     await user.type(screen.getByLabelText(/full name/i), 'Owner Charlie');
     await user.type(screen.getByLabelText(/work email/i), 'charlie@company.com');
     await user.type(screen.getByLabelText(/^password/i), 'securepassword123');
+    await user.type(screen.getByLabelText(/^confirm password$/i), 'securepassword123');
     await user.click(screen.getByRole('button', { name: /create account/i }));
 
     await waitFor(() => {

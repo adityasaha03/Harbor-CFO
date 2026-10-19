@@ -6,7 +6,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 import { Building2, Loader2 } from 'lucide-react';
-import { authClient } from '@/features/auth';
+import { useQueryClient } from '@tanstack/react-query';
+import { authClient, clearApiToken } from '@/features/auth';
+import { setActiveTenantId } from '@/lib/api/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -27,6 +29,7 @@ export type CreateCompanyValues = z.infer<typeof createCompanySchema>;
 
 export function CreateCompanyForm() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [formError, setFormError] = React.useState<string | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -75,10 +78,14 @@ export function CreateCompanyForm() {
 
       toast.success(`Your workspace "${values.name}" is ready! Let's go! 🎉`);
 
-      // Automatically set the new company as active
+      // Automatically set the new company as active in Better Auth, client state, and clear cache
       await authClient.organization.setActive({
         organizationId: data.id,
       });
+
+      setActiveTenantId(data.id);
+      clearApiToken();
+      queryClient.clear();
 
       router.push('/dashboard');
       router.refresh();

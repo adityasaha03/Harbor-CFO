@@ -4,11 +4,34 @@ import type { ErrorCode, ApiErrorDetail } from '@harbor/contracts';
 
 let currentTenantId: string | null = null;
 
+const TENANT_STORAGE_KEY = 'harbor_active_tenant_id';
+
 export function setActiveTenantId(tenantId: string | null): void {
   currentTenantId = tenantId;
+  if (typeof window !== 'undefined') {
+    try {
+      if (tenantId) {
+        sessionStorage.setItem(TENANT_STORAGE_KEY, tenantId);
+      } else {
+        sessionStorage.removeItem(TENANT_STORAGE_KEY);
+      }
+    } catch {
+      // Non-blocking fallback if sessionStorage is blocked
+    }
+  }
 }
 
 export function getActiveTenantId(): string | null {
+  if (!currentTenantId && typeof window !== 'undefined') {
+    try {
+      const stored = sessionStorage.getItem(TENANT_STORAGE_KEY);
+      if (stored) {
+        currentTenantId = stored;
+      }
+    } catch {
+      // Non-blocking fallback
+    }
+  }
   return currentTenantId;
 }
 
@@ -22,7 +45,8 @@ export interface ApiFetchOptions extends Omit<RequestInit, 'body'> {
 
 async function resolveTenantId(explicitTenantId?: string): Promise<string | null> {
   if (explicitTenantId) return explicitTenantId;
-  if (currentTenantId) return currentTenantId;
+  const active = getActiveTenantId();
+  if (active) return active;
 
   try {
     const sessionRes = await authClient.getSession();
@@ -30,7 +54,7 @@ async function resolveTenantId(explicitTenantId?: string): Promise<string | null
       sessionRes?.data?.session as { activeOrganizationId?: string | null } | undefined
     )?.activeOrganizationId;
     if (activeOrgId) {
-      currentTenantId = activeOrgId;
+      setActiveTenantId(activeOrgId);
       return activeOrgId;
     }
   } catch {

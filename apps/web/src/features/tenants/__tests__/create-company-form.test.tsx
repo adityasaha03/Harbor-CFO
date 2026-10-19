@@ -1,6 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import React from 'react';
 import { CreateCompanyForm } from '../components/create-company-form';
 import type * as AuthModule from '@/features/auth';
 import { authClient } from '@/features/auth';
@@ -19,6 +21,7 @@ vi.mock('@/features/auth', async (importOriginal) => {
   const actual = await importOriginal<typeof AuthModule>();
   return {
     ...actual,
+    clearApiToken: vi.fn(),
     authClient: {
       ...actual.authClient,
       organization: {
@@ -30,12 +33,22 @@ vi.mock('@/features/auth', async (importOriginal) => {
 });
 
 describe('CreateCompanyForm', () => {
+  let queryClient: QueryClient;
+
   beforeEach(() => {
     vi.clearAllMocks();
+    queryClient = new QueryClient();
   });
 
+  const renderForm = () =>
+    render(
+      <QueryClientProvider client={queryClient}>
+        <CreateCompanyForm />
+      </QueryClientProvider>
+    );
+
   it('renders company name and slug inputs and submit button', () => {
-    render(<CreateCompanyForm />);
+    renderForm();
 
     expect(screen.getByLabelText(/company legal or trade name/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/workspace identifier/i)).toBeInTheDocument();
@@ -46,7 +59,7 @@ describe('CreateCompanyForm', () => {
 
   it('validates minimum length for name and slug format', async () => {
     const user = userEvent.setup();
-    render(<CreateCompanyForm />);
+    renderForm();
 
     const submitBtn = screen.getByRole('button', { name: /create company workspace/i });
     await user.click(submitBtn);
@@ -59,7 +72,7 @@ describe('CreateCompanyForm', () => {
 
   it('auto-generates slug when typing company name', async () => {
     const user = userEvent.setup();
-    render(<CreateCompanyForm />);
+    renderForm();
 
     const nameInput = screen.getByLabelText(/company legal or trade name/i);
     const slugInput = screen.getByLabelText(/workspace identifier/i);
@@ -80,7 +93,7 @@ describe('CreateCompanyForm', () => {
       error: null,
     } as never);
 
-    render(<CreateCompanyForm />);
+    renderForm();
 
     const nameInput = screen.getByLabelText(/company legal or trade name/i);
     await user.type(nameInput, 'Acme Corp');
@@ -108,7 +121,7 @@ describe('CreateCompanyForm', () => {
       error: { message: 'Slug already taken', status: 400 } as never,
     });
 
-    render(<CreateCompanyForm />);
+    renderForm();
 
     const nameInput = screen.getByLabelText(/company legal or trade name/i);
     await user.type(nameInput, 'Acme Corp');

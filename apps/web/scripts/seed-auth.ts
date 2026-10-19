@@ -2,34 +2,12 @@ import './load-env';
 import { DEMO_EMAILS, DEMO_TENANTS } from '@harbor/contracts';
 import { auth, testMemoryDb } from '../src/features/auth/server/auth';
 import { mongoDb, mongoClient } from '../src/features/auth/server/mongo';
+import { ObjectId } from 'mongodb';
 
-export interface SeededUser {
-  id: string;
-  email: string;
-  name: string;
-  created: boolean;
-}
-
-export interface SeededOrg {
-  id: string;
-  name: string;
-  slug: string;
-  created: boolean;
-}
-
-export interface SeededMember {
-  id: string;
-  userId: string;
-  organizationId: string;
-  role: string;
-  created: boolean;
-}
-
-export interface SeedAuthResult {
-  users: SeededUser[];
-  organizations: SeededOrg[];
-  members: SeededMember[];
-}
+export interface SeededUser { id: string; email: string; name: string; created: boolean; }
+export interface SeededOrg { id: string; name: string; slug: string; created: boolean; }
+export interface SeededMember { id: string; userId: string; organizationId: string; role: string; created: boolean; }
+export interface SeedAuthResult { users: SeededUser[]; organizations: SeededOrg[]; members: SeededMember[]; }
 
 interface MongoDocWithId {
   _id?: unknown;
@@ -86,6 +64,15 @@ export async function seedAuth(options?: { password?: string }): Promise<SeedAut
     { email: DEMO_EMAILS.HARBOR_EMPLOYEE, name: 'Harbor Employee' },
     { email: DEMO_EMAILS.HARBOR_REVIEWER, name: 'Harbor Reviewer' },
     { email: DEMO_EMAILS.PEARL_OWNER, name: 'Pearl Owner' },
+    { email: DEMO_EMAILS.ROHAN_OWNER, name: 'Rohan (Owner)' },
+    { email: DEMO_EMAILS.DRAGON_EMPLOYEE_1, name: 'Alice Chen' },
+    { email: DEMO_EMAILS.DRAGON_EMPLOYEE_2, name: 'Bob Li' },
+    { email: DEMO_EMAILS.DRAGON_EMPLOYEE_3, name: 'Carol Wu' },
+    { email: DEMO_EMAILS.DRAGON_REVIEWER, name: 'David Zhao' },
+    { email: DEMO_EMAILS.JADE_EMPLOYEE_1, name: 'Emma Huang' },
+    { email: DEMO_EMAILS.JADE_EMPLOYEE_2, name: 'Frank Liu' },
+    { email: DEMO_EMAILS.JADE_EMPLOYEE_3, name: 'Grace Wang' },
+    { email: DEMO_EMAILS.JADE_REVIEWER, name: 'Henry Zhang' },
   ];
 
   // 1. Seed or retrieve users
@@ -117,19 +104,35 @@ export async function seedAuth(options?: { password?: string }): Promise<SeedAut
     });
   }
 
-  const harborOwner = users.find((u) => u.email === DEMO_EMAILS.HARBOR_OWNER);
-  const pearlOwner = users.find((u) => u.email === DEMO_EMAILS.PEARL_OWNER);
-  const harborEmployee = users.find((u) => u.email === DEMO_EMAILS.HARBOR_EMPLOYEE);
-  const harborReviewer = users.find((u) => u.email === DEMO_EMAILS.HARBOR_REVIEWER);
-
-  if (!harborOwner || !pearlOwner || !harborEmployee || !harborReviewer) {
-    throw new Error('Failed to resolve all demo users during seeding');
+  // Ensure all demo users have their password set to the standard demo password
+  if (process.env.NODE_ENV !== 'test') {
+    const sample = await mongoDb.collection('account').findOne({
+      providerId: 'credential',
+      password: { $exists: true, $ne: null },
+    });
+    if (sample?.password) {
+      for (const u of users) {
+        await mongoDb.collection('account').updateMany(
+          { $or: [{ userId: u.id }, { userId: new ObjectId(u.id) }] },
+          { $set: { password: sample.password } }
+        );
+      }
+    }
   }
+
+  const userMap = new Map(users.map((u) => [u.email, u.id]));
+  const getUserId = (email: string): string => {
+    const id = userMap.get(email);
+    if (!id) throw new Error(`Failed to resolve demo user: ${email}`);
+    return id;
+  };
 
   // 2. Seed or retrieve organizations
   const orgDefs = [
-    { name: 'Harbor Wholesale', slug: DEMO_TENANTS.HARBOR_WHOLESALE, ownerId: harborOwner.id },
-    { name: 'Pearl Bakery', slug: DEMO_TENANTS.PEARL_BAKERY, ownerId: pearlOwner.id },
+    { name: 'Harbor Wholesale', slug: DEMO_TENANTS.HARBOR_WHOLESALE, ownerId: getUserId(DEMO_EMAILS.HARBOR_OWNER) },
+    { name: 'Pearl Bakery', slug: DEMO_TENANTS.PEARL_BAKERY, ownerId: getUserId(DEMO_EMAILS.PEARL_OWNER) },
+    { name: 'Dragon Electronics', slug: DEMO_TENANTS.DRAGON_ELECTRONICS, ownerId: getUserId(DEMO_EMAILS.ROHAN_OWNER) },
+    { name: 'Jade Textiles', slug: DEMO_TENANTS.JADE_TEXTILES, ownerId: getUserId(DEMO_EMAILS.ROHAN_OWNER) },
   ];
 
   for (const def of orgDefs) {
@@ -164,20 +167,32 @@ export async function seedAuth(options?: { password?: string }): Promise<SeedAut
     });
   }
 
-  const harborOrg = organizations.find((o) => o.slug === DEMO_TENANTS.HARBOR_WHOLESALE);
-  const pearlOrg = organizations.find((o) => o.slug === DEMO_TENANTS.PEARL_BAKERY);
+  const orgMap = new Map(organizations.map((o) => [o.slug, o.id]));
+  const getOrgId = (slug: string): string => {
+    const id = orgMap.get(slug);
+    if (!id) throw new Error(`Failed to resolve demo organization: ${slug}`);
+    return id;
+  };
 
-  if (!harborOrg || !pearlOrg) {
-    throw new Error('Failed to resolve all demo organizations during seeding');
-  }
-
-  // 3. Seed or verify members of Harbor Wholesale
+  // 3. Seed or verify members
   type OrgRole = 'owner' | 'employee' | 'reviewer';
   const targetMembers: { userId: string; orgId: string; role: OrgRole }[] = [
-    { userId: harborOwner.id, orgId: harborOrg.id, role: 'owner' },
-    { userId: harborEmployee.id, orgId: harborOrg.id, role: 'employee' },
-    { userId: harborReviewer.id, orgId: harborOrg.id, role: 'reviewer' },
-    { userId: pearlOwner.id, orgId: pearlOrg.id, role: 'owner' },
+    // Harbor Wholesale
+    { userId: getUserId(DEMO_EMAILS.HARBOR_OWNER), orgId: getOrgId(DEMO_TENANTS.HARBOR_WHOLESALE), role: 'owner' },
+    { userId: getUserId(DEMO_EMAILS.HARBOR_EMPLOYEE), orgId: getOrgId(DEMO_TENANTS.HARBOR_WHOLESALE), role: 'employee' },
+    { userId: getUserId(DEMO_EMAILS.HARBOR_REVIEWER), orgId: getOrgId(DEMO_TENANTS.HARBOR_WHOLESALE), role: 'reviewer' },
+    // Pearl Bakery
+    { userId: getUserId(DEMO_EMAILS.PEARL_OWNER), orgId: getOrgId(DEMO_TENANTS.PEARL_BAKERY), role: 'owner' },
+    // Dragon Electronics
+    { userId: getUserId(DEMO_EMAILS.DRAGON_EMPLOYEE_1), orgId: getOrgId(DEMO_TENANTS.DRAGON_ELECTRONICS), role: 'employee' },
+    { userId: getUserId(DEMO_EMAILS.DRAGON_EMPLOYEE_2), orgId: getOrgId(DEMO_TENANTS.DRAGON_ELECTRONICS), role: 'employee' },
+    { userId: getUserId(DEMO_EMAILS.DRAGON_EMPLOYEE_3), orgId: getOrgId(DEMO_TENANTS.DRAGON_ELECTRONICS), role: 'employee' },
+    { userId: getUserId(DEMO_EMAILS.DRAGON_REVIEWER), orgId: getOrgId(DEMO_TENANTS.DRAGON_ELECTRONICS), role: 'reviewer' },
+    // Jade Textiles
+    { userId: getUserId(DEMO_EMAILS.JADE_EMPLOYEE_1), orgId: getOrgId(DEMO_TENANTS.JADE_TEXTILES), role: 'employee' },
+    { userId: getUserId(DEMO_EMAILS.JADE_EMPLOYEE_2), orgId: getOrgId(DEMO_TENANTS.JADE_TEXTILES), role: 'employee' },
+    { userId: getUserId(DEMO_EMAILS.JADE_EMPLOYEE_3), orgId: getOrgId(DEMO_TENANTS.JADE_TEXTILES), role: 'employee' },
+    { userId: getUserId(DEMO_EMAILS.JADE_REVIEWER), orgId: getOrgId(DEMO_TENANTS.JADE_TEXTILES), role: 'reviewer' },
   ];
 
   for (const target of targetMembers) {

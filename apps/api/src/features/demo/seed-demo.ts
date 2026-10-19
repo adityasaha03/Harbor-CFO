@@ -11,6 +11,14 @@ export async function seedAllDemoTenants(): Promise<void> {
   logger.info('Starting Pearl Bakery demo seed...');
   const pearl = await demoService.seedTenant(DEMO_TENANTS.PEARL_BAKERY);
   logger.info({ tenantId: pearl.tenantId }, 'Pearl Bakery demo seeded successfully');
+
+  logger.info('Starting Dragon Electronics demo seed...');
+  const dragon = await demoService.seedTenant(DEMO_TENANTS.DRAGON_ELECTRONICS);
+  logger.info({ tenantId: dragon.tenantId }, 'Dragon Electronics demo seeded successfully');
+
+  logger.info('Starting Jade Textiles demo seed...');
+  const jade = await demoService.seedTenant(DEMO_TENANTS.JADE_TEXTILES);
+  logger.info({ tenantId: jade.tenantId }, 'Jade Textiles demo seeded successfully');
 }
 
 async function runCli(): Promise<void> {

@@ -1,0 +1,34 @@
+[
+  {
+    "label": "Factory floor lease",
+    "direction": "outflow",
+    "category": "rent",
+    "amountMinor": 1800000,
+    "frequency": "monthly",
+    "anchorOn": "2026-10-25"
+  },
+  {
+    "label": "Production staff payroll",
+    "direction": "outflow",
+    "category": "payroll",
+    "amountMinor": 6000000,
+    "frequency": "monthly",
+    "anchorOn": "2026-11-03"
+  },
+  {
+    "label": "Raw material overhead",
+    "direction": "outflow",
+    "category": "overhead",
+    "amountMinor": 900000,
+    "frequency": "monthly",
+    "anchorOn": "2026-11-08"
+  },
+  {
+    "label": "Recurring wholesale buyer payments",
+    "direction": "inflow",
+    "category": "customer_receipt",
+    "amountMinor": 2000000,
+    "frequency": "biweekly",
+    "anchorOn": "2026-11-01"
+  }
+]
